@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>NEMU-pa0</title>
+    <url>/2023/12/14/NEMU-pa0/</url>
+    <content><![CDATA[<p>主要问题有</p>
+<ul>
+<li>虚拟机网络问题</li>
+<li>github TLS问题</li>
+</ul>
+<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>因为我主机用了代理，允许局域网连接。<br>想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，<br>相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。<br>然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，<br>主机有点像一个默认“网关”？</p>
+<hr>
+<p><font color=red>2023/12/15 update</p>
+<p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
+<p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></font></p>
+<h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#x69;&#116;&#x40;&#103;&#105;&#116;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#109;">&#103;&#x69;&#116;&#x40;&#103;&#105;&#116;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#109;</a>。</p>
+<p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#103;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#x62;&#46;&#99;&#111;&#109;">&#103;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#x62;&#46;&#99;&#111;&#109;</a>/仓库地址，而不是http或https</p>
+<h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
+<p>以后再学</p>
+]]></content>
+      <categories>
+        <category>ICS实验</category>
+      </categories>
+      <tags>
+        <tag>学习</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>NEMU-PA1</title>
     <url>/2024/01/10/NEMU-PA1/</url>
     <content><![CDATA[<h3 id="NEMU是什么"><a href="#NEMU是什么" class="headerlink" title="NEMU是什么"></a>NEMU是什么</h3><p><font color=red>个人理解：</font>是NJU编写的一个模拟器，名字来源于<a href="https://zh.wikipedia.org/wiki/QEMU">QEMU（quick emulator)</a>。NEMU运行于GNU/Linux操作系统上，用C语言模拟了一个虚拟的计算机系统，包括CPU、内存、IO设备等。</p>
@@ -52,39 +79,12 @@
 <li>内存访问类型</li>
 </ul>
 <p>如果不存在寄存器，CPU的数据处理形式并不受影响，协处理器工作不受影响，CPU中的程序计数器PC功能需要由其他硬件支持，通用寄存器暂存功能需要由其他硬件支持，FPU的数据处理形式不受影响，字节序和大小端仍然需要定义，内存访问类型仍然需要定义。</p>
-<h3 id="从状态机视角理解程序运行"><a href="#从状态机视角理解程序运行" class="headerlink" title="从状态机视角理解程序运行"></a>从状态机视角理解程序运行</h3><p><img src="./PA1/1.jpg" alt="1"><br>图灵机的基础：当前状态+当前输入 -&gt; 状态转移 -&gt; 下一状态</p>
+<h3 id="从状态机视角理解程序运行"><a href="#从状态机视角理解程序运行" class="headerlink" title="从状态机视角理解程序运行"></a>从状态机视角理解程序运行</h3><p><img src="1.jpg" alt="1"><br>图灵机的基础：当前状态+当前输入 -&gt; 状态转移 -&gt; 下一状态</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// PC: instruction    | // label: statement</span><br><span class="line">0: mov  r1, 0         |  pc0: r1 = 0;</span><br><span class="line">1: mov  r2, 0         |  pc1: r2 = 0;</span><br><span class="line">2: addi r2, r2, 1     |  pc2: r2 = r2 + 1;</span><br><span class="line">3: add  r1, r1, r2    |  pc3: r1 = r1 + r2;</span><br><span class="line">4: blt  r2, 100, 2    |  pc4: if (r2 &lt; 100) goto pc2;   // branch if less than</span><br><span class="line">5: jmp 5              |  pc5: goto pc5;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(PC, r1, r2) : (0, x, x) -&gt; (1, 0, x) -&gt; (2, 0, 0) -&gt; (3, 0, 1)</span><br><span class="line">-&gt; (4, 1, 1) -&gt; (2, 1, 1) -&gt; (3, 1, 2) -&gt; (4, 3, 2) -&gt; (2, 3, 2)</span><br><span class="line">-&gt; (3, 3, 3) -&gt; (4, 6, 3) -&gt; (2, 6, 3) -&gt; ... -&gt; (4, 4851, 99) </span><br><span class="line">-&gt; (2, 4950, 99) -&gt; (3, 4950, 100) -&gt; (4, 5050, 100) </span><br><span class="line">-&gt; (5, 5050, 100) (end)</span><br></pre></td></tr></table></figure>
 
 
-]]></content>
-      <categories>
-        <category>ICS实验</category>
-      </categories>
-      <tags>
-        <tag>学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>NEMU-pa0</title>
-    <url>/2023/12/14/NEMU-pa0/</url>
-    <content><![CDATA[<p>主要问题有</p>
-<ul>
-<li>虚拟机网络问题</li>
-<li>github TLS问题</li>
-</ul>
-<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>因为我主机用了代理，允许局域网连接。<br>想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，<br>相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。<br>然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，<br>主机有点像一个默认“网关”？</p>
-<hr>
-<p><font color=red>2023/12/15 update</p>
-<p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
-<p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></font></p>
-<h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#104;&#117;&#x62;&#46;&#99;&#111;&#109;">&#103;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#104;&#117;&#x62;&#46;&#99;&#111;&#109;</a>。</p>
-<p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#103;&#x69;&#x74;&#64;&#103;&#x69;&#116;&#x68;&#x75;&#98;&#x2e;&#99;&#x6f;&#109;">&#103;&#x69;&#x74;&#64;&#103;&#x69;&#116;&#x68;&#x75;&#98;&#x2e;&#99;&#x6f;&#109;</a>/仓库地址，而不是http或https</p>
-<h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
-<p>以后再学</p>
 ]]></content>
       <categories>
         <category>ICS实验</category>
