@@ -19,15 +19,15 @@
         <meta name="keywords" content="Nothing is blessing to everything for me,RtekiX">
     
     <meta name="description" content="">
-    <meta name="description" content="重温PA实验，准备虚拟机">
+    <meta name="description" content="主要问题有  虚拟机网络问题 github TLS问题  虚拟机网络因为我主机用了代理，允许局域网连接。想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，主机有点像一个默认“网关”？  2023&#x2F;12&#x2F;15 update 用桥接模式有一点问题，就是主机的IP是变化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NEMU-pa0">
 <meta property="og:url" content="https://rtekix.github.io/2023/12/14/NEMU-pa0/index.html">
 <meta property="og:site_name" content="Nothing is blessing to everything for me">
-<meta property="og:description" content="重温PA实验，准备虚拟机">
+<meta property="og:description" content="主要问题有  虚拟机网络问题 github TLS问题  虚拟机网络因为我主机用了代理，允许局域网连接。想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，主机有点像一个默认“网关”？  2023&#x2F;12&#x2F;15 update 用桥接模式有一点问题，就是主机的IP是变化">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-14T13:24:48.000Z">
-<meta property="article:modified_time" content="2023-12-15T01:42:12.834Z">
+<meta property="article:modified_time" content="2024-01-16T12:43:41.150Z">
 <meta property="article:author" content="RtekiX">
 <meta property="article:tag" content="学习">
 <meta name="twitter:card" content="summary">
@@ -510,9 +510,9 @@
 <p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
 <p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
 <h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#117;&#x62;&#x2e;&#x63;&#x6f;&#x6d;">&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#117;&#x62;&#x2e;&#x63;&#x6f;&#x6d;</a>。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#x67;&#105;&#116;&#64;&#x67;&#x69;&#x74;&#104;&#x75;&#x62;&#46;&#x63;&#111;&#x6d;">&#x67;&#105;&#116;&#64;&#x67;&#x69;&#x74;&#104;&#x75;&#x62;&#46;&#x63;&#111;&#x6d;</a>。</p>
 <p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#x67;&#x69;&#116;&#x40;&#x67;&#105;&#116;&#104;&#117;&#x62;&#x2e;&#x63;&#111;&#x6d;">&#x67;&#x69;&#116;&#x40;&#x67;&#105;&#116;&#104;&#117;&#x62;&#x2e;&#x63;&#111;&#x6d;</a>/仓库地址，而不是http或https</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#103;&#x69;&#x74;&#64;&#x67;&#105;&#x74;&#104;&#117;&#x62;&#x2e;&#99;&#111;&#x6d;">&#103;&#x69;&#x74;&#64;&#x67;&#105;&#x74;&#104;&#117;&#x62;&#x2e;&#99;&#111;&#x6d;</a>/仓库地址，而不是http或https</p>
 <h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
 <p>以后再学</p>
 
@@ -696,8 +696,6 @@
         
         
         
-        
-        
     
     
     
@@ -766,11 +764,6 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
-            <span class="sidebar-tag-name" data-tags="学习">
-                <span class="iconfont-archer">&#xe606;</span>
-                学习
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="上海">
                 <span class="iconfont-archer">&#xe606;</span>
                 上海
@@ -779,6 +772,11 @@
             <span class="sidebar-tag-name" data-tags="研一">
                 <span class="iconfont-archer">&#xe606;</span>
                 研一
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="学习">
+                <span class="iconfont-archer">&#xe606;</span>
+                学习
             </span>
         
             <span class="sidebar-tag-name" data-tags="露营">
@@ -802,14 +800,14 @@
             ICS实验
         </span>
     
-        <span class="sidebar-category-name" data-categories="玩乐">
-            <span class="iconfont-archer">&#xe60a;</span>
-            玩乐
-        </span>
-    
         <span class="sidebar-category-name" data-categories="Manjaro">
             <span class="iconfont-archer">&#xe60a;</span>
             Manjaro
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="玩乐">
+            <span class="iconfont-archer">&#xe60a;</span>
+            玩乐
         </span>
     
     </div>
@@ -855,5 +853,5 @@
         
         <!-- mermaid -->
         
-    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+    </body>
 </html>

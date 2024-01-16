@@ -427,6 +427,7 @@
         
         
             
+            
         
         <article class="index-post">
             <a class="abstract-title" href="/2023/12/14/NEMU-pa0/">
@@ -434,22 +435,13 @@
                 <span class="abstract-title-text">NEMU-pa0</span>
             </a>
             <div class="abstract-content">
-                主要问题有
-
-虚拟机网络问题
-github TLS问题
-
-虚拟机网络因为我主机用了代理，允许局域网连接。想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，主机有点像一个默认“网关”？
-
-2023/12/15 update
-用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。
-NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有...
+                重温PA实验，准备虚拟机
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/12/15">
+                <div class="abstract-date" title="Last updated: 2024/01/16">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/14</span>
                 </div>
                 <!-- tags -->
@@ -590,8 +582,6 @@ NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备
         
         
         
-        
-        
     
     
     
@@ -660,11 +650,6 @@ NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
-            <span class="sidebar-tag-name" data-tags="学习">
-                <span class="iconfont-archer">&#xe606;</span>
-                学习
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="上海">
                 <span class="iconfont-archer">&#xe606;</span>
                 上海
@@ -673,6 +658,11 @@ NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备
             <span class="sidebar-tag-name" data-tags="研一">
                 <span class="iconfont-archer">&#xe606;</span>
                 研一
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="学习">
+                <span class="iconfont-archer">&#xe606;</span>
+                学习
             </span>
         
             <span class="sidebar-tag-name" data-tags="露营">
@@ -696,14 +686,14 @@ NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备
             ICS实验
         </span>
     
-        <span class="sidebar-category-name" data-categories="玩乐">
-            <span class="iconfont-archer">&#xe60a;</span>
-            玩乐
-        </span>
-    
         <span class="sidebar-category-name" data-categories="Manjaro">
             <span class="iconfont-archer">&#xe60a;</span>
             Manjaro
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="玩乐">
+            <span class="iconfont-archer">&#xe60a;</span>
+            玩乐
         </span>
     
     </div>
@@ -747,5 +737,5 @@ NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备
         
         <!-- mermaid -->
         
-    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+    </body>
 </html>
