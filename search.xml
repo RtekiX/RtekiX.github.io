@@ -60,10 +60,10 @@
 
 ]]></content>
       <categories>
-        <category>ICS实验</category>
+        <category>学习</category>
       </categories>
       <tags>
-        <tag>学习</tag>
+        <tag>ICS实验</tag>
       </tags>
   </entry>
   <entry>
@@ -80,9 +80,9 @@
 <p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
 <p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
 <h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#105;&#x74;&#x40;&#x67;&#105;&#x74;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#103;&#105;&#x74;&#x40;&#x67;&#105;&#x74;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#x69;&#x74;&#64;&#103;&#105;&#116;&#x68;&#x75;&#98;&#x2e;&#x63;&#111;&#x6d;">&#103;&#x69;&#x74;&#64;&#103;&#105;&#116;&#x68;&#x75;&#98;&#x2e;&#x63;&#111;&#x6d;</a>。</p>
 <p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#103;&#105;&#x74;&#64;&#x67;&#x69;&#x74;&#x68;&#117;&#x62;&#46;&#x63;&#x6f;&#109;">&#103;&#105;&#x74;&#64;&#x67;&#x69;&#x74;&#x68;&#117;&#x62;&#46;&#x63;&#x6f;&#109;</a>/仓库地址，而不是http或https</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#103;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#104;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;">&#103;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#104;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;</a>/仓库地址，而不是http或https</p>
 <h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
 <p>以后再学</p>
 ]]></content>
@@ -111,7 +111,40 @@
 </ul>
 ]]></content>
       <categories>
-        <category>学习</category>
+        <category>随笔</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>关于FCM服务的一些问题</title>
+    <url>/2024/02/06/%E5%85%B3%E4%BA%8EFCM%E6%9C%8D%E5%8A%A1%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>昨天晚上，突然发现QQ邮箱app即使允许电池无限制使用，收到邮件的时候也不会推送通知，查了一下是因为三星没有像mipush一样的推送服务，QQ邮箱只有常驻后台运行才能通知。</p>
+<p>于是为了能及时收到信息，我下载了支持fcm的gmail和outlook，测试能不能利用fcm推送</p>
+<h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><ol>
+<li><strong>电池优化问题</strong><ul>
+<li>国行安卓手机没有统一的推送服务，大多只能靠应用后台保活来实现实时通知，比如QQ和微信就是默认无限制运行，允许任意自启动和重启，所以才能随时收到消息。</li>
+<li>经过排查，所有支持fcm的应用都设置了无限制运行，允许常驻，仍然无法收到通知</li>
+</ul>
+</li>
+<li><strong>FCM问题</strong><ul>
+<li>允许应用自启动，但是没有收到消息，说明outlook和gmail并没有收到来自FCM的通知，遂检查FCM连接状况。</li>
+<li>三星国行禁用了<font color="red">*#*#426#*#*</font>查看fcm连接状况，只能通过第三方app进入诊断页面。我在github找到了一个FCM推送查看器。在log里可以看到，FCM服务是断开的，每隔十几分钟会尝试重连，然后连接失败，log为<code>Connecting using McsConnection&#123;NetworkWrapper&#123;244&#125;,type=0,isVpnConnected=true&#125;</code></li>
+<li>看到这个log，我以为是clash的问题，于是关闭代理再次连接，成功连接上。所以这里我以为是fcm服务，也就是mtalk.google会检测代理连接，必须直连，所以花了很长一段时间想在配置文件里加上混合配置或者parser。但问题在于，我另一个手机使用相同的配置，能够长期稳定连接到fcm服务不断开，所以问题根源不在这里。</li>
+</ul>
+</li>
+<li><strong>DNS问题</strong><ul>
+<li>绕了很长一段远路，最后想起来clash有日志捕捉功能，遂开启。很快找到原因，<code>error: all DNS requests failed, first error: use default dns resolve failed: all DNS requests failed, first error</code>。所以是DNS问题，尝试了三个解决手段：<ul>
+<li>关闭clash中的DNS劫持：无效</li>
+<li>WIFI设置手动DNS：无效</li>
+<li>clash中设置强制启用系统hosts和DNS：有效</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>所以根本上是clash配置文件中的DNS server有一些问题。但还有一点不明白的地方：在测试连接的时候，我发现只有 <font color="red">5G网络+开启代理</font> 两者组合会导致DNS出现问题。使用2.4GHZ的WIFI或者4G移动数据+代理，可以连接。使用5GHZ的WIFI或者5G移动数据，可以连接。但5G+代理，不修改DNS设置就会出现问题，这一点仍然摸不着头脑。</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
       </categories>
   </entry>
   <entry>
