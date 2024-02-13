@@ -1,57 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Java复习笔记1 - 集合</title>
-    <url>/2024/02/12/Java%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B01-%E9%9B%86%E5%90%88/</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。</p>
-<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_queue实际上底层都是deque容器，deque实现了它们所需的方法。Java中类似，所有容器都是从Collection和Map接口派生出来的，从Collection和Map接口又派生出许多子接口，由“集合（容器）”实现这些接口的方法。</p>
-<ul>
-<li><strong>Collection：</strong> 存放单一元素<ul>
-<li><strong>List</strong>：ArrayList，LinkedList</li>
-<li><strong>Set</strong>：HashSet，TreeSet，LinkedHashSet</li>
-<li><strong>Queue</strong>：PiorityQueue<ul>
-<li><strong>Deque</strong>：LinkedList，ArrayDeque</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><strong>Map：</strong> 存放键值对<ul>
-<li>HashMap，TreeMap，LinkedHashMap</li>
-</ul>
-</li>
-</ul>
-<p>以上黑体是接口，常规体是集合/容器。</p>
-<h4 id="ArrayList和LinkedList"><a href="#ArrayList和LinkedList" class="headerlink" title="ArrayList和LinkedList"></a>ArrayList和LinkedList</h4><p>ArrayList类似于C++的vector，底层用数组实现，可以随机访问、自动扩容。扩容机制也和vector类似，大约为1.5倍。</p>
-<p>LinkedList是双向链表，头尾插入删除O(1)，随机位置插入删除平均仍然是O(n)，所以实际上与ArrayList相比优势不大，但适合作为双向队列的接口实现。</p>
-<h4 id="HashSet，HashMap"><a href="#HashSet，HashMap" class="headerlink" title="HashSet，HashMap"></a>HashSet，HashMap</h4><h5 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h5><p>HashMap和HashSet底层实现相同，都是数组+链表。当冲突形成的拉链表长度大于8，而且数组长度大于64时，会将链表转化为红黑树，降低查找开销。数组长度不大于64则优先数组扩容。</p>
-<h5 id="下标计算"><a href="#下标计算" class="headerlink" title="下标计算"></a>下标计算</h5><p>HashSet类似于C++的unordered_set，元素存放无序、不可重复。计算元素存放位置时，先对元素进行一次hashCode()得到哈希值h，再将h和h的高16位或运算，得到最终的hash。然后<code>(n-1) &amp; hash</code>计算出下标。当n是2的幂次时，<code>(n-1)&amp;hash == hash % n</code>，所以HashMap表的长度总是2的幂次。</p>
-<h5 id="冲突处理"><a href="#冲突处理" class="headerlink" title="冲突处理"></a>冲突处理</h5><p>插入的时候，先对元素进行hashcode计算，如果冲突，则调用equals对比元素的值，相同则覆盖值，不同则按照哈希冲突拉链处理。</p>
-<h5 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h5><p>可以用foreach语法糖遍历，但遍历中不能对元素进行remove。如果需要遍历中对元素remove，需要用Iterator。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Iterator&lt;Map.Entry&lt;Object, Object&gt;&gt; it = mp.entrySet().iterator();</span><br><span class="line">while(it.hasNext()) &#123;</span><br><span class="line">    Map.Entry&lt;Object, Object&gt; entry = it.next();</span><br><span class="line">    System.out.println(entry.getKey() + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>foreach语法糖本质也是用迭代器遍历，但是remove会使用集合的remove方法，而不是迭代器的remove方法，导致出错。</p>
-<p>不建议使用map.keySet()获取键表，然后用get(key)的方法遍历，相当于遍历了两次，效率很低。</p>
-<h4 id="TreeSet和TreeMap"><a href="#TreeSet和TreeMap" class="headerlink" title="TreeSet和TreeMap"></a>TreeSet和TreeMap</h4><p>两者关系和HashSet、HashMap差不多，TreeMap是有序的，会默认按照键值升序排序。</p>
-<h5 id="底层实现-1"><a href="#底层实现-1" class="headerlink" title="底层实现"></a>底层实现</h5><p>红黑树，查找和增删的复杂度相同，效率低于HashMap。</p>
-<h5 id="自定义排序"><a href="#自定义排序" class="headerlink" title="自定义排序"></a>自定义排序</h5><ul>
-<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  public class Node implements Comparable&lt;Node&gt;&#123;</span><br><span class="line">    public int value;</span><br><span class="line">    public char ch;</span><br><span class="line">    public Node(int v, char c) &#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // hashCode和equals重写是为了让自定义类型在Set中去重</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int hashCode() &#123;</span><br><span class="line">        return new Integer(value).hashCode() + new Character(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean equals(Object o) &#123;</span><br><span class="line">        Node n2 = (Node) o;</span><br><span class="line">        return value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int compareTo(Node o) &#123;</span><br><span class="line">        return value &lt; o.value ? 1 : -1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li>方法二：在创建TreeMap时定义比较函数compare：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Character, Integer&gt; mp = new TreeMap&lt;&gt;(new Comparator&lt;Character&gt;() &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public int compare(Character o1, Character o2) &#123;</span><br><span class="line">      return o1 &lt; o2 ? 1 : -1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h4><p>PiorityQueue默认是小顶堆，自定义比较的方法和TreeMap一样。</p>
-<ul>
-<li>poll和take都是取出一个元素，poll不会抛出异常</li>
-<li>peek和element都是获取顶端元素，peek不会抛出异常</li>
-<li>offer和add都是添加一个元素，offer不会抛出异常</li>
-<li>Deque的offerFirst、pollLast等同理</li>
-</ul>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>NEMU-PA1</title>
     <url>/2024/01/10/NEMU-PA1/</url>
     <content><![CDATA[<h3 id="NEMU是什么"><a href="#NEMU是什么" class="headerlink" title="NEMU是什么"></a>NEMU是什么</h3><p><font color="red">个人理解：</font>是NJU编写的一个模拟器，名字来源于<a href="https://zh.wikipedia.org/wiki/QEMU">QEMU（quick emulator)</a>。NEMU运行于GNU/Linux操作系统上，用C语言模拟了一个虚拟的计算机系统，包括CPU、内存、IO设备等。</p>
@@ -118,33 +67,6 @@
       </tags>
   </entry>
   <entry>
-    <title>NEMU-pa0</title>
-    <url>/2023/12/14/NEMU-pa0/</url>
-    <content><![CDATA[<p>主要问题有</p>
-<ul>
-<li>虚拟机网络问题</li>
-<li>github TLS问题</li>
-</ul>
-<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>因为我主机用了代理，允许局域网连接。<br>想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，<br>相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。<br>然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，<br>主机有点像一个默认“网关”？</p>
-<hr>
-<p><font color="red">2023/12/15 update</font></p>
-<p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
-<p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
-<h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;">&#103;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;</a>。</p>
-<p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#103;&#105;&#x74;&#x40;&#x67;&#x69;&#x74;&#x68;&#117;&#98;&#x2e;&#x63;&#x6f;&#x6d;">&#103;&#105;&#x74;&#x40;&#x67;&#x69;&#x74;&#x68;&#117;&#98;&#x2e;&#x63;&#x6f;&#x6d;</a>/仓库地址，而不是http或https</p>
-<h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
-<p>以后再学</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>ICS实验</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>SRS直播服务器</title>
     <url>/2024/01/28/SRS%E7%9B%B4%E6%92%AD%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
     <content><![CDATA[<h3 id="使用SRS-Stack构建"><a href="#使用SRS-Stack构建" class="headerlink" title="使用SRS-Stack构建"></a>使用SRS-Stack构建</h3><p>腾讯云轻量应用服务器提供了应用模板，在控制台重装为音视频流服务器即可快速启动SRS服务。</p>
@@ -166,24 +88,30 @@
       </categories>
   </entry>
   <entry>
-    <title>远程软件控制Manjaro</title>
-    <url>/2021/11/09/%E8%BF%9C%E7%A8%8B%E8%BD%AF%E4%BB%B6%E6%8E%A7%E5%88%B6Manjaro/</url>
-    <content><![CDATA[<h3 id="为什么要用Manjaro"><a href="#为什么要用Manjaro" class="headerlink" title="为什么要用Manjaro"></a>为什么要用Manjaro</h3><p>实验室电脑配置很旧，且常年不关机导致硬件老化严重，很难带动Windwos系统，于是把系统盘格式化了<br>受人影响想试试arch linux，又有点怕麻烦所以用了Manjaro</p>
-<h3 id="下载软件"><a href="#下载软件" class="headerlink" title="下载软件"></a>下载软件</h3><p>Manjaro可以用pacma build直接构建软件</p>
-<p>记得在teamviewer官网上把以前的电脑给删除了，不然限制用户数</p>
-<p>anydesk也还可以用</p>
-<h3 id="解决远程软件无法显示（黑屏）"><a href="#解决远程软件无法显示（黑屏）" class="headerlink" title="解决远程软件无法显示（黑屏）"></a>解决远程软件无法显示（黑屏）</h3><p>在/etc/gdm3/custom.conf，允许自动登录，填上用户名</p>
-<p>最后一行设置<code>WaylandEnable=false</code></p>
-<h3 id="解决无显示器导致卡顿"><a href="#解决无显示器导致卡顿" class="headerlink" title="解决无显示器导致卡顿"></a>解决无显示器导致卡顿</h3><p>安装xf86，sudo pacman -S xf86-video-dummy</p>
-<p>修改配置 sudo gedit /etc/X11/xorg.conf</p>
-<p>抄来的配置，随便了能用就行</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Section &quot;Device&quot;</span><br><span class="line">    Identifier  &quot;Configured Video Device&quot;</span><br><span class="line">    Driver      &quot;dummy&quot;</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Monitor&quot;</span><br><span class="line">    Identifier  &quot;Configured Monitor&quot;</span><br><span class="line">    HorizSync 31.5-48.5</span><br><span class="line">    VertRefresh 50-70</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Screen&quot;</span><br><span class="line">    Identifier  &quot;Default Screen&quot;</span><br><span class="line">    Monitor     &quot;Configured Monitor&quot;</span><br><span class="line">    Device      &quot;Configured Video Device&quot;</span><br><span class="line">    DefaultDepth 24</span><br><span class="line">    SubSection &quot;Display&quot;</span><br><span class="line">        Depth 24</span><br><span class="line">        Modes &quot;1920x1080&quot;</span><br><span class="line">    EndSubSection</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure>
+    <title>NEMU-pa0</title>
+    <url>/2023/12/14/NEMU-pa0/</url>
+    <content><![CDATA[<p>主要问题有</p>
+<ul>
+<li>虚拟机网络问题</li>
+<li>github TLS问题</li>
+</ul>
+<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>因为我主机用了代理，允许局域网连接。<br>想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，<br>相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。<br>然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，<br>主机有点像一个默认“网关”？</p>
+<hr>
+<p><font color="red">2023/12/15 update</font></p>
+<p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
+<p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
+<h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#x69;&#116;&#x40;&#103;&#x69;&#x74;&#x68;&#x75;&#x62;&#46;&#99;&#111;&#x6d;">&#103;&#x69;&#116;&#x40;&#103;&#x69;&#x74;&#x68;&#x75;&#x62;&#46;&#99;&#111;&#x6d;</a>。</p>
+<p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#x67;&#x69;&#x74;&#64;&#x67;&#105;&#116;&#104;&#x75;&#98;&#46;&#x63;&#x6f;&#109;">&#x67;&#x69;&#x74;&#64;&#x67;&#105;&#116;&#104;&#x75;&#98;&#46;&#x63;&#x6f;&#109;</a>/仓库地址，而不是http或https</p>
+<h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
+<p>以后再学</p>
 ]]></content>
       <categories>
         <category>学习</category>
       </categories>
       <tags>
-        <tag>Manjaro</tag>
+        <tag>ICS实验</tag>
       </tags>
   </entry>
   <entry>
@@ -218,6 +146,114 @@
       <categories>
         <category>随笔</category>
       </categories>
+  </entry>
+  <entry>
+    <title>基础知识复习笔记1-Java集合</title>
+    <url>/2024/02/12/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B01-Java%E9%9B%86%E5%90%88/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>复习笔记系列记录一些C++/Java，本科专业课的一些知识，强化记忆</p>
+<p>本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。</p>
+<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_queue实际上底层都是deque容器，deque实现了它们所需的方法。Java中类似，所有容器都是从Collection和Map接口派生出来的，从Collection和Map接口又派生出许多子接口，由“集合（容器）”实现这些接口的方法。</p>
+<ul>
+<li><strong>Collection：</strong> 存放单一元素<ul>
+<li><strong>List</strong>：ArrayList，LinkedList</li>
+<li><strong>Set</strong>：HashSet，TreeSet，LinkedHashSet</li>
+<li><strong>Queue</strong>：PiorityQueue<ul>
+<li><strong>Deque</strong>：LinkedList，ArrayDeque</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Map：</strong> 存放键值对<ul>
+<li>HashMap，TreeMap，LinkedHashMap</li>
+</ul>
+</li>
+</ul>
+<p>以上黑体是接口，常规体是集合/容器。</p>
+<h4 id="ArrayList和LinkedList"><a href="#ArrayList和LinkedList" class="headerlink" title="ArrayList和LinkedList"></a>ArrayList和LinkedList</h4><p>ArrayList类似于C++的vector，底层用数组实现，可以随机访问、自动扩容。扩容机制也和vector类似，大约为1.5倍。</p>
+<p>LinkedList是双向链表，头尾插入删除O(1)，随机位置插入删除平均仍然是O(n)，所以实际上与ArrayList相比优势不大，但适合作为双向队列的接口实现。</p>
+<h4 id="HashSet，HashMap"><a href="#HashSet，HashMap" class="headerlink" title="HashSet，HashMap"></a>HashSet，HashMap</h4><h5 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h5><p>HashMap和HashSet底层实现相同，都是数组+链表。当冲突形成的拉链表长度大于8，而且数组长度大于64时，会将链表转化为红黑树，降低查找开销。数组长度不大于64则优先数组扩容。</p>
+<h5 id="下标计算"><a href="#下标计算" class="headerlink" title="下标计算"></a>下标计算</h5><p>HashSet类似于C++的unordered_set，元素存放无序、不可重复。计算元素存放位置时，先对元素进行一次hashCode()得到哈希值h，再将h和h的高16位或运算，得到最终的hash。然后<code>(n-1) &amp; hash</code>计算出下标。当n是2的幂次时，<code>(n-1)&amp;hash == hash % n</code>，所以HashMap表的长度总是2的幂次。</p>
+<h5 id="冲突处理"><a href="#冲突处理" class="headerlink" title="冲突处理"></a>冲突处理</h5><p>插入的时候，先对元素进行hashcode计算，如果冲突，则调用equals对比元素的值，相同则覆盖值，不同则按照哈希冲突拉链处理。</p>
+<h5 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h5><p>可以用foreach语法糖遍历，但遍历中不能对元素进行remove。如果需要遍历中对元素remove，需要用Iterator。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Iterator&lt;Map.Entry&lt;Object, Object&gt;&gt; it = mp.entrySet().iterator();</span><br><span class="line">while(it.hasNext()) &#123;</span><br><span class="line">    Map.Entry&lt;Object, Object&gt; entry = it.next();</span><br><span class="line">    System.out.println(entry.getKey() + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>foreach语法糖本质也是用迭代器遍历，但是remove会使用集合的remove方法，而不是迭代器的remove方法，导致出错。</p>
+<p>不建议使用map.keySet()获取键表，然后用get(key)的方法遍历，相当于遍历了两次，效率很低。</p>
+<h4 id="TreeSet和TreeMap"><a href="#TreeSet和TreeMap" class="headerlink" title="TreeSet和TreeMap"></a>TreeSet和TreeMap</h4><p>两者关系和HashSet、HashMap差不多，TreeMap是有序的，会默认按照键值升序排序。</p>
+<h5 id="底层实现-1"><a href="#底层实现-1" class="headerlink" title="底层实现"></a>底层实现</h5><p>红黑树，查找和增删的复杂度相同，效率低于HashMap。</p>
+<h5 id="自定义排序"><a href="#自定义排序" class="headerlink" title="自定义排序"></a>自定义排序</h5><ul>
+<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  public class Node implements Comparable&lt;Node&gt;&#123;</span><br><span class="line">    public int value;</span><br><span class="line">    public char ch;</span><br><span class="line">    public Node(int v, char c) &#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // hashCode和equals重写是为了让自定义类型在Set中去重</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int hashCode() &#123;</span><br><span class="line">        return new Integer(value).hashCode() + new Character(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean equals(Object o) &#123;</span><br><span class="line">        Node n2 = (Node) o;</span><br><span class="line">        return value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int compareTo(Node o) &#123;</span><br><span class="line">        return value &lt; o.value ? 1 : -1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>方法二：在创建TreeMap时定义比较函数compare：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Character, Integer&gt; mp = new TreeMap&lt;&gt;(new Comparator&lt;Character&gt;() &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public int compare(Character o1, Character o2) &#123;</span><br><span class="line">      return o1 &lt; o2 ? 1 : -1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h4><p>PiorityQueue默认是小顶堆，自定义比较的方法和TreeMap一样。</p>
+<ul>
+<li>poll和take都是取出一个元素，poll不会抛出异常</li>
+<li>peek和element都是获取顶端元素，peek不会抛出异常</li>
+<li>offer和add都是添加一个元素，offer不会抛出异常</li>
+<li>Deque的offerFirst、pollLast等同理</li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础知识复习笔记2-多线程编程</title>
+    <url>/2024/02/13/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B/</url>
+    <content><![CDATA[<h3 id="线程和进程"><a href="#线程和进程" class="headerlink" title="线程和进程"></a>线程和进程</h3><p>经典问题。这个问题在本科学习操作系统时理解比较深刻，通常习惯从以下几个方面进行比较：</p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><ul>
+<li>进程：进程是程序代码在计算机系统中运行时的一个状态体，代码是静态的，进程是动态的。进程是操作系统分配资源的基本单位，拥有独立的地址空间、代码段、数据段。</li>
+<li>线程：线程是进程中可以独立执行的单元，是CPU调度的基本单位。一个进程可以有多个线程，同一个进程内的线程共享进程的资源，每个线程也拥有自己的线程栈、程序计数器等资源。</li>
+</ul>
+<h4 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h4><ul>
+<li>进程是资源分配单位，线程是最小执行单位。</li>
+<li>进程切换开销大，每个进程都有自己的虚拟地址空间，也都有自己的页表。切换页表涉及到内存访问，页表切换后还会导致页表缓存（TLB）失效，都会导致额外时间开销。同一进程内线程切换不涉及虚拟地址空间切换，只需在线程栈保存上下文。</li>
+<li>多进程适合多核多机并行执行，多线程适合多核。</li>
+</ul>
+<h4 id="C-的多线程编程"><a href="#C-的多线程编程" class="headerlink" title="C++的多线程编程"></a>C++的多线程编程</h4><p>C++11之前没有标准线程库，需要使用 pthread 库。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int pthread_create (pthread_t *thread,pthread_attr_t *attr,</span><br><span class="line">void *(*start_routine)(void *),void *arg);</span><br></pre></td></tr></table></figure>
+<p>将要运行的函数的指针绑定到 pthread_t 对象上，并执行线程任务。</p>
+<p>C++11增加了标准线程库 std::thread。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">std::thread t(foo, args...);</span><br></pre></td></tr></table></figure>
+<p>指定要运行的函数foo和参数args，创建线程t并运行。</p>
+<blockquote>
+<p>C++11有两种方式来等待线程结束：</p>
+<ul>
+<li>detach方式，启动的线程自主在后台运行，当前的代码继续往下执行，不等待新线程结束。<ul>
+<li>调用detach表示thread对象和其表示的线程完全分离；</li>
+<li>分离之后的线程是不在受约束和管制，会单独执行，直到执行完毕释放资源，可以看做是一个daemon线程；</li>
+<li>分离之后thread对象不再表示任何线程；</li>
+<li>分离之后joinable() == false，即使还在执行；</li>
+</ul>
+</li>
+<li>join方式，等待启动的线程完成，才会继续往下执行。假如前面的代码使用这种方式，其输出就会0,1,2,3，因为每次都是前一个线程输出完成了才会进行下一个循环，启动下一个新线程。<ul>
+<li>只有处于活动状态线程才能调用join，可以通过joinable()函数检查;</li>
+<li>joinable() == true表示当前线程是活动线程，才可以调用join函数；</li>
+<li>默认构造函数创建的对象是joinable() == false;</li>
+<li>join只能被调用一次，之后joinable就会变为false，表示线程执行完毕；</li>
+<li>调用 ternimate()的线程必须是 joinable() == false;</li>
+<li>如果线程不调用join()函数，即使执行完毕也是一个活动线程，即joinable() == true，依然可以调用join()函数；</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>C++的线程thread创建之后就会运行，结束，销毁，如果要实现可复用的线程池，需要换一种思路：</p>
+<ul>
+<li>创建N个线程，让这些线程执行一个while函数，持续尝试向一个任务队列获取执行任务（执行任务：（函数地址，参数））。</li>
+<li>线程获取到任务则执行，任务队列为空则阻塞休眠。</li>
+<li>任务队列得到新任务时，唤醒一个休眠中的线程。</li>
+<li>任务队列是一个生产者/消费者模型，需要互斥。</li>
+</ul>
+<h4 id="Java的多线程编程"><a href="#Java的多线程编程" class="headerlink" title="Java的多线程编程"></a>Java的多线程编程</h4><p>to be continued</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
   </entry>
   <entry>
     <title>露营物品列表</title>
@@ -271,6 +307,27 @@
       </categories>
       <tags>
         <tag>露营</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>远程软件控制Manjaro</title>
+    <url>/2021/11/09/%E8%BF%9C%E7%A8%8B%E8%BD%AF%E4%BB%B6%E6%8E%A7%E5%88%B6Manjaro/</url>
+    <content><![CDATA[<h3 id="为什么要用Manjaro"><a href="#为什么要用Manjaro" class="headerlink" title="为什么要用Manjaro"></a>为什么要用Manjaro</h3><p>实验室电脑配置很旧，且常年不关机导致硬件老化严重，很难带动Windwos系统，于是把系统盘格式化了<br>受人影响想试试arch linux，又有点怕麻烦所以用了Manjaro</p>
+<h3 id="下载软件"><a href="#下载软件" class="headerlink" title="下载软件"></a>下载软件</h3><p>Manjaro可以用pacma build直接构建软件</p>
+<p>记得在teamviewer官网上把以前的电脑给删除了，不然限制用户数</p>
+<p>anydesk也还可以用</p>
+<h3 id="解决远程软件无法显示（黑屏）"><a href="#解决远程软件无法显示（黑屏）" class="headerlink" title="解决远程软件无法显示（黑屏）"></a>解决远程软件无法显示（黑屏）</h3><p>在/etc/gdm3/custom.conf，允许自动登录，填上用户名</p>
+<p>最后一行设置<code>WaylandEnable=false</code></p>
+<h3 id="解决无显示器导致卡顿"><a href="#解决无显示器导致卡顿" class="headerlink" title="解决无显示器导致卡顿"></a>解决无显示器导致卡顿</h3><p>安装xf86，sudo pacman -S xf86-video-dummy</p>
+<p>修改配置 sudo gedit /etc/X11/xorg.conf</p>
+<p>抄来的配置，随便了能用就行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Section &quot;Device&quot;</span><br><span class="line">    Identifier  &quot;Configured Video Device&quot;</span><br><span class="line">    Driver      &quot;dummy&quot;</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Monitor&quot;</span><br><span class="line">    Identifier  &quot;Configured Monitor&quot;</span><br><span class="line">    HorizSync 31.5-48.5</span><br><span class="line">    VertRefresh 50-70</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Screen&quot;</span><br><span class="line">    Identifier  &quot;Default Screen&quot;</span><br><span class="line">    Monitor     &quot;Configured Monitor&quot;</span><br><span class="line">    Device      &quot;Configured Video Device&quot;</span><br><span class="line">    DefaultDepth 24</span><br><span class="line">    SubSection &quot;Display&quot;</span><br><span class="line">        Depth 24</span><br><span class="line">        Modes &quot;1920x1080&quot;</span><br><span class="line">    EndSubSection</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>Manjaro</tag>
       </tags>
   </entry>
 </search>
