@@ -27,7 +27,7 @@
 <meta property="og:description" content="前言复习笔记系列记录一些C++&#x2F;Java，本科专业课的一些知识，强化记忆 本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。 集合Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_q">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-02-12T11:55:55.000Z">
-<meta property="article:modified_time" content="2024-02-13T14:31:38.055Z">
+<meta property="article:modified_time" content="2024-02-14T09:44:45.249Z">
 <meta property="article:author" content="RtekiX">
 <meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
@@ -530,7 +530,7 @@
 <h4 id="TreeSet和TreeMap"><a href="#TreeSet和TreeMap" class="headerlink" title="TreeSet和TreeMap"></a>TreeSet和TreeMap</h4><p>两者关系和HashSet、HashMap差不多，TreeMap是有序的，会默认按照键值升序排序。</p>
 <h5 id="底层实现-1"><a href="#底层实现-1" class="headerlink" title="底层实现"></a>底层实现</h5><p>红黑树，查找和增删的复杂度相同，效率低于HashMap。</p>
 <h5 id="自定义排序"><a href="#自定义排序" class="headerlink" title="自定义排序"></a>自定义排序</h5><ul>
-<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">  public class Node implements Comparable&lt;Node&gt;&#123;</span><br><span class="line">    public int value;</span><br><span class="line">    public char ch;</span><br><span class="line">    public Node(int v, char c) &#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // hashCode和equals重写是为了让自定义类型在Set中去重</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int hashCode() &#123;</span><br><span class="line">        return new Integer(value).hashCode() + new Character(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean equals(Object o) &#123;</span><br><span class="line">        Node n2 = (Node) o;</span><br><span class="line">        return value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int compareTo(Node o) &#123;</span><br><span class="line">        return value &lt; o.value ? 1 : -1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Node</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">char</span> ch;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">char</span> c)</span> </span>&#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hashCode和equals重写是为了让自定义类型在Set中去重</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Integer(value).hashCode() + <span class="keyword">new</span> Character(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">        Node n2 = (Node) o;</span><br><span class="line">        <span class="keyword">return</span> value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Node o)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value &lt; o.value ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 <li>方法二：在创建TreeMap时定义比较函数compare：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;Character, Integer&gt; mp = new TreeMap&lt;&gt;(new Comparator&lt;Character&gt;() &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public int compare(Character o1, Character o2) &#123;</span><br><span class="line">      return o1 &lt; o2 ? 1 : -1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h4><p>PiorityQueue默认是小顶堆，自定义比较的方法和TreeMap一样。</p>
@@ -757,14 +757,6 @@
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
     
     
     
@@ -867,14 +859,14 @@
                 笔记
             </span>
         
-            <span class="sidebar-tag-name" data-tags="露营">
-                <span class="iconfont-archer">&#xe606;</span>
-                露营
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="Manjaro">
                 <span class="iconfont-archer">&#xe606;</span>
                 Manjaro
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="露营">
+                <span class="iconfont-archer">&#xe606;</span>
+                露营
             </span>
         
     </div>

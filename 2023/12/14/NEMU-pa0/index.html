@@ -510,9 +510,9 @@
 <p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
 <p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
 <h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#x69;&#116;&#x40;&#103;&#x69;&#x74;&#x68;&#x75;&#x62;&#46;&#99;&#111;&#x6d;">&#103;&#x69;&#116;&#x40;&#103;&#x69;&#x74;&#x68;&#x75;&#x62;&#46;&#99;&#111;&#x6d;</a>。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#105;&#116;&#64;&#103;&#x69;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#111;&#109;">&#103;&#105;&#116;&#64;&#103;&#x69;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#111;&#109;</a>。</p>
 <p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#x67;&#x69;&#x74;&#64;&#x67;&#105;&#116;&#104;&#x75;&#98;&#46;&#x63;&#x6f;&#109;">&#x67;&#x69;&#x74;&#64;&#x67;&#105;&#116;&#104;&#x75;&#98;&#46;&#x63;&#x6f;&#109;</a>/仓库地址，而不是http或https</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#103;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#46;&#99;&#111;&#x6d;">&#103;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#46;&#99;&#111;&#x6d;</a>/仓库地址，而不是http或https</p>
 <h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
 <p>以后再学</p>
 
@@ -732,14 +732,6 @@
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
     
     
     
@@ -842,14 +834,14 @@
                 笔记
             </span>
         
-            <span class="sidebar-tag-name" data-tags="露营">
-                <span class="iconfont-archer">&#xe606;</span>
-                露营
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="Manjaro">
                 <span class="iconfont-archer">&#xe606;</span>
                 Manjaro
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="露营">
+                <span class="iconfont-archer">&#xe606;</span>
+                露营
             </span>
         
     </div>
