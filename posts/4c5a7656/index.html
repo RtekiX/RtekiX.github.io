@@ -19,18 +19,23 @@
         <meta name="keywords" content="Nothing is blessing to everything for me,RtekiX">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Nothing is blessing to everything for me">
-<meta property="og:url" content="https://rtekix.github.io/index.html">
+    <meta name="description" content="线程和进程经典问题。这个问题在本科学习操作系统时理解比较深刻，通常习惯从以下几个方面进行比较： 定义 进程：进程是程序代码在计算机系统中运行时的一个状态体，代码是静态的，进程是动态的。进程是操作系统分配资源的基本单位，拥有独立的地址空间、代码段、数据段。 线程：线程是进程中可以独立执行的单元，是CPU调度的基本单位。一个进程可以有多个线程，同一个进程内的线程共享进程的资源，每个线程也拥有自己的线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基础知识复习笔记2-多线程编程">
+<meta property="og:url" content="https://rtekix.github.io/posts/4c5a7656/index.html">
 <meta property="og:site_name" content="Nothing is blessing to everything for me">
+<meta property="og:description" content="线程和进程经典问题。这个问题在本科学习操作系统时理解比较深刻，通常习惯从以下几个方面进行比较： 定义 进程：进程是程序代码在计算机系统中运行时的一个状态体，代码是静态的，进程是动态的。进程是操作系统分配资源的基本单位，拥有独立的地址空间、代码段、数据段。 线程：线程是进程中可以独立执行的单元，是CPU调度的基本单位。一个进程可以有多个线程，同一个进程内的线程共享进程的资源，每个线程也拥有自己的线程">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-02-13T14:32:08.000Z">
+<meta property="article:modified_time" content="2024-02-14T11:00:18.208Z">
 <meta property="article:author" content="RtekiX">
+<meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/rin.ico">
     
-    <title>Nothing is blessing to everything to me</title>
+    <title>基础知识复习笔记2-多线程编程 · Nothing is blessing to everything to me</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -218,10 +223,10 @@
         }
     </script>
     
-        <body class="home-body">
+        <body class="post-body">
     
         <!-- header -->
-        <header class="header header-mobile index-header">
+        <header class="header header-mobile">
     <!-- top read progress line -->
     <div class="header-element">
         <div class="read-progress"></div>
@@ -249,10 +254,21 @@
     </div>
     <!-- toggle banner for post layout -->
     
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Nothing is blessing to everything to me</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">基础知识复习笔记2-多线程编程</a>
+            </div>
+        </div>
+    
 </header>
 
         <!-- fixed footer -->
-        <footer class="footer-fixed index-footer-fixed">
+        <footer class="footer-fixed">
     <!-- back to top button -->
     <div class="footer-fixed-element">
         
@@ -282,17 +298,17 @@
     <!-- 主页  -->
     
         
-    <!-- 文章页  -->
+    <!-- 404页  -->
     
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                Nothing is blessing to everything to me
-            <!-- 文章页  -->
+                基础知识复习笔记2-多线程编程
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
@@ -300,12 +316,58 @@
             <!-- 主页副标题  -->
             
                 
-                    watching
-                
-            <!-- 文章页  -->
+            <!-- 404 -->
             
         </p>
         <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        
+        
+            
+        
+        
+        <span class="post-category" data-categories="学习"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                学习
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2024/02/13</span>
+                    <!-- busuanzi -->
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -435,556 +497,130 @@
 
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
             <div class="container container-unloaded">
-                <main class="main index-page">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h3 id="线程和进程"><a href="#线程和进程" class="headerlink" title="线程和进程"></a>线程和进程</h3><p>经典问题。这个问题在本科学习操作系统时理解比较深刻，通常习惯从以下几个方面进行比较：</p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><ul>
+<li>进程：进程是程序代码在计算机系统中运行时的一个状态体，代码是静态的，进程是动态的。进程是操作系统分配资源的基本单位，拥有独立的地址空间、代码段、数据段。</li>
+<li>线程：线程是进程中可以独立执行的单元，是CPU调度的基本单位。一个进程可以有多个线程，同一个进程内的线程共享进程的资源，每个线程也拥有自己的线程栈、程序计数器等资源。</li>
+</ul>
+<h4 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h4><ul>
+<li>进程是资源分配单位，线程是最小执行单位。</li>
+<li>进程切换开销大，每个进程都有自己的虚拟地址空间，也都有自己的页表。切换页表涉及到内存访问，页表切换后还会导致页表缓存（TLB）失效，都会导致额外时间开销。同一进程内线程切换不涉及虚拟地址空间切换，只需在线程栈保存上下文。</li>
+<li>多进程适合多核多机并行执行，多线程适合多核。</li>
+</ul>
+<h4 id="C-的多线程编程"><a href="#C-的多线程编程" class="headerlink" title="C++的多线程编程"></a>C++的多线程编程</h4><p>C++11之前没有标准线程库，需要使用 pthread 库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int pthread_create (pthread_t *thread,pthread_attr_t *attr,</span><br><span class="line">void *(*start_routine)(void *),void *arg);</span><br></pre></td></tr></table></figure>
+<p>将要运行的函数的指针绑定到 pthread_t 对象上，并执行线程任务。</p>
+<p>C++11增加了标准线程库 std::thread。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::thread t(foo, args...);</span><br></pre></td></tr></table></figure>
+<p>指定要运行的函数foo和参数args，创建线程t并运行。</p>
+<blockquote>
+<p>C++11有两种方式来等待线程结束：</p>
+<ul>
+<li>detach方式，启动的线程自主在后台运行，当前的代码继续往下执行，不等待新线程结束。<ul>
+<li>调用detach表示thread对象和其表示的线程完全分离；</li>
+<li>分离之后的线程是不在受约束和管制，会单独执行，直到执行完毕释放资源，可以看做是一个daemon线程；</li>
+<li>分离之后thread对象不再表示任何线程；</li>
+<li>分离之后joinable() == false，即使还在执行；</li>
+</ul>
+</li>
+<li>join方式，等待启动的线程完成，才会继续往下执行。假如前面的代码使用这种方式，其输出就会0,1,2,3，因为每次都是前一个线程输出完成了才会进行下一个循环，启动下一个新线程。<ul>
+<li>只有处于活动状态线程才能调用join，可以通过joinable()函数检查;</li>
+<li>joinable() == true表示当前线程是活动线程，才可以调用join函数；</li>
+<li>默认构造函数创建的对象是joinable() == false;</li>
+<li>join只能被调用一次，之后joinable就会变为false，表示线程执行完毕；</li>
+<li>调用 ternimate()的线程必须是 joinable() == false;</li>
+<li>如果线程不调用join()函数，即使执行完毕也是一个活动线程，即joinable() == true，依然可以调用join()函数；</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>C++的线程thread创建之后就会运行，结束，销毁，如果要实现可复用的线程池，需要换一种思路：</p>
+<ul>
+<li>创建N个线程，让这些线程执行一个while函数，持续尝试向一个任务队列获取执行任务（执行任务：（函数地址，参数））。</li>
+<li>线程获取到任务则执行，任务队列为空则阻塞休眠。</li>
+<li>任务队列得到新任务时，唤醒一个休眠中的线程。</li>
+<li>任务队列是一个生产者/消费者模型，需要互斥。</li>
+</ul>
+<h4 id="Java的多线程编程"><a href="#Java的多线程编程" class="headerlink" title="Java的多线程编程"></a>Java的多线程编程</h4><p>Java多线程主要通过三种方式实现</p>
+<ul>
+<li>继承Thread类，重写<code>public void run()</code>方法，调用start()方法创建并执行线程任务</li>
+<li>继承Runnable接口，重写<code>public void run()</code>方法，调用start()方法创建并执行线程任务</li>
+<li>继承Callable接口，重写<code>public E call()</code>方法，调用start()方法创建并执行线程任务。call()可以有返回值</li>
+</ul>
+<h5 id="三种方式的共同点"><a href="#三种方式的共同点" class="headerlink" title="三种方式的共同点"></a>三种方式的共同点</h5><ul>
+<li>Runnable和Callable本质上都是对Thread类的封装，其实创建执行线程还是由Thread完成的。所以说Java多线程也可以说就是new一个Thread对象，然后调用start()进行线程初始化、运行。</li>
+<li>无论是继承Thread类还是继承两个接口，直接调用run()方法也是可以执行函数内容的，但并不会创建新线程，而是在main线程里执行。所以说真正关键动作在start()中</li>
+</ul>
+<h4 id="Java的同步和互斥"><a href="#Java的同步和互斥" class="headerlink" title="Java的同步和互斥"></a>Java的同步和互斥</h4><p>主要了解了synchronized关键词和ReentrantLock</p>
+<h5 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h5><p>关键词，可以修饰方法、对象、代码块。被修饰的内容在有一个线程访问时，其他试图访问的线程都会被阻塞。如果修饰的是静态方法，则该类所有对象的该方法都会被上锁（也很容易理解，静态方法是类级共享的）。</p>
+<p>synchronized在早期给人的印象就是重量级锁，开销很大。因为它用到了操作系统底层的互斥锁，涉及到用户/内核态切换。但是Java新版本也有做一些改进：</p>
+<ul>
+<li><strong>锁粗化</strong>：把多个连续的加锁解锁块合并为一个临界代码块。比如连续的字符串append</li>
+<li><strong>锁消除</strong>：如果某个数据对象被认为是不会共享的，就不会对它上锁，比如一个函数内的局部变量，每个线程都是不同的，不会互相访问，就不会上锁</li>
+<li><strong>轻量级锁</strong>：用<font color="red">CAS原子指令</font>代替重量级锁。<font color="red">CAS</font>就是compare and swap，线程将一个读取一个数据的值A，进行操作得到C，写回之前将A和原来的数据值比较，如果相同就写回C，不同就自旋反复尝试。</li>
+<li><strong>偏向锁</strong>：通俗来说，偏向锁也是类似于82原则，一个被共享的的数据有80%的时间都在被同一个线程t1访问，只有20%的时间被其他线程访问。所以偏向锁就会给t1一个偏向锁认证，免去它访问时的CAS操作，只有当其他线程尝试获取偏向锁时，持有偏向锁的线程才会释放锁。</li>
+</ul>
+<h5 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h5><p>ReentrantLock就是可重入锁，一个线程获取到锁后，如果重复获取锁，不会被锁阻塞。重复获取n次锁，就要重复释放n次锁。</p>
+<p>一般的使用方式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">// 代码</span></span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    lock.unlock();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+    </article>
+    <!-- license -->
     
-        
-        
-        
-        
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
             
+                <div class="nextSlogan">Next Post</div>
+                <a href="/posts/f553d691/" title="C++ thread 多线程任务队列">
+                    <div class="nextTitle">C++ thread 多线程任务队列</div>
+                </a>
             
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/3d21fd56/">
-                
-                <span class="abstract-title-text">基础知识复习笔记4-计算机网络</span>
-            </a>
-            <div class="abstract-content">
-                记录一下常见的几个面试问题
-            </div>
-            <!-- read more -->
+        </li>
+        <li class="previous">
             
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/16</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/posts/67cafe3d/" title="基础知识复习笔记1-Java集合">
+                    <div class="prevTitle">基础知识复习笔记1-Java集合</div>
+                </a>
             
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
+        </li>
+    </ul>
+    <!-- comment -->
     
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/830442ea/">
-                
-                <span class="abstract-title-text">基础知识复习笔记3-I/O多路复用</span>
-            </a>
-            <div class="abstract-content">
-                个人理解
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/15">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/15</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
             
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/f553d691/">
-                
-                <span class="abstract-title-text">C++ thread 多线程任务队列</span>
-            </a>
-            <div class="abstract-content">
-                本来想写线程池，但提交函数指针和参数有点复杂
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/15">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/14</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="C++练习">C++练习</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
             
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/4c5a7656/">
-                
-                <span class="abstract-title-text">基础知识复习笔记2-多线程编程</span>
-            </a>
-            <div class="abstract-content">
-                C++和Java的多线程
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/14">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/13</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
             
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/67cafe3d/">
-                
-                <span class="abstract-title-text">基础知识复习笔记1-Java集合</span>
-            </a>
-            <div class="abstract-content">
-                重操旧业
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/14">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/12</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/24b990d7/">
-                
-                <span class="abstract-title-text">关于FCM服务的一些问题</span>
-            </a>
-            <div class="abstract-content">
-                为了让手机能够及时收到邮件推送
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/06</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="随笔"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                随笔
-            </span>
-        </span>
-    
-    
-</div>
+            <!-- utteranc评论 -->
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/1fa37b1/">
-                
-                <span class="abstract-title-text">SRS直播服务器</span>
-            </a>
-            <div class="abstract-content">
-                使用Simple Realtime Server搭建直播服务器
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/28</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="随笔"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                随笔
-            </span>
-        </span>
-    
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/59b9e0e2/">
-                
-                <span class="abstract-title-text">露营物品列表</span>
-            </a>
-            <div class="abstract-content">
-                出去露营需要买点什么
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/01/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/14</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="玩乐"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                玩乐
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="露营">露营</a>
-    
-</div>
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/8a6b2b4c/">
-                
-                <span class="abstract-title-text">NEMU-PA1</span>
-            </a>
-            <div class="abstract-content">
-                主要是阅读手册和代码
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/10</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ICS实验">ICS实验</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
             
             
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/50a57998/">
-                
-                <span class="abstract-title-text">NEMU-pa0</span>
-            </a>
-            <div class="abstract-content">
-                重温PA实验，准备虚拟机
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/14</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ICS实验">ICS实验</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
+            
+
+        </div>
     
-    <!-- paginator  -->
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
-        <nav class="page-nav">
-            <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">NEXT &gt;</a>
-        </nav>
+    <!-- Mathjax -->
     
 </main>
 
                 <!-- profile -->
-                
-                    <div class="profile">
-    <img class="profile-avatar" alt="avatar" src= /avatar/shinobu.jpg />
-    <div class="profile-name">RtekiX</div>
-    
-        <div class="profile-signature">
-            black hole
-        </div>
-    
-    
-        <div class="profile-social">
-            
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-
-
-        </div>
-    
-    
-    
-    
-    
-</div>
-
                 
             </div>
             <footer class="footer footer-unloaded">
@@ -1049,6 +685,23 @@
 
         </div>
         <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E5%92%8C%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">线程和进程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8C%BA%E5%88%AB"><span class="toc-number">1.2.</span> <span class="toc-text">区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#C-%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">C++的多线程编程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Java%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">Java的多线程编程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F%E7%9A%84%E5%85%B1%E5%90%8C%E7%82%B9"><span class="toc-number">1.4.1.</span> <span class="toc-text">三种方式的共同点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Java%E7%9A%84%E5%90%8C%E6%AD%A5%E5%92%8C%E4%BA%92%E6%96%A5"><span class="toc-number">1.5.</span> <span class="toc-text">Java的同步和互斥</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#synchronized"><span class="toc-number">1.5.1.</span> <span class="toc-text">synchronized</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ReentrantLock"><span class="toc-number">1.5.2.</span> <span class="toc-text">ReentrantLock</span></a></li></ol></li></ol></li></ol>
+            </div>
         
         <!-- sidebar -->
         <div class="sidebar sidebar-hide">
@@ -1372,6 +1025,8 @@
         <!-- CNZZ -->
         
         <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
         
         <!-- mermaid -->
         

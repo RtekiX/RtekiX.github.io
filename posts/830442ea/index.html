@@ -19,18 +19,23 @@
         <meta name="keywords" content="Nothing is blessing to everything for me,RtekiX">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Nothing is blessing to everything for me">
-<meta property="og:url" content="https://rtekix.github.io/index.html">
+    <meta name="description" content="前言之前看图解计算机基础知识的时候，看过几次I&#x2F;O多路复用的内容，但感觉都没有抓到本质。面试的时候也被问过几次，回答得也不太好。所以重新梳理一下个人理解。 I&#x2F;OI&#x2F;O就是输入输出，计算机的存储器（内存）和周边设备的数据传输，最主要的就是文件读取&#x2F;写入。网络传输也是I&#x2F;O的一部分，Linux中一切皆文件，网络编程用到的socket也是一个文件描述符。 单个进程的文件读取 文件管理是由操作系统完成的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基础知识复习笔记3-I&#x2F;O多路复用">
+<meta property="og:url" content="https://rtekix.github.io/posts/830442ea/index.html">
 <meta property="og:site_name" content="Nothing is blessing to everything for me">
+<meta property="og:description" content="前言之前看图解计算机基础知识的时候，看过几次I&#x2F;O多路复用的内容，但感觉都没有抓到本质。面试的时候也被问过几次，回答得也不太好。所以重新梳理一下个人理解。 I&#x2F;OI&#x2F;O就是输入输出，计算机的存储器（内存）和周边设备的数据传输，最主要的就是文件读取&#x2F;写入。网络传输也是I&#x2F;O的一部分，Linux中一切皆文件，网络编程用到的socket也是一个文件描述符。 单个进程的文件读取 文件管理是由操作系统完成的">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-02-15T06:10:19.000Z">
+<meta property="article:modified_time" content="2024-02-15T06:45:14.804Z">
 <meta property="article:author" content="RtekiX">
+<meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/rin.ico">
     
-    <title>Nothing is blessing to everything to me</title>
+    <title>基础知识复习笔记3-I/O多路复用 · Nothing is blessing to everything to me</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -218,10 +223,10 @@
         }
     </script>
     
-        <body class="home-body">
+        <body class="post-body">
     
         <!-- header -->
-        <header class="header header-mobile index-header">
+        <header class="header header-mobile">
     <!-- top read progress line -->
     <div class="header-element">
         <div class="read-progress"></div>
@@ -249,10 +254,21 @@
     </div>
     <!-- toggle banner for post layout -->
     
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Nothing is blessing to everything to me</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">基础知识复习笔记3-I/O多路复用</a>
+            </div>
+        </div>
+    
 </header>
 
         <!-- fixed footer -->
-        <footer class="footer-fixed index-footer-fixed">
+        <footer class="footer-fixed">
     <!-- back to top button -->
     <div class="footer-fixed-element">
         
@@ -282,17 +298,17 @@
     <!-- 主页  -->
     
         
-    <!-- 文章页  -->
+    <!-- 404页  -->
     
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                Nothing is blessing to everything to me
-            <!-- 文章页  -->
+                基础知识复习笔记3-I/O多路复用
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
@@ -300,12 +316,58 @@
             <!-- 主页副标题  -->
             
                 
-                    watching
-                
-            <!-- 文章页  -->
+            <!-- 404 -->
             
         </p>
         <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        
+        
+            
+        
+        
+        <span class="post-category" data-categories="学习"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                学习
+            </span>
+        </span>
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2024/02/15</span>
+                    <!-- busuanzi -->
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -435,556 +497,85 @@
 
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
             <div class="container container-unloaded">
-                <main class="main index-page">
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/3d21fd56/">
-                
-                <span class="abstract-title-text">基础知识复习笔记4-计算机网络</span>
-            </a>
-            <div class="abstract-content">
-                记录一下常见的几个面试问题
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/16</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
+                <main class="main post-page">
+    <article class="article-entry">
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前看图解计算机基础知识的时候，看过几次I/O多路复用的内容，但感觉都没有抓到本质。面试的时候也被问过几次，回答得也不太好。所以重新梳理一下个人理解。</p>
+<h3 id="I-O"><a href="#I-O" class="headerlink" title="I/O"></a>I/O</h3><p>I/O就是输入输出，计算机的存储器（内存）和周边设备的数据传输，最主要的就是文件读取/写入。网络传输也是I/O的一部分，Linux中一切皆文件，网络编程用到的socket也是一个文件描述符。</p>
+<h4 id="单个进程的文件读取"><a href="#单个进程的文件读取" class="headerlink" title="单个进程的文件读取"></a>单个进程的文件读取</h4><ul>
+<li>文件管理是由操作系统完成的，所以实际的文件数据读取和传输需要切换到内核态。</li>
+<li>相较于内存，外存的文件读取是相当慢的。因此CPU不会白白浪费时间等待，而是会阻塞等待I/O的进程，切换去运行其他进程。直到数据传输准备完毕，内核唤醒等待进程，再继续运行。</li>
+<li>用户态的进程，需要有一个内核态的进程维护其状态。</li>
+</ul>
+<h4 id="多个进程的文件读取"><a href="#多个进程的文件读取" class="headerlink" title="多个进程的文件读取"></a>多个进程的文件读取</h4><ul>
+<li>为每一个进程的I/O流创建一个进程/线程维护其状态。当并发量很大时，系统资源吃不消。</li>
+</ul>
+<h4 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h4><p>用一个进程维护多个I/O连接（网络连接）</p>
+<h5 id="select"><a href="#select" class="headerlink" title="select"></a>select</h5><p>用户态维护一个连接表，最大长度固定。进程调用select尝试获取数据时，将连接表复制到内核里，由内核进程顺序遍历检查每个连接是否有数据事件更新，有的话做标记，然后再把更新后的表复制回用户态，用户态再遍历连接表，找到那些有数据事件更新的连接。</p>
+<p>所以总共遍历两次，复制两次</p>
+<h5 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h5><p>本质上和select一样，只是固定长度表变成了变长的链表</p>
+<h5 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h5><p>用户态调用epoll_create，在内核态创建epoll对象。内核用一个红黑树维护所有连接，一个链表维护当前有事件的连接。有连接发生事件时，内核自动将其加入到链表中。当用户调用 epoll_wait() 函数时，内核只返回当前有事件的、链表中的连接对象。</p>
+<p>插入新的连接维护对象，查找、更新，因为是红黑树所以都是 log(n)</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>I/O多路复用就是用一个进程维护多个I/O流的连接，因为每个连接都用一个进程或线程去维护开销是很大的。</p>
+<p>I/O多路复用有三种模式，select、poll和epoll。select是采取轮询的模式，将所有连接维护在一个线性表里，每次select都将表复制到内核，由内核检查并更新是否有数据事件发生，再将结果复制回用户态，遍历获取事件更新状态。</p>
+<p>poll和select类似，只是将线性表改成了链表，增加了最大并发连接数。</p>
+<p>epoll则是在内核中用一个红黑树维护所有连接，有连接发生事件时，内核自动将其加入到一个链表中。当用户调用函数想知道哪些连接有数据事件发生时，内核只需要返回链表中的连接对象。</p>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
+    </article>
+    <!-- license -->
     
-        
-        
-        
-        
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
             
+                <div class="nextSlogan">Next Post</div>
+                <a href="/posts/3d21fd56/" title="基础知识复习笔记4-计算机网络">
+                    <div class="nextTitle">基础知识复习笔记4-计算机网络</div>
+                </a>
             
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/830442ea/">
-                
-                <span class="abstract-title-text">基础知识复习笔记3-I/O多路复用</span>
-            </a>
-            <div class="abstract-content">
-                个人理解
-            </div>
-            <!-- read more -->
+        </li>
+        <li class="previous">
             
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/15">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/15</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/posts/f553d691/" title="C++ thread 多线程任务队列">
+                    <div class="prevTitle">C++ thread 多线程任务队列</div>
+                </a>
             
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
+        </li>
+    </ul>
+    <!-- comment -->
     
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/f553d691/">
-                
-                <span class="abstract-title-text">C++ thread 多线程任务队列</span>
-            </a>
-            <div class="abstract-content">
-                本来想写线程池，但提交函数指针和参数有点复杂
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/15">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/14</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="C++练习">C++练习</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
             
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/4c5a7656/">
-                
-                <span class="abstract-title-text">基础知识复习笔记2-多线程编程</span>
-            </a>
-            <div class="abstract-content">
-                C++和Java的多线程
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/14">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/13</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
             
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/67cafe3d/">
-                
-                <span class="abstract-title-text">基础知识复习笔记1-Java集合</span>
-            </a>
-            <div class="abstract-content">
-                重操旧业
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/14">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/12</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
             
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/24b990d7/">
-                
-                <span class="abstract-title-text">关于FCM服务的一些问题</span>
-            </a>
-            <div class="abstract-content">
-                为了让手机能够及时收到邮件推送
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/06</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="随笔"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                随笔
-            </span>
-        </span>
-    
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/1fa37b1/">
-                
-                <span class="abstract-title-text">SRS直播服务器</span>
-            </a>
-            <div class="abstract-content">
-                使用Simple Realtime Server搭建直播服务器
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/28</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="随笔"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                随笔
-            </span>
-        </span>
-    
-    
-</div>
+            <!-- utteranc评论 -->
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/59b9e0e2/">
-                
-                <span class="abstract-title-text">露营物品列表</span>
-            </a>
-            <div class="abstract-content">
-                出去露营需要买点什么
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/01/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/14</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="玩乐"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                玩乐
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="露营">露营</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/8a6b2b4c/">
-                
-                <span class="abstract-title-text">NEMU-PA1</span>
-            </a>
-            <div class="abstract-content">
-                主要是阅读手册和代码
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/10</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ICS实验">ICS实验</a>
-    
-</div>
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/50a57998/">
-                
-                <span class="abstract-title-text">NEMU-pa0</span>
-            </a>
-            <div class="abstract-content">
-                重温PA实验，准备虚拟机
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/14</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ICS实验">ICS实验</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
+            
+            
+
+            
+
+        </div>
     
-    <!-- paginator  -->
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
-        <nav class="page-nav">
-            <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">NEXT &gt;</a>
-        </nav>
+    <!-- Mathjax -->
     
 </main>
 
                 <!-- profile -->
-                
-                    <div class="profile">
-    <img class="profile-avatar" alt="avatar" src= /avatar/shinobu.jpg />
-    <div class="profile-name">RtekiX</div>
-    
-        <div class="profile-signature">
-            black hole
-        </div>
-    
-    
-        <div class="profile-social">
-            
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-
-
-        </div>
-    
-    
-    
-    
-    
-</div>
-
                 
             </div>
             <footer class="footer footer-unloaded">
@@ -1049,6 +640,23 @@
 
         </div>
         <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I-O"><span class="toc-number">2.</span> <span class="toc-text">I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E4%B8%AA%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="toc-number">2.1.</span> <span class="toc-text">单个进程的文件读取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E4%B8%AA%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="toc-number">2.2.</span> <span class="toc-text">多个进程的文件读取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#I-O%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="toc-number">2.3.</span> <span class="toc-text">I&#x2F;O多路复用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#select"><span class="toc-number">2.3.1.</span> <span class="toc-text">select</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#poll"><span class="toc-number">2.3.2.</span> <span class="toc-text">poll</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#epoll"><span class="toc-number">2.3.3.</span> <span class="toc-text">epoll</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+            </div>
         
         <!-- sidebar -->
         <div class="sidebar sidebar-hide">
@@ -1372,6 +980,8 @@
         <!-- CNZZ -->
         
         <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
         
         <!-- mermaid -->
         

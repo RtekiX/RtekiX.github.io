@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>C++ thread 多线程任务队列</title>
-    <url>/2024/02/14/C-thread-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97/</url>
+    <url>/posts/f553d691/</url>
     <content><![CDATA[<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Semaphore</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Semaphore</span>(<span class="keyword">int</span> value = <span class="number">1</span>) : <span class="built_in">cnt</span>(value) &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">P</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lck</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        <span class="keyword">if</span> (--cnt &lt; <span class="number">0</span>)</span><br><span class="line">            cv.<span class="built_in">wait</span>(lck);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">V</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lck</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        <span class="keyword">if</span> (++cnt &lt;= <span class="number">0</span>)</span><br><span class="line">            cv.<span class="built_in">notify_one</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> cnt;</span><br><span class="line">    mutex mtx;</span><br><span class="line">    condition_variable cv;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TaskQueue</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">TaskQueue</span>(<span class="keyword">int</span> n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">srand</span>(<span class="built_in">time</span>(<span class="number">0</span>));</span><br><span class="line">        max_size = n;</span><br><span class="line">        notfull = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(n);</span><br><span class="line">        notempty = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(<span class="number">0</span>);</span><br><span class="line">        rwlock = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> e)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        notfull-&gt;<span class="built_in">P</span>(); <span class="comment">// 确保有空位</span></span><br><span class="line">        rwlock-&gt;<span class="built_in">P</span>();  <span class="comment">// 获取互斥锁</span></span><br><span class="line">        q.<span class="built_in">push</span>(e);</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;线程id &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot; 执行了add操作，添加数字&quot;</span> &lt;&lt; e &lt;&lt; endl;</span><br><span class="line">        rwlock-&gt;<span class="built_in">V</span>();</span><br><span class="line">        notempty-&gt;<span class="built_in">V</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        notempty-&gt;<span class="built_in">P</span>();</span><br><span class="line">        rwlock-&gt;<span class="built_in">P</span>();</span><br><span class="line">        <span class="keyword">int</span> e = q.<span class="built_in">front</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;线程id &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot; 执行了get操作，获取数字&quot;</span> &lt;&lt; e &lt;&lt; endl;</span><br><span class="line">        rwlock-&gt;<span class="built_in">V</span>();</span><br><span class="line">        notfull-&gt;<span class="built_in">V</span>();</span><br><span class="line">        <span class="keyword">return</span> e;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> max_size;</span><br><span class="line">    Semaphore* notfull, * notempty;</span><br><span class="line">    Semaphore* rwlock; <span class="comment">// 生产者和消费者的互斥锁</span></span><br><span class="line">    queue&lt;<span class="keyword">int</span>&gt; q;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fadd</span><span class="params">(TaskQueue&amp; task_queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (cnt &lt; <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> rnd = <span class="built_in">rand</span>() % <span class="number">100</span>;</span><br><span class="line">        task_queue.<span class="built_in">add</span>(rnd);</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fget</span><span class="params">(TaskQueue&amp; task_queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (cnt &lt; <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> x = task_queue.<span class="built_in">get</span>();</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">TaskQueue <span class="title">task_queue</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">    <span class="function">thread <span class="title">tt1</span><span class="params">(fadd, ref(task_queue))</span></span>;</span><br><span class="line">    <span class="function">thread <span class="title">tt2</span><span class="params">(fget, ref(task_queue))</span></span>;</span><br><span class="line">    tt1.<span class="built_in">join</span>();</span><br><span class="line">    tt2.<span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>用future替代thread，future</p>
@@ -15,35 +15,8 @@
       </tags>
   </entry>
   <entry>
-    <title>NEMU-pa0</title>
-    <url>/2023/12/14/NEMU-pa0/</url>
-    <content><![CDATA[<p>主要问题有</p>
-<ul>
-<li>虚拟机网络问题</li>
-<li>github TLS问题</li>
-</ul>
-<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>因为我主机用了代理，允许局域网连接。<br>想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，<br>相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。<br>然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，<br>主机有点像一个默认“网关”？</p>
-<hr>
-<p><font color="red">2023/12/15 update</font></p>
-<p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
-<p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
-<h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#105;&#x74;&#64;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#46;&#99;&#x6f;&#x6d;">&#103;&#105;&#x74;&#64;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#46;&#99;&#x6f;&#x6d;</a>。</p>
-<p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#103;&#105;&#116;&#64;&#103;&#x69;&#x74;&#104;&#117;&#x62;&#x2e;&#x63;&#111;&#109;">&#103;&#105;&#116;&#64;&#103;&#x69;&#x74;&#104;&#117;&#x62;&#x2e;&#x63;&#111;&#109;</a>/仓库地址，而不是http或https</p>
-<h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
-<p>以后再学</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>ICS实验</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>NEMU-PA1</title>
-    <url>/2024/01/10/NEMU-PA1/</url>
+    <url>/posts/8a6b2b4c/</url>
     <content><![CDATA[<h3 id="NEMU是什么"><a href="#NEMU是什么" class="headerlink" title="NEMU是什么"></a>NEMU是什么</h3><p><font color="red">个人理解：</font>是NJU编写的一个模拟器，名字来源于<a href="https://zh.wikipedia.org/wiki/QEMU">QEMU（quick emulator)</a>。NEMU运行于GNU/Linux操作系统上，用C语言模拟了一个虚拟的计算机系统，包括CPU、内存、IO设备等。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">                         +---------------------+  +---------------------+</span><br><span class="line">                         |     Super Mario     |  |    &quot;Hello World&quot;    |</span><br><span class="line">                         +---------------------+  +---------------------+</span><br><span class="line">                         |    Simulated NES    |  |      Simulated      |</span><br><span class="line">                         |       hardware      |  |       hardware      |</span><br><span class="line">+---------------------+  +---------------------+  +---------------------+</span><br><span class="line">|    &quot;Hello World&quot;    |  |     NES Emulator    |  |        NEMU         |</span><br><span class="line">+---------------------+  +---------------------+  +---------------------+</span><br><span class="line">|      GNU/Linux      |  |      GNU/Linux      |  |      GNU/Linux      |</span><br><span class="line">+---------------------+  +---------------------+  +---------------------+</span><br><span class="line">|    Real hardware    |  |    Real hardware    |  |    Real hardware    |</span><br><span class="line">+---------------------+  +---------------------+  +---------------------+</span><br><span class="line">          (a)                      (b)                     (c)</span><br></pre></td></tr></table></figure>
 <p>图(c)中NEMU和Simulated hardware之间应该还有一层抽象计算机层，描述一个计算机系统需要有哪些硬件和接口。有了抽象计算机层，可以实现<br>多种不同指令架构集的计算机而不改变虚拟机器上层程序的设计形式。</p>
@@ -93,7 +66,7 @@
 <li>内存访问类型</li>
 </ul>
 <p>如果不存在寄存器，CPU的数据处理形式并不受影响，协处理器工作不受影响，CPU中的程序计数器PC功能需要由其他硬件支持，通用寄存器暂存功能需要由其他硬件支持，FPU的数据处理形式不受影响，字节序和大小端仍然需要定义，内存访问类型仍然需要定义。</p>
-<h3 id="从状态机视角理解程序运行"><a href="#从状态机视角理解程序运行" class="headerlink" title="从状态机视角理解程序运行"></a>从状态机视角理解程序运行</h3><p><img src="/2024/01/10/NEMU-PA1/1.jpg" alt="pa1"><br>图灵机的基础：当前状态+当前输入 -&gt; 状态转移 -&gt; 下一状态</p>
+<h3 id="从状态机视角理解程序运行"><a href="#从状态机视角理解程序运行" class="headerlink" title="从状态机视角理解程序运行"></a>从状态机视角理解程序运行</h3><p><img src="/posts/8a6b2b4c/1.jpg" alt="pa1"><br>图灵机的基础：当前状态+当前输入 -&gt; 状态转移 -&gt; 下一状态</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// PC: instruction    | // label: statement</span><br><span class="line">0: mov  r1, 0         |  pc0: r1 = 0;</span><br><span class="line">1: mov  r2, 0         |  pc1: r2 = 0;</span><br><span class="line">2: addi r2, r2, 1     |  pc2: r2 = r2 + 1;</span><br><span class="line">3: add  r1, r1, r2    |  pc3: r1 = r1 + r2;</span><br><span class="line">4: blt  r2, 100, 2    |  pc4: if (r2 &lt; 100) goto pc2;   // branch if less than</span><br><span class="line">5: jmp 5              |  pc5: goto pc5;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(PC, r1, r2) : (0, x, x) -&gt; (1, 0, x) -&gt; (2, 0, 0) -&gt; (3, 0, 1)</span><br><span class="line">-&gt; (4, 1, 1) -&gt; (2, 1, 1) -&gt; (3, 1, 2) -&gt; (4, 3, 2) -&gt; (2, 3, 2)</span><br><span class="line">-&gt; (3, 3, 3) -&gt; (4, 6, 3) -&gt; (2, 6, 3) -&gt; ... -&gt; (4, 4851, 99) </span><br><span class="line">-&gt; (2, 4950, 99) -&gt; (3, 4950, 100) -&gt; (4, 5050, 100) </span><br><span class="line">-&gt; (5, 5050, 100) (end)</span><br></pre></td></tr></table></figure>
@@ -109,7 +82,7 @@
   </entry>
   <entry>
     <title>SRS直播服务器</title>
-    <url>/2024/01/28/SRS%E7%9B%B4%E6%92%AD%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <url>/posts/1fa37b1/</url>
     <content><![CDATA[<h3 id="使用SRS-Stack构建"><a href="#使用SRS-Stack构建" class="headerlink" title="使用SRS-Stack构建"></a>使用SRS-Stack构建</h3><p>腾讯云轻量应用服务器提供了应用模板，在控制台重装为音视频流服务器即可快速启动SRS服务。</p>
 <h3 id="使用Docker构建"><a href="#使用Docker构建" class="headerlink" title="使用Docker构建"></a>使用Docker构建</h3><p>SRS文档提供了服务启动脚本，在服务器中安装好docker后运行即可。</p>
 <h4 id="需要注意的点"><a href="#需要注意的点" class="headerlink" title="需要注意的点"></a>需要注意的点</h4><ol>
@@ -129,119 +102,35 @@
       </categories>
   </entry>
   <entry>
-    <title>基础知识复习笔记3-I/O多路复用</title>
-    <url>/2024/02/15/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B03-I-O%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前看图解计算机基础知识的时候，看过几次I/O多路复用的内容，但感觉都没有抓到本质。面试的时候也被问过几次，回答得也不太好。所以重新梳理一下个人理解。</p>
-<h3 id="I-O"><a href="#I-O" class="headerlink" title="I/O"></a>I/O</h3><p>I/O就是输入输出，计算机的存储器（内存）和周边设备的数据传输，最主要的就是文件读取/写入。网络传输也是I/O的一部分，Linux中一切皆文件，网络编程用到的socket也是一个文件描述符。</p>
-<h4 id="单个进程的文件读取"><a href="#单个进程的文件读取" class="headerlink" title="单个进程的文件读取"></a>单个进程的文件读取</h4><ul>
-<li>文件管理是由操作系统完成的，所以实际的文件数据读取和传输需要切换到内核态。</li>
-<li>相较于内存，外存的文件读取是相当慢的。因此CPU不会白白浪费时间等待，而是会阻塞等待I/O的进程，切换去运行其他进程。直到数据传输准备完毕，内核唤醒等待进程，再继续运行。</li>
-<li>用户态的进程，需要有一个内核态的进程维护其状态。</li>
-</ul>
-<h4 id="多个进程的文件读取"><a href="#多个进程的文件读取" class="headerlink" title="多个进程的文件读取"></a>多个进程的文件读取</h4><ul>
-<li>为每一个进程的I/O流创建一个进程/线程维护其状态。当并发量很大时，系统资源吃不消。</li>
-</ul>
-<h4 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h4><p>用一个进程维护多个I/O连接（网络连接）</p>
-<h5 id="select"><a href="#select" class="headerlink" title="select"></a>select</h5><p>用户态维护一个连接表，最大长度固定。进程调用select尝试获取数据时，将连接表复制到内核里，由内核进程顺序遍历检查每个连接是否有数据事件更新，有的话做标记，然后再把更新后的表复制回用户态，用户态再遍历连接表，找到那些有数据事件更新的连接。</p>
-<p>所以总共遍历两次，复制两次</p>
-<h5 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h5><p>本质上和select一样，只是固定长度表变成了变长的链表</p>
-<h5 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h5><p>用户态调用epoll_create，在内核态创建epoll对象。内核用一个红黑树维护所有连接，一个链表维护当前有事件的连接。有连接发生事件时，内核自动将其加入到链表中。当用户调用 epoll_wait() 函数时，内核只返回当前有事件的、链表中的连接对象。</p>
-<p>插入新的连接维护对象，查找、更新，因为是红黑树所以都是 log(n)</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>I/O多路复用就是用一个进程维护多个I/O流的连接，因为每个连接都用一个进程或线程去维护开销是很大的。</p>
-<p>I/O多路复用有三种模式，select、poll和epoll。select是采取轮询的模式，将所有连接维护在一个线性表里，每次select都将表复制到内核，由内核检查并更新是否有数据事件发生，再将结果复制回用户态，遍历获取事件更新状态。</p>
-<p>poll和select类似，只是将线性表改成了链表，增加了最大并发连接数。</p>
-<p>epoll则是在内核中用一个红黑树维护所有连接，有连接发生事件时，内核自动将其加入到一个链表中。当用户调用函数想知道哪些连接有数据事件发生时，内核只需要返回链表中的连接对象。</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>关于FCM服务的一些问题</title>
-    <url>/2024/02/06/%E5%85%B3%E4%BA%8EFCM%E6%9C%8D%E5%8A%A1%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>昨天晚上，突然发现QQ邮箱app即使允许电池无限制使用，收到邮件的时候也不会推送通知，查了一下是因为三星没有像mipush一样的推送服务，QQ邮箱只有常驻后台运行才能通知。</p>
-<p>于是为了能及时收到信息，我下载了支持fcm的gmail和outlook，测试能不能利用fcm推送</p>
-<h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><ol>
-<li><strong>电池优化问题</strong><ul>
-<li>国行安卓手机没有统一的推送服务，大多只能靠应用后台保活来实现实时通知，比如QQ和微信就是默认无限制运行，允许任意自启动和重启，所以才能随时收到消息。</li>
-<li>经过排查，所有支持fcm的应用都设置了无限制运行，允许常驻，仍然无法收到通知</li>
-</ul>
-</li>
-<li><strong>FCM问题</strong><ul>
-<li>允许应用自启动，但是没有收到消息，说明outlook和gmail并没有收到来自FCM的通知，遂检查FCM连接状况。</li>
-<li>三星国行禁用了<font color="red">*#*#426#*#*</font>查看fcm连接状况，只能通过第三方app进入诊断页面。我在github找到了一个FCM推送查看器。在log里可以看到，FCM服务是断开的，每隔十几分钟会尝试重连，然后连接失败，log为<code>Connecting using McsConnection&#123;NetworkWrapper&#123;244&#125;,type=0,isVpnConnected=true&#125;</code></li>
-<li>看到这个log，我以为是clash的问题，于是关闭代理再次连接，成功连接上。所以这里我以为是fcm服务，也就是mtalk.google会检测代理连接，必须直连，所以花了很长一段时间想在配置文件里加上混合配置或者parser。但问题在于，我另一个手机使用相同的配置，能够长期稳定连接到fcm服务不断开，所以问题根源不在这里。</li>
-</ul>
-</li>
-<li><strong>DNS问题</strong><ul>
-<li>绕了很长一段远路，最后想起来clash有日志捕捉功能，遂开启。很快找到原因，<code>error: all DNS requests failed, first error: use default dns resolve failed: all DNS requests failed, first error</code>。所以是DNS问题，尝试了三个解决手段：<ul>
-<li>关闭clash中的DNS劫持：无效</li>
-<li>WIFI设置手动DNS：无效</li>
-<li>clash中设置强制启用系统hosts和DNS：有效</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>所以根本上是clash配置文件中的DNS server有一些问题。但还有一点不明白的地方：在测试连接的时候，我发现只有 <font color="red">5G网络+开启代理</font> 两者组合会导致DNS出现问题。使用2.4GHZ的WIFI或者4G移动数据+代理，可以连接。使用5GHZ的WIFI或者5G移动数据，可以连接。但5G+代理，不修改DNS设置就会出现问题，这一点仍然摸不着头脑。</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>基础知识复习笔记4-计算机网络</title>
-    <url>/2024/02/16/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B04-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</url>
-    <content><![CDATA[<h3 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a>TCP和UDP的区别</h3><p>TCP和UDP都是传输层协议，负责端到端的数据传输，主要区别是：</p>
+    <title>NEMU-pa0</title>
+    <url>/posts/50a57998/</url>
+    <content><![CDATA[<p>主要问题有</p>
 <ul>
-<li>TCP是有连接的，UDP是无连接的。TCP传输数据前需要三次握手建立连接，UDP只需要知道对方IP和端口即可发送数据。</li>
-<li>TCP是可靠传输协议，UDP是不可靠的。UDP只管发送数据，不会关心数据包是否到达。TCP则需要保证每一个数据分片都能可靠地交付给对方，所以引入了序列号、确认号、超时重传等机制。</li>
+<li>虚拟机网络问题</li>
+<li>github TLS问题</li>
 </ul>
-<h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><ul>
-<li>第一次握手是客户端向服务提供端发起SYNC同步请求，并且附带自己的序列号。</li>
-<li>第二次握手是服务提供方接收到连接请求后，返回一个确认数据包，这个数据包也包含了他自己的序列号，以及SYNC同步标志。</li>
-<li>客户端收到第二次握手的确认包后，再返回一个ACK确认数据包，连接才建立，之后发送数据。</li>
-</ul>
-<h5 id="为什么要三次而不是两次"><a href="#为什么要三次而不是两次" class="headerlink" title="为什么要三次而不是两次"></a>为什么要三次而不是两次</h5><ul>
-<li>如果只有两次握手，实际上只有客户端确认了服务端能够连接，服务端是不知道客户端的连接状态的。假如第二次握手丢失，客户端放弃了连接，而服务端直接就开始发送数据，会造成资源浪费。</li>
-<li>假如第一次握手的数据包在网络中滞留，过一段时间，早就失效的数据包传到服务端，服务端以为是新的连接请求，于是产生第二次握手，然后就以为连接建立了，但实际上这时候客户端已经没有传输需求了，也不会回应服务端，也会造成资源浪费。</li>
-</ul>
-<h5 id="为什么不是四次"><a href="#为什么不是四次" class="headerlink" title="为什么不是四次"></a>为什么不是四次</h5><p>第二次握手实际上把确认收到，和发起连接请求合并到一起了。</p>
-<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><ul>
-<li>第一次挥手：客户端发送FIN数据包，表明打算断开连接，它不再发送数据，但是可以接收数据，进入FIN-WAIT1状态。</li>
-<li>第二次挥手：服务端收到FIN数据，回复一个ACK，表明它知道对方打算断开连接。客户端收到后，进入FIN-WAIT2状态。服务端进入CLOSE-WAIT状态。</li>
-<li>中间 ：服务端继续发送未传输完毕的数据</li>
-<li>第三次挥手：服务端发送FIN数据包，请求关闭连接，进入LAST-ACK状态。</li>
-<li>第四次挥手：客户端回复ACK，进入TIME-WAIT状态，等到两个报文段最长寿命后，CLOSE连接。如果这段时间内收到了服务端的第三次挥手重传，说明第四次挥手没成功发送过去，重传。</li>
-</ul>
-<h5 id="为什么要等两个报文段最长寿命"><a href="#为什么要等两个报文段最长寿命" class="headerlink" title="为什么要等两个报文段最长寿命"></a>为什么要等两个报文段最长寿命</h5><p>因为第四次挥手后，客户端无法得知对方是否收到数据包，并且关闭连接。两个报文段最长寿命就是一发一收的时间，如果这个时间段内没有收到超时重传的消息，就认为服务端收到了最后的ACK。</p>
-<p>如果不等待的话，服务端可能没收到第四次挥手数据，连接无法正常关闭造成资源浪费。</p>
-<h4 id="TCP的拥塞控制、流量控制、滑动窗口等等"><a href="#TCP的拥塞控制、流量控制、滑动窗口等等" class="headerlink" title="TCP的拥塞控制、流量控制、滑动窗口等等"></a>TCP的拥塞控制、流量控制、滑动窗口等等</h4><h5 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h5><p>拥塞控制是针对网络的，避免网络中存在过多的报文造成网络信道拥堵。主要用慢开始、拥塞避免算法，快速重传、快速回复。</p>
-<p><strong>慢开始、拥塞避免</strong><br>发送方维护一个拥塞窗口大小，最开始拥塞窗口为1个单位，每次成功收到确认后就将窗口大小加倍。当窗口大小大于阈值时，就执行拥塞避免算法，每次窗口大小加一个单位。</p>
-<p>如果出现数据丢失，将窗口设为1，执行慢开始算法，并且阈值设为数据丢失时的窗口大小的一半。</p>
-<p><strong>快重传、快恢复</strong><br>快重传是，如果发送方收到连续三个重复确认就立刻重传对方尚未收到的报文段，而不是等重传计时器时间到期。</p>
-<p>同时，因为能收到三个重复ACK，所以认为网络虽然拥堵，但还是有一定的运输能力，所以窗口不会设为1，而是设为阈值减半后的大小，并且继续执行拥塞避免算法。</p>
-<h5 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h5><p>流量控制是针对发送方和接收方数据处理能力的。双方各自维护一个窗口，并且在发送数据时会告知对方自己空闲窗口大小，如果窗口没有空闲，就会减缓数据发送速度。</p>
-<h5 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h5><p>滑动窗口的设置是为了避免出现每一个数据包发送后都要等待确认才能发送下一个数据包这样的情况，效率很低。滑动窗口外的左侧，可以看作是已经发送、确认的数据包；滑动窗口内的话，只有最左侧边缘的连续的数据包被确认了，窗口才会向右移动。</p>
-<h3 id="输入网址后发生的事情"><a href="#输入网址后发生的事情" class="headerlink" title="输入网址后发生的事情"></a>输入网址后发生的事情</h3><ol>
-<li>URL解析：url是统一资源定位符，为了访问服务器的资源，需要将url解析为IP地址，就会用到DNS协议。如果浏览器有域名缓存，或者系统本地有相应的hosts项，那就不用再向DNS服务器发送请求，直接就可以解析。如果没有的话，主机就会依次向本地、上级的DNS服务器递归地发送请求。</li>
-<li>解析得到IP地址后，为了传输HTTP请求，还要和服务器建立TCP连接，也就是三次握手。传输层往下，网络层根据IP对数据包进行转发，再往下还有ARP协议通过IP地址获得下一次转发的MAC地址。</li>
-<li>TCP连接建立后，服务器收到HTTP请求，将网页资源封装，再传给主机。主机收到网页资源数据后，由浏览器进行解析和渲染，同时页面内如果还有其他资源，则还会构造相应的HTTP请求去获取这些资源文件。</li>
-</ol>
+<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>因为我主机用了代理，允许局域网连接。<br>想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，<br>相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。<br>然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，<br>主机有点像一个默认“网关”？</p>
+<hr>
+<p><font color="red">2023/12/15 update</font></p>
+<p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
+<p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
+<h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#x68;&#117;&#98;&#46;&#99;&#x6f;&#109;">&#103;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#x68;&#117;&#98;&#46;&#99;&#x6f;&#109;</a>。</p>
+<p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#116;&#104;&#x75;&#x62;&#46;&#x63;&#x6f;&#109;">&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#116;&#104;&#x75;&#x62;&#46;&#x63;&#x6f;&#109;</a>/仓库地址，而不是http或https</p>
+<h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
+<p>以后再学</p>
 ]]></content>
       <categories>
         <category>学习</category>
       </categories>
       <tags>
-        <tag>笔记</tag>
+        <tag>ICS实验</tag>
       </tags>
   </entry>
   <entry>
     <title>基础知识复习笔记1-Java集合</title>
-    <url>/2024/02/12/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B01-Java%E9%9B%86%E5%90%88/</url>
+    <url>/posts/67cafe3d/</url>
     <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>复习笔记系列记录一些C++/Java，本科专业课的一些知识，强化记忆</p>
 <p>本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。</p>
 <h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_queue实际上底层都是deque容器，deque实现了它们所需的方法。Java中类似，所有容器都是从Collection和Map接口派生出来的，从Collection和Map接口又派生出许多子接口，由“集合（容器）”实现这些接口的方法。</p>
@@ -293,7 +182,7 @@
   </entry>
   <entry>
     <title>基础知识复习笔记2-多线程编程</title>
-    <url>/2024/02/13/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B/</url>
+    <url>/posts/4c5a7656/</url>
     <content><![CDATA[<h3 id="线程和进程"><a href="#线程和进程" class="headerlink" title="线程和进程"></a>线程和进程</h3><p>经典问题。这个问题在本科学习操作系统时理解比较深刻，通常习惯从以下几个方面进行比较：</p>
 <h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><ul>
 <li>进程：进程是程序代码在计算机系统中运行时的一个状态体，代码是静态的，进程是动态的。进程是操作系统分配资源的基本单位，拥有独立的地址空间、代码段、数据段。</li>
@@ -368,29 +257,72 @@
       </tags>
   </entry>
   <entry>
-    <title>远程软件控制Manjaro</title>
-    <url>/2021/11/09/%E8%BF%9C%E7%A8%8B%E8%BD%AF%E4%BB%B6%E6%8E%A7%E5%88%B6Manjaro/</url>
-    <content><![CDATA[<h3 id="为什么要用Manjaro"><a href="#为什么要用Manjaro" class="headerlink" title="为什么要用Manjaro"></a>为什么要用Manjaro</h3><p>实验室电脑配置很旧，且常年不关机导致硬件老化严重，很难带动Windwos系统，于是把系统盘格式化了<br>受人影响想试试arch linux，又有点怕麻烦所以用了Manjaro</p>
-<h3 id="下载软件"><a href="#下载软件" class="headerlink" title="下载软件"></a>下载软件</h3><p>Manjaro可以用pacma build直接构建软件</p>
-<p>记得在teamviewer官网上把以前的电脑给删除了，不然限制用户数</p>
-<p>anydesk也还可以用</p>
-<h3 id="解决远程软件无法显示（黑屏）"><a href="#解决远程软件无法显示（黑屏）" class="headerlink" title="解决远程软件无法显示（黑屏）"></a>解决远程软件无法显示（黑屏）</h3><p>在/etc/gdm3/custom.conf，允许自动登录，填上用户名</p>
-<p>最后一行设置<code>WaylandEnable=false</code></p>
-<h3 id="解决无显示器导致卡顿"><a href="#解决无显示器导致卡顿" class="headerlink" title="解决无显示器导致卡顿"></a>解决无显示器导致卡顿</h3><p>安装xf86，sudo pacman -S xf86-video-dummy</p>
-<p>修改配置 sudo gedit /etc/X11/xorg.conf</p>
-<p>抄来的配置，随便了能用就行</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Section &quot;Device&quot;</span><br><span class="line">    Identifier  &quot;Configured Video Device&quot;</span><br><span class="line">    Driver      &quot;dummy&quot;</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Monitor&quot;</span><br><span class="line">    Identifier  &quot;Configured Monitor&quot;</span><br><span class="line">    HorizSync 31.5-48.5</span><br><span class="line">    VertRefresh 50-70</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Screen&quot;</span><br><span class="line">    Identifier  &quot;Default Screen&quot;</span><br><span class="line">    Monitor     &quot;Configured Monitor&quot;</span><br><span class="line">    Device      &quot;Configured Video Device&quot;</span><br><span class="line">    DefaultDepth 24</span><br><span class="line">    SubSection &quot;Display&quot;</span><br><span class="line">        Depth 24</span><br><span class="line">        Modes &quot;1920x1080&quot;</span><br><span class="line">    EndSubSection</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure>
+    <title>关于FCM服务的一些问题</title>
+    <url>/posts/24b990d7/</url>
+    <content><![CDATA[<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>昨天晚上，突然发现QQ邮箱app即使允许电池无限制使用，收到邮件的时候也不会推送通知，查了一下是因为三星没有像mipush一样的推送服务，QQ邮箱只有常驻后台运行才能通知。</p>
+<p>于是为了能及时收到信息，我下载了支持fcm的gmail和outlook，测试能不能利用fcm推送</p>
+<h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><ol>
+<li><strong>电池优化问题</strong><ul>
+<li>国行安卓手机没有统一的推送服务，大多只能靠应用后台保活来实现实时通知，比如QQ和微信就是默认无限制运行，允许任意自启动和重启，所以才能随时收到消息。</li>
+<li>经过排查，所有支持fcm的应用都设置了无限制运行，允许常驻，仍然无法收到通知</li>
+</ul>
+</li>
+<li><strong>FCM问题</strong><ul>
+<li>允许应用自启动，但是没有收到消息，说明outlook和gmail并没有收到来自FCM的通知，遂检查FCM连接状况。</li>
+<li>三星国行禁用了<font color="red">*#*#426#*#*</font>查看fcm连接状况，只能通过第三方app进入诊断页面。我在github找到了一个FCM推送查看器。在log里可以看到，FCM服务是断开的，每隔十几分钟会尝试重连，然后连接失败，log为<code>Connecting using McsConnection&#123;NetworkWrapper&#123;244&#125;,type=0,isVpnConnected=true&#125;</code></li>
+<li>看到这个log，我以为是clash的问题，于是关闭代理再次连接，成功连接上。所以这里我以为是fcm服务，也就是mtalk.google会检测代理连接，必须直连，所以花了很长一段时间想在配置文件里加上混合配置或者parser。但问题在于，我另一个手机使用相同的配置，能够长期稳定连接到fcm服务不断开，所以问题根源不在这里。</li>
+</ul>
+</li>
+<li><strong>DNS问题</strong><ul>
+<li>绕了很长一段远路，最后想起来clash有日志捕捉功能，遂开启。很快找到原因，<code>error: all DNS requests failed, first error: use default dns resolve failed: all DNS requests failed, first error</code>。所以是DNS问题，尝试了三个解决手段：<ul>
+<li>关闭clash中的DNS劫持：无效</li>
+<li>WIFI设置手动DNS：无效</li>
+<li>clash中设置强制启用系统hosts和DNS：有效</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>所以根本上是clash配置文件中的DNS server有一些问题。但还有一点不明白的地方：在测试连接的时候，我发现只有 <font color="red">5G网络+开启代理</font> 两者组合会导致DNS出现问题。使用2.4GHZ的WIFI或者4G移动数据+代理，可以连接。使用5GHZ的WIFI或者5G移动数据，可以连接。但5G+代理，不修改DNS设置就会出现问题，这一点仍然摸不着头脑。</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>基础知识复习笔记3-I/O多路复用</title>
+    <url>/posts/830442ea/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前看图解计算机基础知识的时候，看过几次I/O多路复用的内容，但感觉都没有抓到本质。面试的时候也被问过几次，回答得也不太好。所以重新梳理一下个人理解。</p>
+<h3 id="I-O"><a href="#I-O" class="headerlink" title="I/O"></a>I/O</h3><p>I/O就是输入输出，计算机的存储器（内存）和周边设备的数据传输，最主要的就是文件读取/写入。网络传输也是I/O的一部分，Linux中一切皆文件，网络编程用到的socket也是一个文件描述符。</p>
+<h4 id="单个进程的文件读取"><a href="#单个进程的文件读取" class="headerlink" title="单个进程的文件读取"></a>单个进程的文件读取</h4><ul>
+<li>文件管理是由操作系统完成的，所以实际的文件数据读取和传输需要切换到内核态。</li>
+<li>相较于内存，外存的文件读取是相当慢的。因此CPU不会白白浪费时间等待，而是会阻塞等待I/O的进程，切换去运行其他进程。直到数据传输准备完毕，内核唤醒等待进程，再继续运行。</li>
+<li>用户态的进程，需要有一个内核态的进程维护其状态。</li>
+</ul>
+<h4 id="多个进程的文件读取"><a href="#多个进程的文件读取" class="headerlink" title="多个进程的文件读取"></a>多个进程的文件读取</h4><ul>
+<li>为每一个进程的I/O流创建一个进程/线程维护其状态。当并发量很大时，系统资源吃不消。</li>
+</ul>
+<h4 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h4><p>用一个进程维护多个I/O连接（网络连接）</p>
+<h5 id="select"><a href="#select" class="headerlink" title="select"></a>select</h5><p>用户态维护一个连接表，最大长度固定。进程调用select尝试获取数据时，将连接表复制到内核里，由内核进程顺序遍历检查每个连接是否有数据事件更新，有的话做标记，然后再把更新后的表复制回用户态，用户态再遍历连接表，找到那些有数据事件更新的连接。</p>
+<p>所以总共遍历两次，复制两次</p>
+<h5 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h5><p>本质上和select一样，只是固定长度表变成了变长的链表</p>
+<h5 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h5><p>用户态调用epoll_create，在内核态创建epoll对象。内核用一个红黑树维护所有连接，一个链表维护当前有事件的连接。有连接发生事件时，内核自动将其加入到链表中。当用户调用 epoll_wait() 函数时，内核只返回当前有事件的、链表中的连接对象。</p>
+<p>插入新的连接维护对象，查找、更新，因为是红黑树所以都是 log(n)</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>I/O多路复用就是用一个进程维护多个I/O流的连接，因为每个连接都用一个进程或线程去维护开销是很大的。</p>
+<p>I/O多路复用有三种模式，select、poll和epoll。select是采取轮询的模式，将所有连接维护在一个线性表里，每次select都将表复制到内核，由内核检查并更新是否有数据事件发生，再将结果复制回用户态，遍历获取事件更新状态。</p>
+<p>poll和select类似，只是将线性表改成了链表，增加了最大并发连接数。</p>
+<p>epoll则是在内核中用一个红黑树维护所有连接，有连接发生事件时，内核自动将其加入到一个链表中。当用户调用函数想知道哪些连接有数据事件发生时，内核只需要返回链表中的连接对象。</p>
 ]]></content>
       <categories>
         <category>学习</category>
       </categories>
       <tags>
-        <tag>Manjaro</tag>
+        <tag>笔记</tag>
       </tags>
   </entry>
   <entry>
     <title>露营物品列表</title>
-    <url>/2024/01/14/%E9%9C%B2%E8%90%A5%E7%89%A9%E5%93%81%E5%88%97%E8%A1%A8/</url>
+    <url>/posts/59b9e0e2/</url>
     <content><![CDATA[<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ol>
 <li>确定目的地。如果选择有人经营的露营营地，可以减少一些装备的准备。如果是无人看守的地方，最好提前看好附近有无公共厕所。</li>
 <li>预订酒店。有些地方会提供民宿+野外烧烤的服务，也可以在露营地附近订住宿。露宿野外有风险。</li>
@@ -440,6 +372,74 @@
       </categories>
       <tags>
         <tag>露营</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础知识复习笔记4-计算机网络</title>
+    <url>/posts/3d21fd56/</url>
+    <content><![CDATA[<h3 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a>TCP和UDP的区别</h3><p>TCP和UDP都是传输层协议，负责端到端的数据传输，主要区别是：</p>
+<ul>
+<li>TCP是有连接的，UDP是无连接的。TCP传输数据前需要三次握手建立连接，UDP只需要知道对方IP和端口即可发送数据。</li>
+<li>TCP是可靠传输协议，UDP是不可靠的。UDP只管发送数据，不会关心数据包是否到达。TCP则需要保证每一个数据分片都能可靠地交付给对方，所以引入了序列号、确认号、超时重传等机制。</li>
+</ul>
+<h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><ul>
+<li>第一次握手是客户端向服务提供端发起SYNC同步请求，并且附带自己的序列号。</li>
+<li>第二次握手是服务提供方接收到连接请求后，返回一个确认数据包，这个数据包也包含了他自己的序列号，以及SYNC同步标志。</li>
+<li>客户端收到第二次握手的确认包后，再返回一个ACK确认数据包，连接才建立，之后发送数据。</li>
+</ul>
+<h5 id="为什么要三次而不是两次"><a href="#为什么要三次而不是两次" class="headerlink" title="为什么要三次而不是两次"></a>为什么要三次而不是两次</h5><ul>
+<li>如果只有两次握手，实际上只有客户端确认了服务端能够连接，服务端是不知道客户端的连接状态的。假如第二次握手丢失，客户端放弃了连接，而服务端直接就开始发送数据，会造成资源浪费。</li>
+<li>假如第一次握手的数据包在网络中滞留，过一段时间，早就失效的数据包传到服务端，服务端以为是新的连接请求，于是产生第二次握手，然后就以为连接建立了，但实际上这时候客户端已经没有传输需求了，也不会回应服务端，也会造成资源浪费。</li>
+</ul>
+<h5 id="为什么不是四次"><a href="#为什么不是四次" class="headerlink" title="为什么不是四次"></a>为什么不是四次</h5><p>第二次握手实际上把确认收到，和发起连接请求合并到一起了。</p>
+<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><ul>
+<li>第一次挥手：客户端发送FIN数据包，表明打算断开连接，它不再发送数据，但是可以接收数据，进入FIN-WAIT1状态。</li>
+<li>第二次挥手：服务端收到FIN数据，回复一个ACK，表明它知道对方打算断开连接。客户端收到后，进入FIN-WAIT2状态。服务端进入CLOSE-WAIT状态。</li>
+<li>中间 ：服务端继续发送未传输完毕的数据</li>
+<li>第三次挥手：服务端发送FIN数据包，请求关闭连接，进入LAST-ACK状态。</li>
+<li>第四次挥手：客户端回复ACK，进入TIME-WAIT状态，等到两个报文段最长寿命后，CLOSE连接。如果这段时间内收到了服务端的第三次挥手重传，说明第四次挥手没成功发送过去，重传。</li>
+</ul>
+<h5 id="为什么要等两个报文段最长寿命"><a href="#为什么要等两个报文段最长寿命" class="headerlink" title="为什么要等两个报文段最长寿命"></a>为什么要等两个报文段最长寿命</h5><p>因为第四次挥手后，客户端无法得知对方是否收到数据包，并且关闭连接。两个报文段最长寿命就是一发一收的时间，如果这个时间段内没有收到超时重传的消息，就认为服务端收到了最后的ACK。</p>
+<p>如果不等待的话，服务端可能没收到第四次挥手数据，连接无法正常关闭造成资源浪费。</p>
+<h4 id="TCP的拥塞控制、流量控制、滑动窗口等等"><a href="#TCP的拥塞控制、流量控制、滑动窗口等等" class="headerlink" title="TCP的拥塞控制、流量控制、滑动窗口等等"></a>TCP的拥塞控制、流量控制、滑动窗口等等</h4><h5 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h5><p>拥塞控制是针对网络的，避免网络中存在过多的报文造成网络信道拥堵。主要用慢开始、拥塞避免算法，快速重传、快速回复。</p>
+<p><strong>慢开始、拥塞避免</strong><br>发送方维护一个拥塞窗口大小，最开始拥塞窗口为1个单位，每次成功收到确认后就将窗口大小加倍。当窗口大小大于阈值时，就执行拥塞避免算法，每次窗口大小加一个单位。</p>
+<p>如果出现数据丢失，将窗口设为1，执行慢开始算法，并且阈值设为数据丢失时的窗口大小的一半。</p>
+<p><strong>快重传、快恢复</strong><br>快重传是，如果发送方收到连续三个重复确认就立刻重传对方尚未收到的报文段，而不是等重传计时器时间到期。</p>
+<p>同时，因为能收到三个重复ACK，所以认为网络虽然拥堵，但还是有一定的运输能力，所以窗口不会设为1，而是设为阈值减半后的大小，并且继续执行拥塞避免算法。</p>
+<h5 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h5><p>流量控制是针对发送方和接收方数据处理能力的。双方各自维护一个窗口，并且在发送数据时会告知对方自己空闲窗口大小，如果窗口没有空闲，就会减缓数据发送速度。</p>
+<h5 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h5><p>滑动窗口的设置是为了避免出现每一个数据包发送后都要等待确认才能发送下一个数据包这样的情况，效率很低。滑动窗口外的左侧，可以看作是已经发送、确认的数据包；滑动窗口内的话，只有最左侧边缘的连续的数据包被确认了，窗口才会向右移动。</p>
+<h3 id="输入网址后发生的事情"><a href="#输入网址后发生的事情" class="headerlink" title="输入网址后发生的事情"></a>输入网址后发生的事情</h3><ol>
+<li>URL解析：url是统一资源定位符，为了访问服务器的资源，需要将url解析为IP地址，就会用到DNS协议。如果浏览器有域名缓存，或者系统本地有相应的hosts项，那就不用再向DNS服务器发送请求，直接就可以解析。如果没有的话，主机就会依次向本地、上级的DNS服务器递归地发送请求。</li>
+<li>解析得到IP地址后，为了传输HTTP请求，还要和服务器建立TCP连接，也就是三次握手。传输层往下，网络层根据IP对数据包进行转发，再往下还有ARP协议通过IP地址获得下一次转发的MAC地址。</li>
+<li>TCP连接建立后，服务器收到HTTP请求，将网页资源封装，再传给主机。主机收到网页资源数据后，由浏览器进行解析和渲染，同时页面内如果还有其他资源，则还会构造相应的HTTP请求去获取这些资源文件。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>远程软件控制Manjaro</title>
+    <url>/posts/1075cfa9/</url>
+    <content><![CDATA[<h3 id="为什么要用Manjaro"><a href="#为什么要用Manjaro" class="headerlink" title="为什么要用Manjaro"></a>为什么要用Manjaro</h3><p>实验室电脑配置很旧，且常年不关机导致硬件老化严重，很难带动Windwos系统，于是把系统盘格式化了<br>受人影响想试试arch linux，又有点怕麻烦所以用了Manjaro</p>
+<h3 id="下载软件"><a href="#下载软件" class="headerlink" title="下载软件"></a>下载软件</h3><p>Manjaro可以用pacma build直接构建软件</p>
+<p>记得在teamviewer官网上把以前的电脑给删除了，不然限制用户数</p>
+<p>anydesk也还可以用</p>
+<h3 id="解决远程软件无法显示（黑屏）"><a href="#解决远程软件无法显示（黑屏）" class="headerlink" title="解决远程软件无法显示（黑屏）"></a>解决远程软件无法显示（黑屏）</h3><p>在/etc/gdm3/custom.conf，允许自动登录，填上用户名</p>
+<p>最后一行设置<code>WaylandEnable=false</code></p>
+<h3 id="解决无显示器导致卡顿"><a href="#解决无显示器导致卡顿" class="headerlink" title="解决无显示器导致卡顿"></a>解决无显示器导致卡顿</h3><p>安装xf86，sudo pacman -S xf86-video-dummy</p>
+<p>修改配置 sudo gedit /etc/X11/xorg.conf</p>
+<p>抄来的配置，随便了能用就行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Section &quot;Device&quot;</span><br><span class="line">    Identifier  &quot;Configured Video Device&quot;</span><br><span class="line">    Driver      &quot;dummy&quot;</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Monitor&quot;</span><br><span class="line">    Identifier  &quot;Configured Monitor&quot;</span><br><span class="line">    HorizSync 31.5-48.5</span><br><span class="line">    VertRefresh 50-70</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Screen&quot;</span><br><span class="line">    Identifier  &quot;Default Screen&quot;</span><br><span class="line">    Monitor     &quot;Configured Monitor&quot;</span><br><span class="line">    Device      &quot;Configured Video Device&quot;</span><br><span class="line">    DefaultDepth 24</span><br><span class="line">    SubSection &quot;Display&quot;</span><br><span class="line">        Depth 24</span><br><span class="line">        Modes &quot;1920x1080&quot;</span><br><span class="line">    EndSubSection</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>Manjaro</tag>
       </tags>
   </entry>
 </search>
