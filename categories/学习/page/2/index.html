@@ -19,22 +19,18 @@
         <meta name="keywords" content="Nothing is blessing to everything for me,RtekiX">
     
     <meta name="description" content="">
-    <meta name="description" content="起因昨天晚上，突然发现QQ邮箱app即使允许电池无限制使用，收到邮件的时候也不会推送通知，查了一下是因为三星没有像mipush一样的推送服务，QQ邮箱只有常驻后台运行才能通知。 于是为了能及时收到信息，我下载了支持fcm的gmail和outlook，测试能不能利用fcm推送 问题排查 电池优化问题 国行安卓手机没有统一的推送服务，大多只能靠应用后台保活来实现实时通知，比如QQ和微信就是默认无限制运">
-<meta property="og:type" content="article">
-<meta property="og:title" content="关于FCM服务的一些问题">
-<meta property="og:url" content="https://rtekix.github.io/posts/24b990d7/index.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Nothing is blessing to everything for me">
+<meta property="og:url" content="https://rtekix.github.io/categories/%E5%AD%A6%E4%B9%A0/page/2/index.html">
 <meta property="og:site_name" content="Nothing is blessing to everything for me">
-<meta property="og:description" content="起因昨天晚上，突然发现QQ邮箱app即使允许电池无限制使用，收到邮件的时候也不会推送通知，查了一下是因为三星没有像mipush一样的推送服务，QQ邮箱只有常驻后台运行才能通知。 于是为了能及时收到信息，我下载了支持fcm的gmail和outlook，测试能不能利用fcm推送 问题排查 电池优化问题 国行安卓手机没有统一的推送服务，大多只能靠应用后台保活来实现实时通知，比如QQ和微信就是默认无限制运">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-02-06T14:17:13.000Z">
-<meta property="article:modified_time" content="2024-02-17T08:16:39.076Z">
 <meta property="article:author" content="RtekiX">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/rin.ico">
     
-    <title>关于FCM服务的一些问题 · Nothing is blessing to everything to me</title>
+    <title>Nothing is blessing to everything to me</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -222,8 +218,6 @@
         }
     </script>
     
-        <body class="post-body">
-    
         <!-- header -->
         <header class="header header-mobile">
     <!-- top read progress line -->
@@ -253,17 +247,6 @@
     </div>
     <!-- toggle banner for post layout -->
     
-        
-            <div class="banner">
-        
-            <div class="blog-title header-element">
-                <a href="/">Nothing is blessing to everything to me</a>
-            </div>
-            <div class="post-title header-element">
-                <a href="#" class="post-name">关于FCM服务的一些问题</a>
-            </div>
-        </div>
-    
 </header>
 
         <!-- fixed footer -->
@@ -290,81 +273,24 @@
 
 
 
-    height:50vh;
-
 ">
     
     <!-- 主页  -->
     
-        
-    <!-- 404页  -->
-    
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
-            
-                关于FCM服务的一些问题
-            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
-                
-            <!-- 404 -->
-            
         </p>
         <!-- 文章页 meta -->
-        
-            <div class="post-intros">
-                <!-- 文章页标签  -->
-                
-                    <div class= post-intro-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="随笔"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                随笔
-            </span>
-        </span>
-    
-    
-</div>
-
-                
-                <!-- 文章字数统计 -->
-                
-                <div class="post-intro-meta">
-                    <!-- 撰写日期 -->
-                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2024/02/06</span>
-                    <!-- busuanzi -->
-                    
-                    <!-- 文章分享 -->
-                    <span class="share-wrapper">
-                        <span class="iconfont-archer share-icon">&#xe71d;</span>
-                        <span class="share-text">Share</span>
-                        <ul class="share-list">
-                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
-                                <div class="share-qrcode"></div>
-                            </li>
-                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
-                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
-                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
-                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
         
     </div>
 </div>
@@ -494,86 +420,61 @@
 
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
             <div class="container container-unloaded">
-                <main class="main post-page">
-    <article class="article-entry">
-        <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>昨天晚上，突然发现QQ邮箱app即使允许电池无限制使用，收到邮件的时候也不会推送通知，查了一下是因为三星没有像mipush一样的推送服务，QQ邮箱只有常驻后台运行才能通知。</p>
-<p>于是为了能及时收到信息，我下载了支持fcm的gmail和outlook，测试能不能利用fcm推送</p>
-<h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><ol>
-<li><strong>电池优化问题</strong><ul>
-<li>国行安卓手机没有统一的推送服务，大多只能靠应用后台保活来实现实时通知，比如QQ和微信就是默认无限制运行，允许任意自启动和重启，所以才能随时收到消息。</li>
-<li>经过排查，所有支持fcm的应用都设置了无限制运行，允许常驻，仍然无法收到通知</li>
-</ul>
-</li>
-<li><strong>FCM问题</strong><ul>
-<li>允许应用自启动，但是没有收到消息，说明outlook和gmail并没有收到来自FCM的通知，遂检查FCM连接状况。</li>
-<li>三星国行禁用了<font color="red">*#*#426#*#*</font>查看fcm连接状况，只能通过第三方app进入诊断页面。我在github找到了一个FCM推送查看器。在log里可以看到，FCM服务是断开的，每隔十几分钟会尝试重连，然后连接失败，log为<code>Connecting using McsConnection&#123;NetworkWrapper&#123;244&#125;,type=0,isVpnConnected=true&#125;</code></li>
-<li>看到这个log，我以为是clash的问题，于是关闭代理再次连接，成功连接上。所以这里我以为是fcm服务，也就是mtalk.google会检测代理连接，必须直连，所以花了很长一段时间想在配置文件里加上混合配置或者parser。但问题在于，我另一个手机使用相同的配置，能够长期稳定连接到fcm服务不断开，所以问题根源不在这里。</li>
-</ul>
-</li>
-<li><strong>DNS问题</strong><ul>
-<li>绕了很长一段远路，最后想起来clash有日志捕捉功能，遂开启。很快找到原因，<code>error: all DNS requests failed, first error: use default dns resolve failed: all DNS requests failed, first error</code>。所以是DNS问题，尝试了三个解决手段：<ul>
-<li>关闭clash中的DNS劫持：无效</li>
-<li>WIFI设置手动DNS：无效</li>
-<li>clash中设置强制启用系统hosts和DNS：有效</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>所以根本上是clash配置文件中的DNS server有一些问题。但还有一点不明白的地方：在测试连接的时候，我发现只有 <font color="red">5G网络+开启代理</font> 两者组合会导致DNS出现问题。使用2.4GHZ的WIFI或者4G移动数据+代理，可以连接。使用5GHZ的WIFI或者5G移动数据，可以连接。但5G+代理，不修改DNS设置就会出现问题，这一点仍然摸不着头脑。</p>
-
-    </article>
-    <!-- license -->
+                <main class="main index-page">
     
-    <!-- paginator -->
-    <ul class="post-paginator">
-        <li class="next">
+        
+        
+        
+        
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/posts/67cafe3d/" title="基础知识复习笔记1-Java集合">
-                    <div class="nextTitle">基础知识复习笔记1-Java集合</div>
-                </a>
             
-        </li>
-        <li class="previous">
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/posts/1075cfa9/">
+                
+                <span class="abstract-title-text">远程软件控制Manjaro</span>
+            </a>
+            <div class="abstract-content">
+                用笔记本连接实验室电脑，无公网ip
+            </div>
+            <!-- read more -->
             
-                <div class="prevSlogan">Previous Post</div>
-                <a href="/posts/1fa37b1/" title="SRS直播服务器">
-                    <div class="prevTitle">SRS直播服务器</div>
-                </a>
-            
-        </li>
-    </ul>
-    <!-- comment -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/02/17">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/09</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
     
-        <div class="post-comment">
-            <!-- 来必力 City 版安装代码 -->
-
-
+        
+        
             
-
-            
-
-            
-
-            <!-- utteranc评论 -->
-
-
-            <!-- partial('_partial/comment/changyan') -->
-            <!--PC版-->
-
-
-            
-            
-
-            
-
-        </div>
+        
+        
+        <span class="post-category" data-categories="学习"">
+            <i class="fas fa-folder post-category-icon"></i>
+            <span class="post-category-text">
+                学习
+            </span>
+        </span>
     
-    <!-- timeliness note -->
-    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
-    <!-- Mathjax -->
+        <a class="post-tag" href="javascript:void(0);" data-tags="Manjaro">Manjaro</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+    <!-- paginator  -->
+    
+        <nav class="page-nav">
+            <a class="extend prev" rel="prev" href="/categories/%E5%AD%A6%E4%B9%A0/">&lt; PREV</a><a class="page-number" href="/categories/%E5%AD%A6%E4%B9%A0/">1</a><span class="page-number current">2</span>
+        </nav>
     
 </main>
 
@@ -642,23 +543,6 @@
 
         </div>
         <!-- toc -->
-        
-            <div class="toc-wrapper toc-wrapper-loding" style=
-
-
-
-
-
-
-
-    top:50vh;
-
->
-                <div class="toc-catalog">
-                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
-                </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%B7%E5%9B%A0"><span class="toc-number">1.</span> <span class="toc-text">起因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5"><span class="toc-number">2.</span> <span class="toc-text">问题排查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">3.</span> <span class="toc-text">结果</span></a></li></ol>
-            </div>
         
         <!-- sidebar -->
         <div class="sidebar sidebar-hide">
@@ -1038,8 +922,6 @@
         <!-- CNZZ -->
         
         <!-- async load share.js -->
-        
-            <script src="/scripts/share.js?v=20211217" async></script>
         
         <!-- mermaid -->
         

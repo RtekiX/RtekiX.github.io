@@ -19,22 +19,23 @@
         <meta name="keywords" content="Nothing is blessing to everything for me,RtekiX">
     
     <meta name="description" content="">
-    <meta name="description" content="起因昨天晚上，突然发现QQ邮箱app即使允许电池无限制使用，收到邮件的时候也不会推送通知，查了一下是因为三星没有像mipush一样的推送服务，QQ邮箱只有常驻后台运行才能通知。 于是为了能及时收到信息，我下载了支持fcm的gmail和outlook，测试能不能利用fcm推送 问题排查 电池优化问题 国行安卓手机没有统一的推送服务，大多只能靠应用后台保活来实现实时通知，比如QQ和微信就是默认无限制运">
+    <meta name="description" content="选择题MySQL分布式事务：XA事务，2pc。将分布式事务执行的过程分为两阶段，第一阶段所有需要执行操作的节点准备自身资源数据，检查是否可以提交，向事务管理节点发送precommit的消息。所有节点都准备就绪precommit后，才能开始实际执行事务，期间等待是阻塞的。 Java垃圾回收：强引用，任何时候都不回收；软引用，空间不足时回收；弱引用和虚引用，任何时候都回收。 编程题第一题忘了，比较简单">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于FCM服务的一些问题">
-<meta property="og:url" content="https://rtekix.github.io/posts/24b990d7/index.html">
+<meta property="og:title" content="2024&#x2F;2&#x2F;21 oppo春招笔试">
+<meta property="og:url" content="https://rtekix.github.io/posts/4a67726/index.html">
 <meta property="og:site_name" content="Nothing is blessing to everything for me">
-<meta property="og:description" content="起因昨天晚上，突然发现QQ邮箱app即使允许电池无限制使用，收到邮件的时候也不会推送通知，查了一下是因为三星没有像mipush一样的推送服务，QQ邮箱只有常驻后台运行才能通知。 于是为了能及时收到信息，我下载了支持fcm的gmail和outlook，测试能不能利用fcm推送 问题排查 电池优化问题 国行安卓手机没有统一的推送服务，大多只能靠应用后台保活来实现实时通知，比如QQ和微信就是默认无限制运">
+<meta property="og:description" content="选择题MySQL分布式事务：XA事务，2pc。将分布式事务执行的过程分为两阶段，第一阶段所有需要执行操作的节点准备自身资源数据，检查是否可以提交，向事务管理节点发送precommit的消息。所有节点都准备就绪precommit后，才能开始实际执行事务，期间等待是阻塞的。 Java垃圾回收：强引用，任何时候都不回收；软引用，空间不足时回收；弱引用和虚引用，任何时候都回收。 编程题第一题忘了，比较简单">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-02-06T14:17:13.000Z">
-<meta property="article:modified_time" content="2024-02-17T08:16:39.076Z">
+<meta property="article:published_time" content="2024-02-21T06:15:31.000Z">
+<meta property="article:modified_time" content="2024-02-21T06:33:55.569Z">
 <meta property="article:author" content="RtekiX">
+<meta property="article:tag" content="笔试">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/rin.ico">
     
-    <title>关于FCM服务的一些问题 · Nothing is blessing to everything to me</title>
+    <title>2024/2/21 oppo春招笔试 · Nothing is blessing to everything to me</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -260,7 +261,7 @@
                 <a href="/">Nothing is blessing to everything to me</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">关于FCM服务的一些问题</a>
+                <a href="#" class="post-name">2024/2/21 oppo春招笔试</a>
             </div>
         </div>
     
@@ -306,7 +307,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                关于FCM服务的一些问题
+                2024/2/21 oppo春招笔试
             <!-- 404 -->
             
         </h1>
@@ -330,13 +331,15 @@
             
         
         
-        <span class="post-category" data-categories="随笔"">
+        <span class="post-category" data-categories="学习"">
             <i class="fas fa-folder post-category-icon"></i>
             <span class="post-category-text">
-                随笔
+                学习
             </span>
         </span>
     
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="笔试">笔试</a>
     
 </div>
 
@@ -346,7 +349,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2024/02/06</span>
+                    <span class="post-intro-time">2024/02/21</span>
                     <!-- busuanzi -->
                     
                     <!-- 文章分享 -->
@@ -496,31 +499,22 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>昨天晚上，突然发现QQ邮箱app即使允许电池无限制使用，收到邮件的时候也不会推送通知，查了一下是因为三星没有像mipush一样的推送服务，QQ邮箱只有常驻后台运行才能通知。</p>
-<p>于是为了能及时收到信息，我下载了支持fcm的gmail和outlook，测试能不能利用fcm推送</p>
-<h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><ol>
-<li><strong>电池优化问题</strong><ul>
-<li>国行安卓手机没有统一的推送服务，大多只能靠应用后台保活来实现实时通知，比如QQ和微信就是默认无限制运行，允许任意自启动和重启，所以才能随时收到消息。</li>
-<li>经过排查，所有支持fcm的应用都设置了无限制运行，允许常驻，仍然无法收到通知</li>
+        <h3 id="选择题"><a href="#选择题" class="headerlink" title="选择题"></a>选择题</h3><p>MySQL分布式事务：XA事务，2pc。将分布式事务执行的过程分为两阶段，第一阶段所有需要执行操作的节点准备自身资源数据，检查是否可以提交，向事务管理节点发送precommit的消息。所有节点都准备就绪precommit后，才能开始实际执行事务，期间等待是阻塞的。</p>
+<p>Java垃圾回收：强引用，任何时候都不回收；软引用，空间不足时回收；弱引用和虚引用，任何时候都回收。</p>
+<h3 id="编程题"><a href="#编程题" class="headerlink" title="编程题"></a>编程题</h3><h4 id="第一题忘了，比较简单"><a href="#第一题忘了，比较简单" class="headerlink" title="第一题忘了，比较简单"></a>第一题忘了，比较简单</h4><h4 id="第二题"><a href="#第二题" class="headerlink" title="第二题"></a>第二题</h4><p>第二题题意是，一个数组中，任选两个元素删除，并将它们的和再加入数组，使数组的极差最小。</p>
+<h5 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h5><p>用优先队列读入元素，删除最小的两个元素，再加入数组。过了90%。</p>
+<p>忘记考虑的点：最小的两个元素相加后，可能大于原数组最大的元素，而我直接默认优先队列头的元素最大了，测试数据中可能出现了负数。</p>
+<h4 id="第三题"><a href="#第三题" class="headerlink" title="第三题"></a>第三题</h4><p>n个杯子中有k杯水，每个回合可能的行为：</p>
+<ul>
+<li>随机选择一个杯子</li>
+<li>如果杯子空：则回合结束</li>
+<li>如果杯子不空：上回合喝过水了，则放下杯子回合结束；上回合没喝水，则喝掉杯子里的水</li>
 </ul>
-</li>
-<li><strong>FCM问题</strong><ul>
-<li>允许应用自启动，但是没有收到消息，说明outlook和gmail并没有收到来自FCM的通知，遂检查FCM连接状况。</li>
-<li>三星国行禁用了<font color="red">*#*#426#*#*</font>查看fcm连接状况，只能通过第三方app进入诊断页面。我在github找到了一个FCM推送查看器。在log里可以看到，FCM服务是断开的，每隔十几分钟会尝试重连，然后连接失败，log为<code>Connecting using McsConnection&#123;NetworkWrapper&#123;244&#125;,type=0,isVpnConnected=true&#125;</code></li>
-<li>看到这个log，我以为是clash的问题，于是关闭代理再次连接，成功连接上。所以这里我以为是fcm服务，也就是mtalk.google会检测代理连接，必须直连，所以花了很长一段时间想在配置文件里加上混合配置或者parser。但问题在于，我另一个手机使用相同的配置，能够长期稳定连接到fcm服务不断开，所以问题根源不在这里。</li>
-</ul>
-</li>
-<li><strong>DNS问题</strong><ul>
-<li>绕了很长一段远路，最后想起来clash有日志捕捉功能，遂开启。很快找到原因，<code>error: all DNS requests failed, first error: use default dns resolve failed: all DNS requests failed, first error</code>。所以是DNS问题，尝试了三个解决手段：<ul>
-<li>关闭clash中的DNS劫持：无效</li>
-<li>WIFI设置手动DNS：无效</li>
-<li>clash中设置强制启用系统hosts和DNS：有效</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>所以根本上是clash配置文件中的DNS server有一些问题。但还有一点不明白的地方：在测试连接的时候，我发现只有 <font color="red">5G网络+开启代理</font> 两者组合会导致DNS出现问题。使用2.4GHZ的WIFI或者4G移动数据+代理，可以连接。使用5GHZ的WIFI或者5G移动数据，可以连接。但5G+代理，不修改DNS设置就会出现问题，这一点仍然摸不着头脑。</p>
+<p>最终求所有水被喝完时的回合数的期望值。</p>
+<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><p>很明显是一个数学题。假如不考虑两次喝水之间的间隙，还剩i杯水的时候，喝到水的概率p=i/n。此时，喝一杯水的期望回合是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T = p*1 + p(1-p)*2 + p(1-p)^2*3 + ... + p(1-p)^n*(n+1)</span><br><span class="line">  = i/n(1-p)^2</span><br></pre></td></tr></table></figure>
+<p>然后令i=k，i=k-1, … i=1，累加即可</p>
+<p>没想出来的地方：两次喝水有间隙——卡在这里很久，实际上只需要在最后的结果加上k-1个回合就可以了。</p>
 
     </article>
     <!-- license -->
@@ -529,17 +523,12 @@
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/posts/67cafe3d/" title="基础知识复习笔记1-Java集合">
-                    <div class="nextTitle">基础知识复习笔记1-Java集合</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/posts/1fa37b1/" title="SRS直播服务器">
-                    <div class="prevTitle">SRS直播服务器</div>
+                <a href="/posts/ccf09792/" title="基础知识学习笔记-Spring">
+                    <div class="prevTitle">基础知识学习笔记-Spring</div>
                 </a>
             
         </li>
@@ -657,7 +646,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%B7%E5%9B%A0"><span class="toc-number">1.</span> <span class="toc-text">起因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5"><span class="toc-number">2.</span> <span class="toc-text">问题排查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">3.</span> <span class="toc-text">结果</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">选择题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A8%8B%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">编程题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%A2%98%E5%BF%98%E4%BA%86%EF%BC%8C%E6%AF%94%E8%BE%83%E7%AE%80%E5%8D%95"><span class="toc-number">2.1.</span> <span class="toc-text">第一题忘了，比较简单</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E9%A2%98"><span class="toc-number">2.2.</span> <span class="toc-text">第二题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF"><span class="toc-number">2.2.1.</span> <span class="toc-text">思路</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E9%A2%98"><span class="toc-number">2.3.</span> <span class="toc-text">第三题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="toc-number">2.3.1.</span> <span class="toc-text">思路</span></a></li></ol></li></ol></li></ol>
             </div>
         
         <!-- sidebar -->
