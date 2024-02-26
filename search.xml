@@ -108,6 +108,24 @@
       </tags>
   </entry>
   <entry>
+    <title>QQ的存储空间为什么会越来越大</title>
+    <url>/posts/cda2b7f1/</url>
+    <content><![CDATA[<h3 id="注意到问题的缘由"><a href="#注意到问题的缘由" class="headerlink" title="注意到问题的缘由"></a>注意到问题的缘由</h3><p>我有定期清理硬盘空间的习惯，除了用dism++清理系统临时文件以外，还会手动去检查一些占用空间比较大的文件夹。</p>
+<p>事情就发生在上一次清理空间的时候。我习惯性地打开QQ存储文件主目录，然后删除 QQ/&lt;qq号&gt;/Image/Gourp2 里的所有文件。关于这里，还有一点想吐槽的：</p>
+<ul>
+<li>QQ为了加速图片检索，以Gourp2文件夹为根建了一颗B+树，所以点开文件夹会看到很多个名称长度为2的子文件夹，子文件夹下又有若干个名称长度为2的子文件夹，里面存储的就是文件前缀名相同的几张图片。结果就是删除的时候系统会做很多额外的检查，比如找文件索引、检查权限等等，因为删除实际上也是文件的移动，移动到回收站而已，整个删除过程速度非常慢。</li>
+</ul>
+<p>回到主题，删除完没用的群聊图片后，我发现QQ占用空间仍然很大，而且点击文件夹属性，存储空间计算时有一个断崖式的增长，也就是肯定存在一个大文件，进而才发现了 Msg3.0.db 和 Msg3.0index.db</p>
+<h3 id="Msg3-0-db"><a href="#Msg3-0-db" class="headerlink" title="Msg3.0.db"></a>Msg3.0.db</h3><p>Msg3.0.db 和 Msg3.0index.db 在我的电脑上一个占用11.3GB，一个占用7GB。</p>
+<p>根据文件名形式，猜测是SQLite，网上查了一下确实是。所以说QQ是将所有的聊天记录都存储在 Msg3.0.db 中，并且为其建立了 Msg3.0index.db 的索引。</p>
+<p>在QQ界面有一个消息管理器，可以看到即使删除了联系人、退出了群，相应的聊天记录也不会自动删除，还是存储在 db 文件中，必须在管理器中手动选择删除。如果不删除，那QQ占用空间就确实会随着时间越来越大，只删除图片缓存也没用。</p>
+<p>删除的时候，文件夹下会有相应的 db-journal 文件，实际上就是事务执行时的临时文件，用于回滚。事务执行结束后会清空为0字节，但不会删除，省去下次创建操作。</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+  </entry>
+  <entry>
     <title>SRS直播服务器</title>
     <url>/posts/1fa37b1/</url>
     <content><![CDATA[<h3 id="使用SRS-Stack构建"><a href="#使用SRS-Stack构建" class="headerlink" title="使用SRS-Stack构建"></a>使用SRS-Stack构建</h3><p>腾讯云轻量应用服务器提供了应用模板，在控制台重装为音视频流服务器即可快速启动SRS服务。</p>
@@ -129,6 +147,91 @@
       </categories>
   </entry>
   <entry>
+    <title>关于FCM服务的一些问题</title>
+    <url>/posts/24b990d7/</url>
+    <content><![CDATA[<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>昨天晚上，突然发现QQ邮箱app即使允许电池无限制使用，收到邮件的时候也不会推送通知，查了一下是因为三星没有像mipush一样的推送服务，QQ邮箱只有常驻后台运行才能通知。</p>
+<p>于是为了能及时收到信息，我下载了支持fcm的gmail和outlook，测试能不能利用fcm推送</p>
+<h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><ol>
+<li><strong>电池优化问题</strong><ul>
+<li>国行安卓手机没有统一的推送服务，大多只能靠应用后台保活来实现实时通知，比如QQ和微信就是默认无限制运行，允许任意自启动和重启，所以才能随时收到消息。</li>
+<li>经过排查，所有支持fcm的应用都设置了无限制运行，允许常驻，仍然无法收到通知</li>
+</ul>
+</li>
+<li><strong>FCM问题</strong><ul>
+<li>允许应用自启动，但是没有收到消息，说明outlook和gmail并没有收到来自FCM的通知，遂检查FCM连接状况。</li>
+<li>三星国行禁用了<font color="red">*#*#426#*#*</font>查看fcm连接状况，只能通过第三方app进入诊断页面。我在github找到了一个FCM推送查看器。在log里可以看到，FCM服务是断开的，每隔十几分钟会尝试重连，然后连接失败，log为<code>Connecting using McsConnection&#123;NetworkWrapper&#123;244&#125;,type=0,isVpnConnected=true&#125;</code></li>
+<li>看到这个log，我以为是clash的问题，于是关闭代理再次连接，成功连接上。所以这里我以为是fcm服务，也就是mtalk.google会检测代理连接，必须直连，所以花了很长一段时间想在配置文件里加上混合配置或者parser。但问题在于，我另一个手机使用相同的配置，能够长期稳定连接到fcm服务不断开，所以问题根源不在这里。</li>
+</ul>
+</li>
+<li><strong>DNS问题</strong><ul>
+<li>绕了很长一段远路，最后想起来clash有日志捕捉功能，遂开启。很快找到原因，<code>error: all DNS requests failed, first error: use default dns resolve failed: all DNS requests failed, first error</code>。所以是DNS问题，尝试了三个解决手段：<ul>
+<li>关闭clash中的DNS劫持：无效</li>
+<li>WIFI设置手动DNS：无效</li>
+<li>clash中设置强制启用系统hosts和DNS：有效</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>所以根本上是clash配置文件中的DNS server有一些问题。但还有一点不明白的地方：在测试连接的时候，我发现只有 <font color="red">5G网络+开启代理</font> 两者组合会导致DNS出现问题。使用2.4GHZ的WIFI或者4G移动数据+代理，可以连接。使用5GHZ的WIFI或者5G移动数据，可以连接。但5G+代理，不修改DNS设置就会出现问题，这一点仍然摸不着头脑。</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>基础知识复习笔记1-Java集合</title>
+    <url>/posts/67cafe3d/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>复习笔记系列记录一些C++/Java，本科专业课的一些知识，强化记忆</p>
+<p>本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。</p>
+<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_queue实际上底层都是deque容器，deque实现了它们所需的方法。Java中类似，所有容器都是从Collection和Map接口派生出来的，从Collection和Map接口又派生出许多子接口，由“集合（容器）”实现这些接口的方法。</p>
+<ul>
+<li><strong>Collection：</strong> 存放单一元素<ul>
+<li><strong>List</strong>：ArrayList，LinkedList</li>
+<li><strong>Set</strong>：HashSet，TreeSet，LinkedHashSet</li>
+<li><strong>Queue</strong>：PiorityQueue<ul>
+<li><strong>Deque</strong>：LinkedList，ArrayDeque</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Map：</strong> 存放键值对<ul>
+<li>HashMap，TreeMap，LinkedHashMap</li>
+</ul>
+</li>
+</ul>
+<p>以上黑体是接口，常规体是集合/容器。</p>
+<h4 id="ArrayList和LinkedList"><a href="#ArrayList和LinkedList" class="headerlink" title="ArrayList和LinkedList"></a>ArrayList和LinkedList</h4><p>ArrayList类似于C++的vector，底层用数组实现，可以随机访问、自动扩容。扩容机制也和vector类似，大约为1.5倍。</p>
+<p>LinkedList是双向链表，头尾插入删除O(1)，随机位置插入删除平均仍然是O(n)，所以实际上与ArrayList相比优势不大，但适合作为双向队列的接口实现。</p>
+<h4 id="HashSet，HashMap"><a href="#HashSet，HashMap" class="headerlink" title="HashSet，HashMap"></a>HashSet，HashMap</h4><h5 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h5><p>HashMap和HashSet底层实现相同，都是数组+链表。当冲突形成的拉链表长度大于8，而且数组长度大于64时，会将链表转化为红黑树，降低查找开销。数组长度不大于64则优先数组扩容。</p>
+<h5 id="下标计算"><a href="#下标计算" class="headerlink" title="下标计算"></a>下标计算</h5><p>HashSet类似于C++的unordered_set，元素存放无序、不可重复。计算元素存放位置时，先对元素进行一次hashCode()得到哈希值h，再将h和h的高16位或运算，得到最终的hash。然后<code>(n-1) &amp; hash</code>计算出下标。当n是2的幂次时，<code>(n-1)&amp;hash == hash % n</code>，所以HashMap表的长度总是2的幂次。</p>
+<h5 id="冲突处理"><a href="#冲突处理" class="headerlink" title="冲突处理"></a>冲突处理</h5><p>插入的时候，先对元素进行hashcode计算，如果冲突，则调用equals对比元素的值，相同则覆盖值，不同则按照哈希冲突拉链处理。</p>
+<h5 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h5><p>可以用foreach语法糖遍历，但遍历中不能对元素进行remove。如果需要遍历中对元素remove，需要用Iterator。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Iterator&lt;Map.Entry&lt;Object, Object&gt;&gt; it = mp.entrySet().iterator();</span><br><span class="line">while(it.hasNext()) &#123;</span><br><span class="line">    Map.Entry&lt;Object, Object&gt; entry = it.next();</span><br><span class="line">    System.out.println(entry.getKey() + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>foreach语法糖本质也是用迭代器遍历，但是remove会使用集合的remove方法，而不是迭代器的remove方法，导致出错。</p>
+<p>不建议使用map.keySet()获取键表，然后用get(key)的方法遍历，相当于遍历了两次，效率很低。</p>
+<h4 id="TreeSet和TreeMap"><a href="#TreeSet和TreeMap" class="headerlink" title="TreeSet和TreeMap"></a>TreeSet和TreeMap</h4><p>两者关系和HashSet、HashMap差不多，TreeMap是有序的，会默认按照键值升序排序。</p>
+<h5 id="底层实现-1"><a href="#底层实现-1" class="headerlink" title="底层实现"></a>底层实现</h5><p>红黑树，查找和增删的复杂度相同，效率低于HashMap。</p>
+<h5 id="自定义排序"><a href="#自定义排序" class="headerlink" title="自定义排序"></a>自定义排序</h5><ul>
+<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Node</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">char</span> ch;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">char</span> c)</span> </span>&#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hashCode和equals重写是为了让自定义类型在Set中去重</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Integer(value).hashCode() + <span class="keyword">new</span> Character(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">        Node n2 = (Node) o;</span><br><span class="line">        <span class="keyword">return</span> value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Node o)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value &lt; o.value ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>方法二：在创建TreeMap时定义比较函数compare：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Character, Integer&gt; mp = new TreeMap&lt;&gt;(new Comparator&lt;Character&gt;() &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public int compare(Character o1, Character o2) &#123;</span><br><span class="line">      return o1 &lt; o2 ? 1 : -1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h4><p>PiorityQueue默认是小顶堆，自定义比较的方法和TreeMap一样。</p>
+<ul>
+<li>poll和take都是取出一个元素，poll不会抛出异常</li>
+<li>peek和element都是获取顶端元素，peek不会抛出异常</li>
+<li>offer和add都是添加一个元素，offer不会抛出异常</li>
+<li>Deque的offerFirst、pollLast等同理</li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>NEMU-pa0</title>
     <url>/posts/50a57998/</url>
     <content><![CDATA[<p>主要问题有</p>
@@ -142,9 +245,9 @@
 <p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
 <p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
 <h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#105;&#x74;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#98;&#46;&#99;&#x6f;&#x6d;">&#103;&#105;&#x74;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#98;&#46;&#99;&#x6f;&#x6d;</a>。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#x67;&#105;&#x74;&#x40;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#x6d;">&#x67;&#105;&#x74;&#x40;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#x6d;</a>。</p>
 <p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#x67;&#105;&#116;&#64;&#103;&#105;&#116;&#x68;&#x75;&#98;&#46;&#99;&#111;&#x6d;">&#x67;&#105;&#116;&#64;&#103;&#105;&#116;&#x68;&#x75;&#98;&#46;&#99;&#111;&#x6d;</a>/仓库地址，而不是http或https</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#103;&#105;&#x74;&#x40;&#103;&#105;&#116;&#x68;&#117;&#x62;&#x2e;&#x63;&#x6f;&#x6d;">&#103;&#105;&#x74;&#x40;&#103;&#105;&#116;&#x68;&#117;&#x62;&#x2e;&#x63;&#x6f;&#x6d;</a>/仓库地址，而不是http或https</p>
 <h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
 <p>以后再学</p>
 ]]></content>
@@ -263,39 +366,6 @@
       </tags>
   </entry>
   <entry>
-    <title>关于FCM服务的一些问题</title>
-    <url>/posts/24b990d7/</url>
-    <content><![CDATA[<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>昨天晚上，突然发现QQ邮箱app即使允许电池无限制使用，收到邮件的时候也不会推送通知，查了一下是因为三星没有像mipush一样的推送服务，QQ邮箱只有常驻后台运行才能通知。</p>
-<p>于是为了能及时收到信息，我下载了支持fcm的gmail和outlook，测试能不能利用fcm推送</p>
-<h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><ol>
-<li><strong>电池优化问题</strong><ul>
-<li>国行安卓手机没有统一的推送服务，大多只能靠应用后台保活来实现实时通知，比如QQ和微信就是默认无限制运行，允许任意自启动和重启，所以才能随时收到消息。</li>
-<li>经过排查，所有支持fcm的应用都设置了无限制运行，允许常驻，仍然无法收到通知</li>
-</ul>
-</li>
-<li><strong>FCM问题</strong><ul>
-<li>允许应用自启动，但是没有收到消息，说明outlook和gmail并没有收到来自FCM的通知，遂检查FCM连接状况。</li>
-<li>三星国行禁用了<font color="red">*#*#426#*#*</font>查看fcm连接状况，只能通过第三方app进入诊断页面。我在github找到了一个FCM推送查看器。在log里可以看到，FCM服务是断开的，每隔十几分钟会尝试重连，然后连接失败，log为<code>Connecting using McsConnection&#123;NetworkWrapper&#123;244&#125;,type=0,isVpnConnected=true&#125;</code></li>
-<li>看到这个log，我以为是clash的问题，于是关闭代理再次连接，成功连接上。所以这里我以为是fcm服务，也就是mtalk.google会检测代理连接，必须直连，所以花了很长一段时间想在配置文件里加上混合配置或者parser。但问题在于，我另一个手机使用相同的配置，能够长期稳定连接到fcm服务不断开，所以问题根源不在这里。</li>
-</ul>
-</li>
-<li><strong>DNS问题</strong><ul>
-<li>绕了很长一段远路，最后想起来clash有日志捕捉功能，遂开启。很快找到原因，<code>error: all DNS requests failed, first error: use default dns resolve failed: all DNS requests failed, first error</code>。所以是DNS问题，尝试了三个解决手段：<ul>
-<li>关闭clash中的DNS劫持：无效</li>
-<li>WIFI设置手动DNS：无效</li>
-<li>clash中设置强制启用系统hosts和DNS：有效</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>所以根本上是clash配置文件中的DNS server有一些问题。但还有一点不明白的地方：在测试连接的时候，我发现只有 <font color="red">5G网络+开启代理</font> 两者组合会导致DNS出现问题。使用2.4GHZ的WIFI或者4G移动数据+代理，可以连接。使用5GHZ的WIFI或者5G移动数据，可以连接。但5G+代理，不修改DNS设置就会出现问题，这一点仍然摸不着头脑。</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-  </entry>
-  <entry>
     <title>基础知识复习笔记4-计算机网络</title>
     <url>/posts/3d21fd56/</url>
     <content><![CDATA[<h3 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a>TCP和UDP的区别</h3><p>TCP和UDP都是传输层协议，负责端到端的数据传输，主要区别是：</p>
@@ -334,79 +404,6 @@
 <li>解析得到IP地址后，为了传输HTTP请求，还要和服务器建立TCP连接，也就是三次握手。传输层往下，网络层根据IP对数据包进行转发，再往下还有ARP协议通过IP地址获得下一次转发的MAC地址。</li>
 <li>TCP连接建立后，服务器收到HTTP请求，将网页资源封装，再传给主机。主机收到网页资源数据后，由浏览器进行解析和渲染，同时页面内如果还有其他资源，则还会构造相应的HTTP请求去获取这些资源文件。</li>
 </ol>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础知识复习笔记1-Java集合</title>
-    <url>/posts/67cafe3d/</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>复习笔记系列记录一些C++/Java，本科专业课的一些知识，强化记忆</p>
-<p>本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。</p>
-<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_queue实际上底层都是deque容器，deque实现了它们所需的方法。Java中类似，所有容器都是从Collection和Map接口派生出来的，从Collection和Map接口又派生出许多子接口，由“集合（容器）”实现这些接口的方法。</p>
-<ul>
-<li><strong>Collection：</strong> 存放单一元素<ul>
-<li><strong>List</strong>：ArrayList，LinkedList</li>
-<li><strong>Set</strong>：HashSet，TreeSet，LinkedHashSet</li>
-<li><strong>Queue</strong>：PiorityQueue<ul>
-<li><strong>Deque</strong>：LinkedList，ArrayDeque</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><strong>Map：</strong> 存放键值对<ul>
-<li>HashMap，TreeMap，LinkedHashMap</li>
-</ul>
-</li>
-</ul>
-<p>以上黑体是接口，常规体是集合/容器。</p>
-<h4 id="ArrayList和LinkedList"><a href="#ArrayList和LinkedList" class="headerlink" title="ArrayList和LinkedList"></a>ArrayList和LinkedList</h4><p>ArrayList类似于C++的vector，底层用数组实现，可以随机访问、自动扩容。扩容机制也和vector类似，大约为1.5倍。</p>
-<p>LinkedList是双向链表，头尾插入删除O(1)，随机位置插入删除平均仍然是O(n)，所以实际上与ArrayList相比优势不大，但适合作为双向队列的接口实现。</p>
-<h4 id="HashSet，HashMap"><a href="#HashSet，HashMap" class="headerlink" title="HashSet，HashMap"></a>HashSet，HashMap</h4><h5 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h5><p>HashMap和HashSet底层实现相同，都是数组+链表。当冲突形成的拉链表长度大于8，而且数组长度大于64时，会将链表转化为红黑树，降低查找开销。数组长度不大于64则优先数组扩容。</p>
-<h5 id="下标计算"><a href="#下标计算" class="headerlink" title="下标计算"></a>下标计算</h5><p>HashSet类似于C++的unordered_set，元素存放无序、不可重复。计算元素存放位置时，先对元素进行一次hashCode()得到哈希值h，再将h和h的高16位或运算，得到最终的hash。然后<code>(n-1) &amp; hash</code>计算出下标。当n是2的幂次时，<code>(n-1)&amp;hash == hash % n</code>，所以HashMap表的长度总是2的幂次。</p>
-<h5 id="冲突处理"><a href="#冲突处理" class="headerlink" title="冲突处理"></a>冲突处理</h5><p>插入的时候，先对元素进行hashcode计算，如果冲突，则调用equals对比元素的值，相同则覆盖值，不同则按照哈希冲突拉链处理。</p>
-<h5 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h5><p>可以用foreach语法糖遍历，但遍历中不能对元素进行remove。如果需要遍历中对元素remove，需要用Iterator。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Iterator&lt;Map.Entry&lt;Object, Object&gt;&gt; it = mp.entrySet().iterator();</span><br><span class="line">while(it.hasNext()) &#123;</span><br><span class="line">    Map.Entry&lt;Object, Object&gt; entry = it.next();</span><br><span class="line">    System.out.println(entry.getKey() + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>foreach语法糖本质也是用迭代器遍历，但是remove会使用集合的remove方法，而不是迭代器的remove方法，导致出错。</p>
-<p>不建议使用map.keySet()获取键表，然后用get(key)的方法遍历，相当于遍历了两次，效率很低。</p>
-<h4 id="TreeSet和TreeMap"><a href="#TreeSet和TreeMap" class="headerlink" title="TreeSet和TreeMap"></a>TreeSet和TreeMap</h4><p>两者关系和HashSet、HashMap差不多，TreeMap是有序的，会默认按照键值升序排序。</p>
-<h5 id="底层实现-1"><a href="#底层实现-1" class="headerlink" title="底层实现"></a>底层实现</h5><p>红黑树，查找和增删的复杂度相同，效率低于HashMap。</p>
-<h5 id="自定义排序"><a href="#自定义排序" class="headerlink" title="自定义排序"></a>自定义排序</h5><ul>
-<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Node</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">char</span> ch;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">char</span> c)</span> </span>&#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hashCode和equals重写是为了让自定义类型在Set中去重</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Integer(value).hashCode() + <span class="keyword">new</span> Character(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">        Node n2 = (Node) o;</span><br><span class="line">        <span class="keyword">return</span> value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Node o)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value &lt; o.value ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li>方法二：在创建TreeMap时定义比较函数compare：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Character, Integer&gt; mp = new TreeMap&lt;&gt;(new Comparator&lt;Character&gt;() &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public int compare(Character o1, Character o2) &#123;</span><br><span class="line">      return o1 &lt; o2 ? 1 : -1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h4><p>PiorityQueue默认是小顶堆，自定义比较的方法和TreeMap一样。</p>
-<ul>
-<li>poll和take都是取出一个元素，poll不会抛出异常</li>
-<li>peek和element都是获取顶端元素，peek不会抛出异常</li>
-<li>offer和add都是添加一个元素，offer不会抛出异常</li>
-<li>Deque的offerFirst、pollLast等同理</li>
-</ul>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础知识学习笔记-Spring</title>
-    <url>/posts/ccf09792/</url>
-    <content><![CDATA[<h3 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h3><p>Spring是Java的一个轻量级开发框架，包含了很多模块，可以帮助开发人员快速构建应用，提高开发效率。其中最核心的模块就是IoC（控制反转）和AOP（面向切片编程）</p>
-<h4 id="IoC"><a href="#IoC" class="headerlink" title="IoC"></a>IoC</h4><p>控制反转的核心就是让Spring框架来管理程序中需要的对象实例，而不是由程序自己手动创建。</p>
-<ul>
-<li>不需要考虑实例化某个类需要构造怎样的参数，只要配置好，在需要用的时候，向IOC容器拿就可以了。</li>
-<li>如果某个类A用到了一个接口B，因为接口不能被实例化，所以就必须指定B的实现类。但是使用IOC的话，定义接口不需要指定实现类，在需要的时候在IOC容器中获取就可以了<ul>
-<li>比如在Service类里定义了操作数据库的DAO接口，用注解@Autowired就可以自动注入DAO对象实例</li>
-</ul>
-</li>
-</ul>
-<h4 id="面向切片编程"><a href="#面向切片编程" class="headerlink" title="面向切片编程"></a>面向切片编程</h4><p>面向切片编程和面向对象编程并不冲突，目的是将一些通用的操作和功能与业务功能代码分离开，提高代码的可读性和可维护性。比如像日志记录，如果每个类都重复实现日志的功能，就会有很多重复的冗余代码，维护起来很麻烦。所以面向切片就是把这些代码分离出来。</p>
 ]]></content>
       <categories>
         <category>学习</category>
@@ -478,6 +475,27 @@
 </li>
 </ul>
 <h5 id="分代算法"><a href="#分代算法" class="headerlink" title="分代算法"></a>分代算法</h5><p>新生代使用复制算法，因为新生代的对象存活概率低，大概率不需要复制很多内容。<br>老年代使用标记整理算法，老年代的对象通常比较大。</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础知识学习笔记6-Spring</title>
+    <url>/posts/ccf09792/</url>
+    <content><![CDATA[<h3 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h3><p>Spring是Java的一个轻量级开发框架，包含了很多模块，可以帮助开发人员快速构建应用，提高开发效率。其中最核心的模块就是IoC（控制反转）和AOP（面向切片编程）</p>
+<h4 id="IoC"><a href="#IoC" class="headerlink" title="IoC"></a>IoC</h4><p>控制反转的核心就是让Spring框架来管理程序中需要的对象实例，而不是由程序自己手动创建。</p>
+<ul>
+<li>不需要考虑实例化某个类需要构造怎样的参数，只要配置好，在需要用的时候，向IOC容器拿就可以了。</li>
+<li>如果某个类A用到了一个接口B，因为接口不能被实例化，所以就必须指定B的实现类。但是使用IOC的话，定义接口不需要指定实现类，在需要的时候在IOC容器中获取就可以了<ul>
+<li>比如在Service类里定义了操作数据库的DAO接口，用注解@Autowired就可以自动注入DAO对象实例</li>
+</ul>
+</li>
+</ul>
+<h4 id="面向切片编程"><a href="#面向切片编程" class="headerlink" title="面向切片编程"></a>面向切片编程</h4><p>面向切片编程和面向对象编程并不冲突，目的是将一些通用的操作和功能与业务功能代码分离开，提高代码的可读性和可维护性。比如像日志记录，如果每个类都重复实现日志的功能，就会有很多重复的冗余代码，维护起来很麻烦。所以面向切片就是把这些代码分离出来。</p>
 ]]></content>
       <categories>
         <category>学习</category>

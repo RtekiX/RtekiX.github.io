@@ -510,9 +510,9 @@
 <p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
 <p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
 <h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#105;&#x74;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#98;&#46;&#99;&#x6f;&#x6d;">&#103;&#105;&#x74;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#98;&#46;&#99;&#x6f;&#x6d;</a>。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#x67;&#105;&#x74;&#x40;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#x6d;">&#x67;&#105;&#x74;&#x40;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#x6d;</a>。</p>
 <p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#x67;&#105;&#116;&#64;&#103;&#105;&#116;&#x68;&#x75;&#98;&#46;&#99;&#111;&#x6d;">&#x67;&#105;&#116;&#64;&#103;&#105;&#116;&#x68;&#x75;&#98;&#46;&#99;&#111;&#x6d;</a>/仓库地址，而不是http或https</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#103;&#105;&#x74;&#x40;&#103;&#105;&#116;&#x68;&#117;&#x62;&#x2e;&#x63;&#x6f;&#x6d;">&#103;&#105;&#x74;&#x40;&#103;&#105;&#116;&#x68;&#117;&#x62;&#x2e;&#x63;&#x6f;&#x6d;</a>/仓库地址，而不是http或https</p>
 <h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
 <p>以后再学</p>
 
@@ -735,7 +735,16 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
         
         
         
@@ -816,7 +825,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -832,6 +841,12 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span>
+            <a class="archive-post-title" href="/posts/cda2b7f1/">QQ的存储空间为什么会越来越大</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">02/21</span>
             <a class="archive-post-title" href="/posts/4a67726/">2024/2/21 oppo春招笔试</a>
         </li>
@@ -839,7 +854,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/18</span>
-            <a class="archive-post-title" href="/posts/ccf09792/">基础知识学习笔记-Spring</a>
+            <a class="archive-post-title" href="/posts/ccf09792/">基础知识学习笔记6-Spring</a>
         </li>
     
         

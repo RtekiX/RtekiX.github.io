@@ -19,23 +19,22 @@
         <meta name="keywords" content="Nothing is blessing to everything for me,RtekiX">
     
     <meta name="description" content="">
-    <meta name="description" content="线程和进程经典问题。这个问题在本科学习操作系统时理解比较深刻，通常习惯从以下几个方面进行比较： 定义 进程：进程是程序代码在计算机系统中运行时的一个状态体，代码是静态的，进程是动态的。进程是操作系统分配资源的基本单位，拥有独立的地址空间、代码段、数据段。 线程：线程是进程中可以独立执行的单元，是CPU调度的基本单位。一个进程可以有多个线程，同一个进程内的线程共享进程的资源，每个线程也拥有自己的线程">
+    <meta name="description" content="注意到问题的缘由我有定期清理硬盘空间的习惯，除了用dism++清理系统临时文件以外，还会手动去检查一些占用空间比较大的文件夹。 事情就发生在上一次清理空间的时候。我习惯性地打开QQ存储文件主目录，然后删除 QQ&#x2F;&lt;qq号&gt;&#x2F;Image&#x2F;Gourp2 里的所有文件。关于这里，还有一点想吐槽的：  QQ为了加速图片检索，以Gourp2文件夹为根建了一颗B+树，所以点开文件夹会看到很多个名称">
 <meta property="og:type" content="article">
-<meta property="og:title" content="基础知识复习笔记2-多线程编程">
-<meta property="og:url" content="https://rtekix.github.io/posts/4c5a7656/index.html">
+<meta property="og:title" content="QQ的存储空间为什么会越来越大">
+<meta property="og:url" content="https://rtekix.github.io/posts/cda2b7f1/index.html">
 <meta property="og:site_name" content="Nothing is blessing to everything for me">
-<meta property="og:description" content="线程和进程经典问题。这个问题在本科学习操作系统时理解比较深刻，通常习惯从以下几个方面进行比较： 定义 进程：进程是程序代码在计算机系统中运行时的一个状态体，代码是静态的，进程是动态的。进程是操作系统分配资源的基本单位，拥有独立的地址空间、代码段、数据段。 线程：线程是进程中可以独立执行的单元，是CPU调度的基本单位。一个进程可以有多个线程，同一个进程内的线程共享进程的资源，每个线程也拥有自己的线程">
+<meta property="og:description" content="注意到问题的缘由我有定期清理硬盘空间的习惯，除了用dism++清理系统临时文件以外，还会手动去检查一些占用空间比较大的文件夹。 事情就发生在上一次清理空间的时候。我习惯性地打开QQ存储文件主目录，然后删除 QQ&#x2F;&lt;qq号&gt;&#x2F;Image&#x2F;Gourp2 里的所有文件。关于这里，还有一点想吐槽的：  QQ为了加速图片检索，以Gourp2文件夹为根建了一颗B+树，所以点开文件夹会看到很多个名称">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-02-13T14:32:08.000Z">
-<meta property="article:modified_time" content="2024-02-17T08:16:39.075Z">
+<meta property="article:published_time" content="2024-02-26T04:41:11.000Z">
+<meta property="article:modified_time" content="2024-02-26T05:02:51.544Z">
 <meta property="article:author" content="RtekiX">
-<meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/rin.ico">
     
-    <title>基础知识复习笔记2-多线程编程 · Nothing is blessing to everything to me</title>
+    <title>QQ的存储空间为什么会越来越大 · Nothing is blessing to everything to me</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -261,7 +260,7 @@
                 <a href="/">Nothing is blessing to everything to me</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">基础知识复习笔记2-多线程编程</a>
+                <a href="#" class="post-name">QQ的存储空间为什么会越来越大</a>
             </div>
         </div>
     
@@ -307,7 +306,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                基础知识复习笔记2-多线程编程
+                QQ的存储空间为什么会越来越大
             <!-- 404 -->
             
         </h1>
@@ -331,15 +330,13 @@
             
         
         
-        <span class="post-category" data-categories="学习"">
+        <span class="post-category" data-categories="随笔"">
             <i class="fas fa-folder post-category-icon"></i>
             <span class="post-category-text">
-                学习
+                随笔
             </span>
         </span>
     
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
     
 </div>
 
@@ -349,7 +346,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2024/02/13</span>
+                    <span class="post-intro-time">2024/02/26</span>
                     <!-- busuanzi -->
                     
                     <!-- 文章分享 -->
@@ -499,72 +496,17 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h3 id="线程和进程"><a href="#线程和进程" class="headerlink" title="线程和进程"></a>线程和进程</h3><p>经典问题。这个问题在本科学习操作系统时理解比较深刻，通常习惯从以下几个方面进行比较：</p>
-<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><ul>
-<li>进程：进程是程序代码在计算机系统中运行时的一个状态体，代码是静态的，进程是动态的。进程是操作系统分配资源的基本单位，拥有独立的地址空间、代码段、数据段。</li>
-<li>线程：线程是进程中可以独立执行的单元，是CPU调度的基本单位。一个进程可以有多个线程，同一个进程内的线程共享进程的资源，每个线程也拥有自己的线程栈、程序计数器等资源。</li>
-</ul>
-<h4 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h4><ul>
-<li>进程是资源分配单位，线程是最小执行单位。</li>
-<li>进程切换开销大，每个进程都有自己的虚拟地址空间，也都有自己的页表。切换页表涉及到内存访问，页表切换后还会导致页表缓存（TLB）失效，都会导致额外时间开销。同一进程内线程切换不涉及虚拟地址空间切换，只需在线程栈保存上下文。</li>
-<li>多进程适合多核多机并行执行，多线程适合多核。</li>
-</ul>
-<h4 id="C-的多线程编程"><a href="#C-的多线程编程" class="headerlink" title="C++的多线程编程"></a>C++的多线程编程</h4><p>C++11之前没有标准线程库，需要使用 pthread 库。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int pthread_create (pthread_t *thread,pthread_attr_t *attr,</span><br><span class="line">void *(*start_routine)(void *),void *arg);</span><br></pre></td></tr></table></figure>
-<p>将要运行的函数的指针绑定到 pthread_t 对象上，并执行线程任务。</p>
-<p>C++11增加了标准线程库 std::thread。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::thread t(foo, args...);</span><br></pre></td></tr></table></figure>
-<p>指定要运行的函数foo和参数args，创建线程t并运行。</p>
-<blockquote>
-<p>C++11有两种方式来等待线程结束：</p>
+        <h3 id="注意到问题的缘由"><a href="#注意到问题的缘由" class="headerlink" title="注意到问题的缘由"></a>注意到问题的缘由</h3><p>我有定期清理硬盘空间的习惯，除了用dism++清理系统临时文件以外，还会手动去检查一些占用空间比较大的文件夹。</p>
+<p>事情就发生在上一次清理空间的时候。我习惯性地打开QQ存储文件主目录，然后删除 QQ/&lt;qq号&gt;/Image/Gourp2 里的所有文件。关于这里，还有一点想吐槽的：</p>
 <ul>
-<li>detach方式，启动的线程自主在后台运行，当前的代码继续往下执行，不等待新线程结束。<ul>
-<li>调用detach表示thread对象和其表示的线程完全分离；</li>
-<li>分离之后的线程是不在受约束和管制，会单独执行，直到执行完毕释放资源，可以看做是一个daemon线程；</li>
-<li>分离之后thread对象不再表示任何线程；</li>
-<li>分离之后joinable() == false，即使还在执行；</li>
+<li>QQ为了加速图片检索，以Gourp2文件夹为根建了一颗B+树，所以点开文件夹会看到很多个名称长度为2的子文件夹，子文件夹下又有若干个名称长度为2的子文件夹，里面存储的就是文件前缀名相同的几张图片。结果就是删除的时候系统会做很多额外的检查，比如找文件索引、检查权限等等，因为删除实际上也是文件的移动，移动到回收站而已，整个删除过程速度非常慢。</li>
 </ul>
-</li>
-<li>join方式，等待启动的线程完成，才会继续往下执行。假如前面的代码使用这种方式，其输出就会0,1,2,3，因为每次都是前一个线程输出完成了才会进行下一个循环，启动下一个新线程。<ul>
-<li>只有处于活动状态线程才能调用join，可以通过joinable()函数检查;</li>
-<li>joinable() == true表示当前线程是活动线程，才可以调用join函数；</li>
-<li>默认构造函数创建的对象是joinable() == false;</li>
-<li>join只能被调用一次，之后joinable就会变为false，表示线程执行完毕；</li>
-<li>调用 ternimate()的线程必须是 joinable() == false;</li>
-<li>如果线程不调用join()函数，即使执行完毕也是一个活动线程，即joinable() == true，依然可以调用join()函数；</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<p>C++的线程thread创建之后就会运行，结束，销毁，如果要实现可复用的线程池，需要换一种思路：</p>
-<ul>
-<li>创建N个线程，让这些线程执行一个while函数，持续尝试向一个任务队列获取执行任务（执行任务：（函数地址，参数））。</li>
-<li>线程获取到任务则执行，任务队列为空则阻塞休眠。</li>
-<li>任务队列得到新任务时，唤醒一个休眠中的线程。</li>
-<li>任务队列是一个生产者/消费者模型，需要互斥。</li>
-</ul>
-<h4 id="Java的多线程编程"><a href="#Java的多线程编程" class="headerlink" title="Java的多线程编程"></a>Java的多线程编程</h4><p>Java多线程主要通过三种方式实现</p>
-<ul>
-<li>继承Thread类，重写<code>public void run()</code>方法，调用start()方法创建并执行线程任务</li>
-<li>继承Runnable接口，重写<code>public void run()</code>方法，调用start()方法创建并执行线程任务</li>
-<li>继承Callable接口，重写<code>public E call()</code>方法，调用start()方法创建并执行线程任务。call()可以有返回值</li>
-</ul>
-<h5 id="三种方式的共同点"><a href="#三种方式的共同点" class="headerlink" title="三种方式的共同点"></a>三种方式的共同点</h5><ul>
-<li>Runnable和Callable本质上都是对Thread类的封装，其实创建执行线程还是由Thread完成的。所以说Java多线程也可以说就是new一个Thread对象，然后调用start()进行线程初始化、运行。</li>
-<li>无论是继承Thread类还是继承两个接口，直接调用run()方法也是可以执行函数内容的，但并不会创建新线程，而是在main线程里执行。所以说真正关键动作在start()中</li>
-</ul>
-<h4 id="Java的同步和互斥"><a href="#Java的同步和互斥" class="headerlink" title="Java的同步和互斥"></a>Java的同步和互斥</h4><p>主要了解了synchronized关键词和ReentrantLock</p>
-<h5 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h5><p>关键词，可以修饰方法、对象、代码块。被修饰的内容在有一个线程访问时，其他试图访问的线程都会被阻塞。如果修饰的是静态方法，则该类所有对象的该方法都会被上锁（也很容易理解，静态方法是类级共享的）。</p>
-<p>synchronized在早期给人的印象就是重量级锁，开销很大。因为它用到了操作系统底层的互斥锁，涉及到用户/内核态切换。但是Java新版本也有做一些改进：</p>
-<ul>
-<li><strong>锁粗化</strong>：把多个连续的加锁解锁块合并为一个临界代码块。比如连续的字符串append</li>
-<li><strong>锁消除</strong>：如果某个数据对象被认为是不会共享的，就不会对它上锁，比如一个函数内的局部变量，每个线程都是不同的，不会互相访问，就不会上锁</li>
-<li><strong>轻量级锁</strong>：用<font color="red">CAS原子指令</font>代替重量级锁。<font color="red">CAS</font>就是compare and swap，线程将一个读取一个数据的值A，进行操作得到C，写回之前将A和原来的数据值比较，如果相同就写回C，不同就自旋反复尝试。</li>
-<li><strong>偏向锁</strong>：通俗来说，偏向锁也是类似于82原则，一个被共享的的数据有80%的时间都在被同一个线程t1访问，只有20%的时间被其他线程访问。所以偏向锁就会给t1一个偏向锁认证，免去它访问时的CAS操作，只有当其他线程尝试获取偏向锁时，持有偏向锁的线程才会释放锁。</li>
-</ul>
-<h5 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h5><p>ReentrantLock就是可重入锁，一个线程获取到锁后，如果重复获取锁，不会被锁阻塞。重复获取n次锁，就要重复释放n次锁。</p>
-<p>一般的使用方式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">// 代码</span></span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    lock.unlock();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>回到主题，删除完没用的群聊图片后，我发现QQ占用空间仍然很大，而且点击文件夹属性，存储空间计算时有一个断崖式的增长，也就是肯定存在一个大文件，进而才发现了 Msg3.0.db 和 Msg3.0index.db</p>
+<h3 id="Msg3-0-db"><a href="#Msg3-0-db" class="headerlink" title="Msg3.0.db"></a>Msg3.0.db</h3><p>Msg3.0.db 和 Msg3.0index.db 在我的电脑上一个占用11.3GB，一个占用7GB。</p>
+<p>根据文件名形式，猜测是SQLite，网上查了一下确实是。所以说QQ是将所有的聊天记录都存储在 Msg3.0.db 中，并且为其建立了 Msg3.0index.db 的索引。</p>
+<p>在QQ界面有一个消息管理器，可以看到即使删除了联系人、退出了群，相应的聊天记录也不会自动删除，还是存储在 db 文件中，必须在管理器中手动选择删除。如果不删除，那QQ占用空间就确实会随着时间越来越大，只删除图片缓存也没用。</p>
+<p>删除的时候，文件夹下会有相应的 db-journal 文件，实际上就是事务执行时的临时文件，用于回滚。事务执行结束后会清空为0字节，但不会删除，省去下次创建操作。</p>
+
     </article>
     <!-- license -->
     
@@ -572,17 +514,12 @@
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/posts/f553d691/" title="C++ thread 多线程任务队列">
-                    <div class="nextTitle">C++ thread 多线程任务队列</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/posts/67cafe3d/" title="基础知识复习笔记1-Java集合">
-                    <div class="prevTitle">基础知识复习笔记1-Java集合</div>
+                <a href="/posts/4a67726/" title="2024/2/21 oppo春招笔试">
+                    <div class="prevTitle">2024/2/21 oppo春招笔试</div>
                 </a>
             
         </li>
@@ -700,7 +637,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E5%92%8C%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">线程和进程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8C%BA%E5%88%AB"><span class="toc-number">1.2.</span> <span class="toc-text">区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#C-%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">C++的多线程编程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Java%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">Java的多线程编程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F%E7%9A%84%E5%85%B1%E5%90%8C%E7%82%B9"><span class="toc-number">1.4.1.</span> <span class="toc-text">三种方式的共同点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Java%E7%9A%84%E5%90%8C%E6%AD%A5%E5%92%8C%E4%BA%92%E6%96%A5"><span class="toc-number">1.5.</span> <span class="toc-text">Java的同步和互斥</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#synchronized"><span class="toc-number">1.5.1.</span> <span class="toc-text">synchronized</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ReentrantLock"><span class="toc-number">1.5.2.</span> <span class="toc-text">ReentrantLock</span></a></li></ol></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E5%88%B0%E9%97%AE%E9%A2%98%E7%9A%84%E7%BC%98%E7%94%B1"><span class="toc-number">1.</span> <span class="toc-text">注意到问题的缘由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Msg3-0-db"><span class="toc-number">2.</span> <span class="toc-text">Msg3.0.db</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
