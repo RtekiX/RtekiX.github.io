@@ -108,6 +108,33 @@
       </tags>
   </entry>
   <entry>
+    <title>NEMU-pa0</title>
+    <url>/posts/50a57998/</url>
+    <content><![CDATA[<p>主要问题有</p>
+<ul>
+<li>虚拟机网络问题</li>
+<li>github TLS问题</li>
+</ul>
+<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>因为我主机用了代理，允许局域网连接。<br>想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，<br>相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。<br>然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，<br>主机有点像一个默认“网关”？</p>
+<hr>
+<p><font color="red">2023/12/15 update</font></p>
+<p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
+<p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
+<h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#x69;&#116;&#64;&#103;&#105;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#111;&#109;">&#103;&#x69;&#116;&#64;&#103;&#105;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#111;&#109;</a>。</p>
+<p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#x67;&#105;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#98;&#x2e;&#x63;&#x6f;&#x6d;">&#x67;&#105;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#98;&#x2e;&#x63;&#x6f;&#x6d;</a>/仓库地址，而不是http或https</p>
+<h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
+<p>以后再学</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>ICS实验</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>QQ的存储空间为什么会越来越大</title>
     <url>/posts/cda2b7f1/</url>
     <content><![CDATA[<h3 id="注意到问题的缘由"><a href="#注意到问题的缘由" class="headerlink" title="注意到问题的缘由"></a>注意到问题的缘由</h3><p>我有定期清理硬盘空间的习惯，除了用dism++清理系统临时文件以外，还会手动去检查一些占用空间比较大的文件夹。</p>
@@ -118,7 +145,7 @@
 <p>回到主题，删除完没用的群聊图片后，我发现QQ占用空间仍然很大，而且点击文件夹属性，存储空间计算时有一个断崖式的增长，也就是肯定存在一个大文件，进而才发现了 Msg3.0.db 和 Msg3.0index.db</p>
 <h3 id="Msg3-0-db"><a href="#Msg3-0-db" class="headerlink" title="Msg3.0.db"></a>Msg3.0.db</h3><p>Msg3.0.db 和 Msg3.0index.db 在我的电脑上一个占用11.3GB，一个占用7GB。</p>
 <p>根据文件名形式，猜测是SQLite，网上查了一下确实是。所以说QQ是将所有的聊天记录都存储在 Msg3.0.db 中，并且为其建立了 Msg3.0index.db 的索引。</p>
-<p>在QQ界面有一个消息管理器，可以看到即使删除了联系人、退出了群，相应的聊天记录也不会自动删除，还是存储在 db 文件中，必须在管理器中手动选择删除。如果不删除，那QQ占用空间就确实会随着时间越来越大，只删除图片缓存也没用。</p>
+<p>在QQ界面有一个消息管理器，所有消息记录都存储在 Msg3.0.db 中。如果不删除，那QQ占用空间就确实会随着时间越来越大，只删除图片缓存也没用。</p>
 <p>删除的时候，文件夹下会有相应的 db-journal 文件，实际上就是事务执行时的临时文件，用于回滚。事务执行结束后会清空为0字节，但不会删除，省去下次创建操作。</p>
 ]]></content>
       <categories>
@@ -229,33 +256,6 @@
       </categories>
       <tags>
         <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>NEMU-pa0</title>
-    <url>/posts/50a57998/</url>
-    <content><![CDATA[<p>主要问题有</p>
-<ul>
-<li>虚拟机网络问题</li>
-<li>github TLS问题</li>
-</ul>
-<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>因为我主机用了代理，允许局域网连接。<br>想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，<br>相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。<br>然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，<br>主机有点像一个默认“网关”？</p>
-<hr>
-<p><font color="red">2023/12/15 update</font></p>
-<p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
-<p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
-<h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#x67;&#105;&#x74;&#x40;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#x6d;">&#x67;&#105;&#x74;&#x40;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#x6d;</a>。</p>
-<p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#103;&#105;&#x74;&#x40;&#103;&#105;&#116;&#x68;&#117;&#x62;&#x2e;&#x63;&#x6f;&#x6d;">&#103;&#105;&#x74;&#x40;&#103;&#105;&#116;&#x68;&#117;&#x62;&#x2e;&#x63;&#x6f;&#x6d;</a>/仓库地址，而不是http或https</p>
-<h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
-<p>以后再学</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>ICS实验</tag>
       </tags>
   </entry>
   <entry>

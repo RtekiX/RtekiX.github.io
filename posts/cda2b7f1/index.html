@@ -27,7 +27,7 @@
 <meta property="og:description" content="注意到问题的缘由我有定期清理硬盘空间的习惯，除了用dism++清理系统临时文件以外，还会手动去检查一些占用空间比较大的文件夹。 事情就发生在上一次清理空间的时候。我习惯性地打开QQ存储文件主目录，然后删除 QQ&#x2F;&lt;qq号&gt;&#x2F;Image&#x2F;Gourp2 里的所有文件。关于这里，还有一点想吐槽的：  QQ为了加速图片检索，以Gourp2文件夹为根建了一颗B+树，所以点开文件夹会看到很多个名称">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-02-26T04:41:11.000Z">
-<meta property="article:modified_time" content="2024-02-26T05:02:51.544Z">
+<meta property="article:modified_time" content="2024-02-26T05:08:52.497Z">
 <meta property="article:author" content="RtekiX">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
@@ -504,7 +504,7 @@
 <p>回到主题，删除完没用的群聊图片后，我发现QQ占用空间仍然很大，而且点击文件夹属性，存储空间计算时有一个断崖式的增长，也就是肯定存在一个大文件，进而才发现了 Msg3.0.db 和 Msg3.0index.db</p>
 <h3 id="Msg3-0-db"><a href="#Msg3-0-db" class="headerlink" title="Msg3.0.db"></a>Msg3.0.db</h3><p>Msg3.0.db 和 Msg3.0index.db 在我的电脑上一个占用11.3GB，一个占用7GB。</p>
 <p>根据文件名形式，猜测是SQLite，网上查了一下确实是。所以说QQ是将所有的聊天记录都存储在 Msg3.0.db 中，并且为其建立了 Msg3.0index.db 的索引。</p>
-<p>在QQ界面有一个消息管理器，可以看到即使删除了联系人、退出了群，相应的聊天记录也不会自动删除，还是存储在 db 文件中，必须在管理器中手动选择删除。如果不删除，那QQ占用空间就确实会随着时间越来越大，只删除图片缓存也没用。</p>
+<p>在QQ界面有一个消息管理器，所有消息记录都存储在 Msg3.0.db 中。如果不删除，那QQ占用空间就确实会随着时间越来越大，只删除图片缓存也没用。</p>
 <p>删除的时候，文件夹下会有相应的 db-journal 文件，实际上就是事务执行时的临时文件，用于回滚。事务执行结束后会清空为0字节，但不会删除，省去下次创建操作。</p>
 
     </article>
