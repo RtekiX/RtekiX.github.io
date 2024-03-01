@@ -1,1483 +1,1343 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <!-- title -->
-
-
-    
-
-<!-- keywords -->
-
-
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="author" content="RtekiX">
-    <meta name="renderer" content="webkit">
-    <meta name="copyright" content="RtekiX">
-    
-        <meta name="keywords" content="Nothing is blessing to everything for me,RtekiX">
-    
-    <meta name="description" content="">
-    <meta property="og:type" content="website">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"rtekix.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="website">
 <meta property="og:title" content="Nothing is blessing to everything for me">
 <meta property="og:url" content="https://rtekix.github.io/index.html">
 <meta property="og:site_name" content="Nothing is blessing to everything for me">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="RtekiX">
 <meta name="twitter:card" content="summary">
-    <meta http-equiv="Cache-control" content="no-cache">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="icon" href="/assets/rin.ico">
-    
-    <title>Nothing is blessing to everything to me</title>
-    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
-/* This file is meant as a standalone workflow for
-- testing support for link[rel=preload]
-- enabling async CSS loading in browsers that do not support rel=preload
-- applying rel preload css once loaded, whether supported or not.
-*/ -->
-<script>
-    (function (w) {
-        'use strict'
-        // rel=preload support test
-        if (!w.loadCSS) {
-            w.loadCSS = function () {}
-        }
-        // define on the loadCSS obj
-        var rp = (loadCSS.relpreload = {})
-        // rel=preload feature support test
-        // runs once and returns a function for compat purposes
-        rp.support = (function () {
-            var ret
-            try {
-                ret = w.document.createElement('link').relList.supports('preload')
-            } catch (e) {
-                ret = false
-            }
-            return function () {
-                return ret
-            }
-        })()
 
-        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
-        // then change that media back to its intended value on load
-        rp.bindMediaToggle = function (link) {
-            // remember existing media attr for ultimate state, or default to 'all'
-            var finalMedia = link.media || 'all'
+<link rel="canonical" href="https://rtekix.github.io/">
 
-            function enableStylesheet() {
-                link.media = finalMedia
-            }
 
-            // bind load handlers to enable media
-            if (link.addEventListener) {
-                link.addEventListener('load', enableStylesheet)
-            } else if (link.attachEvent) {
-                link.attachEvent('onload', enableStylesheet)
-            }
-
-            // Set rel and non-applicable media type to start an async request
-            // note: timeout allows this to happen async to let rendering continue in IE
-            setTimeout(function () {
-                link.rel = 'stylesheet'
-                link.media = 'only x'
-            })
-            // also enable media after 3 seconds,
-            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
-            setTimeout(enableStylesheet, 3000)
-        }
-
-        // loop through link elements in DOM
-        rp.poly = function () {
-            // double check this to prevent external calls from running
-            if (rp.support()) {
-                return
-            }
-            var links = w.document.getElementsByTagName('link')
-            for (var i = 0; i < links.length; i++) {
-                var link = links[i]
-                // qualify links to those with rel=preload and as=style attrs
-                if (
-                    link.rel === 'preload' &&
-                    link.getAttribute('as') === 'style' &&
-                    !link.getAttribute('data-loadcss')
-                ) {
-                    // prevent rerunning on link
-                    link.setAttribute('data-loadcss', true)
-                    // bind listeners to toggle media back
-                    rp.bindMediaToggle(link)
-                }
-            }
-        }
-
-        // if unsupported, run the polyfill
-        if (!rp.support()) {
-            // run once at least
-            rp.poly()
-
-            // rerun poly on an interval until onload
-            var run = w.setInterval(rp.poly, 500)
-            if (w.addEventListener) {
-                w.addEventListener('load', function () {
-                    rp.poly()
-                    w.clearInterval(run)
-                })
-            } else if (w.attachEvent) {
-                w.attachEvent('onload', function () {
-                    rp.poly()
-                    w.clearInterval(run)
-                })
-            }
-        }
-
-        // commonjs
-        if (typeof exports !== 'undefined') {
-            exports.loadCSS = loadCSS
-        } else {
-            w.loadCSS = loadCSS
-        }
-    })(typeof global !== 'undefined' ? global : this)
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
 </script>
 
-    <style type="text/css">
-    @font-face {
-        font-family: 'Oswald-Regular';
-        src: url("/font/Oswald-Regular.ttf");
-    }
+  <title>Nothing is blessing to everything for me</title>
+  
 
-    body {
-        margin: 0;
-    }
 
-    header,
-    footer,
-    .back-top,
-    .sidebar,
-    .container,
-    .site-intro-meta,
-    .toc-wrapper {
-        display: none;
-    }
 
-    .site-intro {
-        position: relative;
-        z-index: 3;
-        width: 100%;
-        /* height: 50vh; */
-        overflow: hidden;
-    }
 
-    .site-intro-placeholder {
-        position: absolute;
-        z-index: -2;
-        top: 0;
-        left: 0;
-        width: calc(100% + 300px);
-        height: 100%;
-        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
-        background-position: center center;
-        transform: translate3d(-226px, 0, 0);
-        animation: gradient-move 2.5s ease-out 0s infinite;
-    }
 
-    @keyframes gradient-move {
-        0% {
-            transform: translate3d(-226px, 0, 0);
-        }
-        100% {
-            transform: translate3d(0, 0, 0);
-        }
-    }
-</style>
 
-    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
-    <link rel="stylesheet" href="/css/dark.css">
-    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
-    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
-    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
-    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
-    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
-    <!-- algolia -->
-    
-    <!-- 百度统计  -->
-    
-    <!-- Google tag (gtag.js) -->
-    
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script type="text/javascript">
-        if (typeof window.$ == undefined) {
-            console.warn('jquery load from jsdelivr failed, will load local script')
-            document.write('<script src="/lib/jquery.min.js" />')
-        }
-    </script>
-    
-        <body class="home-body">
-    
-        <!-- header -->
-        <header class="header header-mobile index-header">
-    <!-- top read progress line -->
-    <div class="header-element">
-        <div class="read-progress"></div>
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    <!-- sidebar menu button -->
-    <div class="header-element">
-        
-            <div class="header-sidebar-menu">
-        
-            
-                <div style="padding-left: 1px;">&#xe775;</div>
-            
-        </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Nothing is blessing to everything for me</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">black hole for rtekix, sad man</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
-    <!-- header actions -->
-    <div class="header-actions">
-        <!-- theme mode switch button -->
-        <span class="header-theme-btn header-element">
-            <i class="fas fa-adjust"></i>
-        </span>
-        <!-- back to home page text -->
-        <span class="home-link header-element">
-            <a href=/>Nothing is blessing to everything to me</a>
-        </span>
-    </div>
-    <!-- toggle banner for post layout -->
-    
-</header>
-
-        <!-- fixed footer -->
-        <footer class="footer-fixed index-footer-fixed">
-    <!-- back to top button -->
-    <div class="footer-fixed-element">
-        
-            <div class="back-top back-top-hidden">
-        
-        
-            <div>&#xe639;</div>
-        
-        </div>
-    </div>
-</footer>
-
-        <!-- wrapper -->
-        <div class="wrapper">
-            <div class="site-intro" style="
-
-
-
-
-
-
-
-    height:50vh;
-
-">
-    
-    <!-- 主页  -->
-    
-        
-    <!-- 文章页  -->
-    
-    <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
-    <div class="site-intro-meta">
-        <!-- 标题  -->
-        <h1 class="intro-title">
-            <!-- 主页  -->
-            
-                Nothing is blessing to everything to me
-            <!-- 文章页  -->
-            
-        </h1>
-        <!-- 副标题 -->
-        <p class="intro-subtitle">
-            <!-- 主页副标题  -->
-            
-                
-                    watching
-                
-            <!-- 文章页  -->
-            
-        </p>
-        <!-- 文章页 meta -->
-        
-    </div>
+  </div>
 </div>
 
-            <script>
-  // get user agent
-  function getBrowserVersions() {
-    var u = window.navigator.userAgent
-    return {
-      userAgent: u,
-      trident: u.indexOf('Trident') > -1, //IE内核
-      presto: u.indexOf('Presto') > -1, //opera内核
-      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
-      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
-      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
-      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
-      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
-      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
-      iPad: u.indexOf('iPad') > -1, //是否为iPad
-      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
-      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
-      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
-    }
-  }
-  var browser = {
-    versions: getBrowserVersions(),
-  }
-  console.log('userAgent: ' + browser.versions.userAgent)
 
-  // callback
-  function fontLoaded() {
-    console.log('font loaded')
-    if (document.getElementsByClassName('site-intro-meta')) {
-      document
-        .getElementsByClassName('intro-title')[0]
-        .classList.add('intro-fade-in')
-      document
-        .getElementsByClassName('intro-subtitle')[0]
-        .classList.add('intro-fade-in')
-      var postIntros = document.getElementsByClassName('post-intros')[0]
-      if (postIntros) {
-        postIntros.classList.add('post-fade-in')
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://rtekix.github.io/posts/e8b72eb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="RtekiX">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nothing is blessing to everything for me">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/e8b72eb/" class="post-title-link" itemprop="url">2024-03-01-oppo一面</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-03-01 15:12:24 / 修改时间：15:35:53" itemprop="dateCreated datePublished" datetime="2024-03-01T15:12:24+08:00">2024-03-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9D%A2%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">面试</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>2月29日上午邮件通知面试，3月1日下午14:10开始，调试设备约5分钟，面试时长约30分钟，无手撕代码。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><ul>
+<li><strong>自我介绍</strong>：主要介绍了我的本科、硕士经历，常用编程语言，业余项目。</li>
+<li><strong>个人介绍中提到了论文，介绍论文工作和贡献</strong>：主要从研究背景、解决方法、创新点三方面讲了一下。</li>
+<li><strong>论文中怎麽判断用户是否恶意，用哪些属性</strong>：我理解的意思是，怎么筛选重要属性和非重要属性。主要根据过往文献总结、个人经验，筛选出“粉丝、关注、博客数、是否开启定位、是否开启账号保护”这几项属性为比较重要的。</li>
+<li><strong>C++的内存管理</strong>：new和delete、智能指针</li>
+<li><strong>深入讲一下new</strong>：new主要做三部分工作，计算对象大小、在堆上开辟空间，调用类构造函数，将对象绑定到开辟空间的地址上（返回指针）</li>
+<li><strong>多线程编程了解哪些</strong>：用C++写过一个生产者消费者程序，用mutex、条件变量、int类型的资源标记数定义了信号量的P、V操作，用于临界资源管理。对C++的队列容器进行了包装，用三个信号量分别用于标志队列未满、队列未空以及当前是否有线程访问队列。</li>
+<li><strong>用的什么队列</strong>：猜测是联想到了Java中队列有很多种实现形式，说明了用的就是C++中的默认队列。<font color="red">这里回答有一点错误，C++的queue是一个容器适配器，类似于Java中的接口，默认实现方式其实是deque。</font>之后我也讲了一下deque的底层，是多块不连续内存加一个数组实现的。以及优先队列是堆。</li>
+<li><strong>介绍最有价值的项目</strong>：其实都是业余项目，简单讲了一下QQ聊天机器人的架构。Nonebot+Gocqhttp，Nonebot是Onebot协议的实现，类似于一个Python的SDK。Gocqhttp通俗来说是模拟QQ客户端的一个程序，与腾讯的消息服务器通信。我做的是Nonebot框架下的功能插件开发，包括点歌、记账、定时提醒等。顺便讲了一下消息传递的优先级模式。</li>
+<li><strong>反问</strong>：<ul>
+<li>研发有很多方向，具体是由谁定？——主要看个人兴趣</li>
+<li>Java了解比较浅，有没有关系？——有导师带，当然自己尽快学习上手最好</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>面试官人很好，基本是顺着我的舒适区提问，让我有点不好意思。因为没有手撕环节，整体流程体感比较快。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://rtekix.github.io/posts/cda2b7f1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="RtekiX">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nothing is blessing to everything for me">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/cda2b7f1/" class="post-title-link" itemprop="url">QQ的存储空间为什么会越来越大</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-02-26 12:41:11 / 修改时间：13:08:52" itemprop="dateCreated datePublished" datetime="2024-02-26T12:41:11+08:00">2024-02-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="注意到问题的缘由"><a href="#注意到问题的缘由" class="headerlink" title="注意到问题的缘由"></a>注意到问题的缘由</h3><p>我有定期清理硬盘空间的习惯，除了用dism++清理系统临时文件以外，还会手动去检查一些占用空间比较大的文件夹。</p>
+<p>事情就发生在上一次清理空间的时候。我习惯性地打开QQ存储文件主目录，然后删除 QQ/&lt;qq号&gt;/Image/Gourp2 里的所有文件。关于这里，还有一点想吐槽的：</p>
+<ul>
+<li>QQ为了加速图片检索，以Gourp2文件夹为根建了一颗B+树，所以点开文件夹会看到很多个名称长度为2的子文件夹，子文件夹下又有若干个名称长度为2的子文件夹，里面存储的就是文件前缀名相同的几张图片。结果就是删除的时候系统会做很多额外的检查，比如找文件索引、检查权限等等，因为删除实际上也是文件的移动，移动到回收站而已，整个删除过程速度非常慢。</li>
+</ul>
+<p>回到主题，删除完没用的群聊图片后，我发现QQ占用空间仍然很大，而且点击文件夹属性，存储空间计算时有一个断崖式的增长，也就是肯定存在一个大文件，进而才发现了 Msg3.0.db 和 Msg3.0index.db</p>
+<h3 id="Msg3-0-db"><a href="#Msg3-0-db" class="headerlink" title="Msg3.0.db"></a>Msg3.0.db</h3><p>Msg3.0.db 和 Msg3.0index.db 在我的电脑上一个占用11.3GB，一个占用7GB。</p>
+<p>根据文件名形式，猜测是SQLite，网上查了一下确实是。所以说QQ是将所有的聊天记录都存储在 Msg3.0.db 中，并且为其建立了 Msg3.0index.db 的索引。</p>
+<p>在QQ界面有一个消息管理器，所有消息记录都存储在 Msg3.0.db 中。如果不删除，那QQ占用空间就确实会随着时间越来越大，只删除图片缓存也没用。</p>
+<p>删除的时候，文件夹下会有相应的 db-journal 文件，实际上就是事务执行时的临时文件，用于回滚。事务执行结束后会清空为0字节，但不会删除，省去下次创建操作。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://rtekix.github.io/posts/4a67726/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="RtekiX">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nothing is blessing to everything for me">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/4a67726/" class="post-title-link" itemprop="url">2024/2/21 oppo春招笔试</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-02-21 14:15:31 / 修改时间：14:34:29" itemprop="dateCreated datePublished" datetime="2024-02-21T14:15:31+08:00">2024-02-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="选择题"><a href="#选择题" class="headerlink" title="选择题"></a>选择题</h3><p>MySQL分布式事务：XA事务，2pc。将分布式事务执行的过程分为两阶段，第一阶段所有需要执行操作的节点准备自身资源数据，检查是否可以提交，向事务管理节点发送precommit的消息。所有节点都准备就绪precommit后，才能开始实际执行事务，期间等待是阻塞的。</p>
+<p>Java垃圾回收：强引用，任何时候都不回收；软引用，空间不足时回收；弱引用和虚引用，任何时候都回收。</p>
+<h3 id="编程题"><a href="#编程题" class="headerlink" title="编程题"></a>编程题</h3><h4 id="第一题忘了，比较简单"><a href="#第一题忘了，比较简单" class="headerlink" title="第一题忘了，比较简单"></a>第一题忘了，比较简单</h4><h4 id="第二题"><a href="#第二题" class="headerlink" title="第二题"></a>第二题</h4><p>第二题题意是，一个数组中，任选两个元素删除，并将它们的和再加入数组，使数组的极差最小。</p>
+<h5 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h5><p>用优先队列读入元素，删除最小的两个元素，再加入数组。过了90%。</p>
+<p>忘记考虑的点：最小的两个元素相加后，可能大于原数组最大的元素，而我直接默认优先队列头的元素最大了，测试数据中可能出现了负数。</p>
+<h4 id="第三题"><a href="#第三题" class="headerlink" title="第三题"></a>第三题</h4><p>n个杯子中有k杯水，每个回合可能的行为：</p>
+<ul>
+<li>随机选择一个杯子</li>
+<li>如果杯子空：则回合结束</li>
+<li>如果杯子不空：上回合喝过水了，则放下杯子回合结束；上回合没喝水，则喝掉杯子里的水</li>
+</ul>
+<p>最终求所有水被喝完时的回合数的期望值。</p>
+<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><p>很明显是一个数学题。假如不考虑两次喝水之间的间隙，还剩i杯水的时候，喝到水的概率p=i/n。此时，喝一杯水的期望回合是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T = p*1 + p(1-p)*2 + p(1-p)^2*3 + ... + p(1-p)^n*(n+1)</span><br><span class="line">  = i/n(1-p)^2</span><br></pre></td></tr></table></figure>
+<p>然后令i=k，i=k-1, … i=1，累加即可</p>
+<p>没想出来的地方：两次喝水有间隙——卡在这里很久，实际上只需要在最后的结果加上k-1个回合就可以了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://rtekix.github.io/posts/ccf09792/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="RtekiX">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nothing is blessing to everything for me">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/ccf09792/" class="post-title-link" itemprop="url">基础知识学习笔记6-Spring</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-18 19:54:50" itemprop="dateCreated datePublished" datetime="2024-02-18T19:54:50+08:00">2024-02-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-02-21 14:34:25" itemprop="dateModified" datetime="2024-02-21T14:34:25+08:00">2024-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h3><p>Spring是Java的一个轻量级开发框架，包含了很多模块，可以帮助开发人员快速构建应用，提高开发效率。其中最核心的模块就是IoC（控制反转）和AOP（面向切片编程）</p>
+<h4 id="IoC"><a href="#IoC" class="headerlink" title="IoC"></a>IoC</h4><p>控制反转的核心就是让Spring框架来管理程序中需要的对象实例，而不是由程序自己手动创建。</p>
+<ul>
+<li>不需要考虑实例化某个类需要构造怎样的参数，只要配置好，在需要用的时候，向IOC容器拿就可以了。</li>
+<li>如果某个类A用到了一个接口B，因为接口不能被实例化，所以就必须指定B的实现类。但是使用IOC的话，定义接口不需要指定实现类，在需要的时候在IOC容器中获取就可以了<ul>
+<li>比如在Service类里定义了操作数据库的DAO接口，用注解@Autowired就可以自动注入DAO对象实例</li>
+</ul>
+</li>
+</ul>
+<h4 id="面向切片编程"><a href="#面向切片编程" class="headerlink" title="面向切片编程"></a>面向切片编程</h4><p>面向切片编程和面向对象编程并不冲突，目的是将一些通用的操作和功能与业务功能代码分离开，提高代码的可读性和可维护性。比如像日志记录，如果每个类都重复实现日志的功能，就会有很多重复的冗余代码，维护起来很麻烦。所以面向切片就是把这些代码分离出来。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://rtekix.github.io/posts/a2044ae4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="RtekiX">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nothing is blessing to everything for me">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/a2044ae4/" class="post-title-link" itemprop="url">基础知识复习笔记5-内存管理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-02-17 21:33:08 / 修改时间：22:28:34" itemprop="dateCreated datePublished" datetime="2024-02-17T21:33:08+08:00">2024-02-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="C-的程序内存布局"><a href="#C-的程序内存布局" class="headerlink" title="C++的程序内存布局"></a>C++的程序内存布局</h3><p>从上往下是：</p>
+<ul>
+<li>内核空间：操作系统内核</li>
+<li>环境变量，命令行参数</li>
+<li>栈（高地址向低地址增长）：存放局部变量，函数参数，返回地址等，由编译器管理</li>
+<li>（空闲区域）</li>
+<li>堆（低地址向高地址增长）：由程序员new/delete管理，容量远大于栈</li>
+<li>BSS段：未初始化的数据</li>
+<li>data段：已初始化的数据，全局变量，静态变量</li>
+<li>text段：代码区</li>
+</ul>
+<h4 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h4><p>C++没有垃圾回收机制，只能由程序员手动管理内存，一旦操作不当就可能导致：</p>
+<ul>
+<li>内存泄漏：某段代码每次执行都会申请一小段内存，结束后却不释放，久而久之就会吞噬系统的空闲内存，最终导致程序甚至系统崩溃。<ul>
+<li>如果一段程序随着时间运行，内存占用越来越大且没有饱和的趋势，可能就出现了内存泄漏。</li>
+<li>内存泄漏的静态检测方法，首先就是对代码进行检查，看是否有new/delete不匹配的地方。</li>
+<li>也可以用工具进行检查，比如valgrind可以检查程序是否有非法使用内存的问题。</li>
+</ul>
+</li>
+</ul>
+<p>另外一个方法是使用智能指针，智能指针会管理对象的生命周期，在其生命周期结束时自动释放内存。</p>
+<ul>
+<li>shared_ptr：可以允许多个指针指向一个对象，通过引用计数管理对象生命周期。</li>
+<li>unique_ptr：对象只能由一个指针独享，可以移动对象所有权，但不能复制。</li>
+<li>weak_ptr：主要避免shared_ptr造成的循环引用，A引用B，B引用A，这样谁都无法被释放。weak_ptr可以提供某个对象的访问，但是不会参与引用计数。需要用时，使用lock方法来获得一个shared_ptr对象。</li>
+</ul>
+<h4 id="C-类的内存布局"><a href="#C-类的内存布局" class="headerlink" title="C++类的内存布局"></a>C++类的内存布局</h4><p>对于一般的类，所有非静态成员变量按照声明顺序，内存对齐原则放在一起。静态成员变量放在全局数据区，所有类成员函数是放在代码区，位置没有明显关联。</p>
+<p>有虚函数的类，类的地址起始位置有一个虚函数指针，指向虚函数表，虚函数表中存放了所有虚函数的入口地址。紧接着放非静态成员变量。子类在构造时也会有一个虚函数表，如果子类重写了虚函数，则会用新的函数地址覆盖掉表中原来的虚函数地址。</p>
+<p>继承的话，继承类先按照其继承的基类的顺序，存放了各个基类的成员变量和各自的虚函数表指针，再存放自己的数据成员。</p>
+<p>基类析构函数声明为虚函数：这样才能在基类指针调用析构时，执行子类的析构函数，不然可能出现局部释放的情况，只释放了基类的相关内容，子类的却没有释放，造成内存泄漏。</p>
+<h3 id="Java的内存管理"><a href="#Java的内存管理" class="headerlink" title="Java的内存管理"></a>Java的内存管理</h3><p>Java有垃圾回收机制，不需要程序员手动管理内存分配和释放，</p>
+<h4 id="Java的垃圾回收策略"><a href="#Java的垃圾回收策略" class="headerlink" title="Java的垃圾回收策略"></a>Java的垃圾回收策略</h4><p>根据JVM实现的不同，策略也有所不同。Java的堆内存区域一般可以分为新生代、老年代和永久代三块，新生代一般是生命周期比较短的对象，老年代是占用内存比较大，生命周期较长的对象，永久代则是始终不会被清理的对象。</p>
+<p>分配内存时，优先在新生代区域分配，如果内存不够，则尝试将新生代的部分对象转移到老年代。如果分配的对象很大，则会直接进入到老年代，减少垃圾回收的频率和成本。每个对象都有一个年龄计数器，每次垃圾回收没有被清理的对象年龄就会增加，增加到一定数值就会转移到老年代区域。</p>
+<h4 id="判断对象生命周期"><a href="#判断对象生命周期" class="headerlink" title="判断对象生命周期"></a>判断对象生命周期</h4><ul>
+<li>引用计数：类似于C++的shared_ptr，但是也有循环引用的问题，使用的比较少。</li>
+<li>可达性分析算法：从以下对象中选择根对象，搜索根对象引用的对象，如果一个对象没有一条到达根对象的引用链，就说明它该被回收了。（我理解的就是从“钉子户”开始链式搜索，因为“钉子户”引用的对象一定是被需要的）<ul>
+<li>虚拟机栈(栈帧中的局部变量表)中引用的对象</li>
+<li>本地方法栈(Native 方法)中引用的对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>所有被同步锁持有的对象</li>
+<li>JNI（Java Native Interface）引用的对象</li>
+</ul>
+</li>
+</ul>
+<h4 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h4><ul>
+<li>标记-清除算法：标记所有不用的对象，然后再依次清除。<ul>
+<li>简单，但是容易产生内存碎片，标记和清除的效率低</li>
+</ul>
+</li>
+<li>复制算法：将内存划为两半，只用其中一半存放对象。内存满后，将还存活的对象复制到另一边，直接清除掉当前这边的内存。<ul>
+<li>清除的效率更高，但可用内存变小了，且不适用于老年代对象，因为复制开销大</li>
+</ul>
+</li>
+<li>标记-整理算法：标记所有存活的对象，将他们向内存的一端整理移动，然后清除掉另一端的内存。<ul>
+<li>整理的效率比较低</li>
+</ul>
+</li>
+</ul>
+<h5 id="分代算法"><a href="#分代算法" class="headerlink" title="分代算法"></a>分代算法</h5><p>新生代使用复制算法，因为新生代的对象存活概率低，大概率不需要复制很多内容。<br>老年代使用标记整理算法，老年代的对象通常比较大。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://rtekix.github.io/posts/3d21fd56/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="RtekiX">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nothing is blessing to everything for me">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/3d21fd56/" class="post-title-link" itemprop="url">基础知识复习笔记4-计算机网络</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-16 20:33:59" itemprop="dateCreated datePublished" datetime="2024-02-16T20:33:59+08:00">2024-02-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-02-17 16:16:39" itemprop="dateModified" datetime="2024-02-17T16:16:39+08:00">2024-02-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a>TCP和UDP的区别</h3><p>TCP和UDP都是传输层协议，负责端到端的数据传输，主要区别是：</p>
+<ul>
+<li>TCP是有连接的，UDP是无连接的。TCP传输数据前需要三次握手建立连接，UDP只需要知道对方IP和端口即可发送数据。</li>
+<li>TCP是可靠传输协议，UDP是不可靠的。UDP只管发送数据，不会关心数据包是否到达。TCP则需要保证每一个数据分片都能可靠地交付给对方，所以引入了序列号、确认号、超时重传等机制。</li>
+</ul>
+<h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><ul>
+<li>第一次握手是客户端向服务提供端发起SYNC同步请求，并且附带自己的序列号。</li>
+<li>第二次握手是服务提供方接收到连接请求后，返回一个确认数据包，这个数据包也包含了他自己的序列号，以及SYNC同步标志。</li>
+<li>客户端收到第二次握手的确认包后，再返回一个ACK确认数据包，连接才建立，之后发送数据。</li>
+</ul>
+<h5 id="为什么要三次而不是两次"><a href="#为什么要三次而不是两次" class="headerlink" title="为什么要三次而不是两次"></a>为什么要三次而不是两次</h5><ul>
+<li>如果只有两次握手，实际上只有客户端确认了服务端能够连接，服务端是不知道客户端的连接状态的。假如第二次握手丢失，客户端放弃了连接，而服务端直接就开始发送数据，会造成资源浪费。</li>
+<li>假如第一次握手的数据包在网络中滞留，过一段时间，早就失效的数据包传到服务端，服务端以为是新的连接请求，于是产生第二次握手，然后就以为连接建立了，但实际上这时候客户端已经没有传输需求了，也不会回应服务端，也会造成资源浪费。</li>
+</ul>
+<h5 id="为什么不是四次"><a href="#为什么不是四次" class="headerlink" title="为什么不是四次"></a>为什么不是四次</h5><p>第二次握手实际上把确认收到，和发起连接请求合并到一起了。</p>
+<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><ul>
+<li>第一次挥手：客户端发送FIN数据包，表明打算断开连接，它不再发送数据，但是可以接收数据，进入FIN-WAIT1状态。</li>
+<li>第二次挥手：服务端收到FIN数据，回复一个ACK，表明它知道对方打算断开连接。客户端收到后，进入FIN-WAIT2状态。服务端进入CLOSE-WAIT状态。</li>
+<li>中间 ：服务端继续发送未传输完毕的数据</li>
+<li>第三次挥手：服务端发送FIN数据包，请求关闭连接，进入LAST-ACK状态。</li>
+<li>第四次挥手：客户端回复ACK，进入TIME-WAIT状态，等到两个报文段最长寿命后，CLOSE连接。如果这段时间内收到了服务端的第三次挥手重传，说明第四次挥手没成功发送过去，重传。</li>
+</ul>
+<h5 id="为什么要等两个报文段最长寿命"><a href="#为什么要等两个报文段最长寿命" class="headerlink" title="为什么要等两个报文段最长寿命"></a>为什么要等两个报文段最长寿命</h5><p>因为第四次挥手后，客户端无法得知对方是否收到数据包，并且关闭连接。两个报文段最长寿命就是一发一收的时间，如果这个时间段内没有收到超时重传的消息，就认为服务端收到了最后的ACK。</p>
+<p>如果不等待的话，服务端可能没收到第四次挥手数据，连接无法正常关闭造成资源浪费。</p>
+<h4 id="TCP的拥塞控制、流量控制、滑动窗口等等"><a href="#TCP的拥塞控制、流量控制、滑动窗口等等" class="headerlink" title="TCP的拥塞控制、流量控制、滑动窗口等等"></a>TCP的拥塞控制、流量控制、滑动窗口等等</h4><h5 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h5><p>拥塞控制是针对网络的，避免网络中存在过多的报文造成网络信道拥堵。主要用慢开始、拥塞避免算法，快速重传、快速回复。</p>
+<p><strong>慢开始、拥塞避免</strong><br>发送方维护一个拥塞窗口大小，最开始拥塞窗口为1个单位，每次成功收到确认后就将窗口大小加倍。当窗口大小大于阈值时，就执行拥塞避免算法，每次窗口大小加一个单位。</p>
+<p>如果出现数据丢失，将窗口设为1，执行慢开始算法，并且阈值设为数据丢失时的窗口大小的一半。</p>
+<p><strong>快重传、快恢复</strong><br>快重传是，如果发送方收到连续三个重复确认就立刻重传对方尚未收到的报文段，而不是等重传计时器时间到期。</p>
+<p>同时，因为能收到三个重复ACK，所以认为网络虽然拥堵，但还是有一定的运输能力，所以窗口不会设为1，而是设为阈值减半后的大小，并且继续执行拥塞避免算法。</p>
+<h5 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h5><p>流量控制是针对发送方和接收方数据处理能力的。双方各自维护一个窗口，并且在发送数据时会告知对方自己空闲窗口大小，如果窗口没有空闲，就会减缓数据发送速度。</p>
+<h5 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h5><p>滑动窗口的设置是为了避免出现每一个数据包发送后都要等待确认才能发送下一个数据包这样的情况，效率很低。滑动窗口外的左侧，可以看作是已经发送、确认的数据包；滑动窗口内的话，只有最左侧边缘的连续的数据包被确认了，窗口才会向右移动。</p>
+<h3 id="输入网址后发生的事情"><a href="#输入网址后发生的事情" class="headerlink" title="输入网址后发生的事情"></a>输入网址后发生的事情</h3><ol>
+<li>URL解析：url是统一资源定位符，为了访问服务器的资源，需要将url解析为IP地址，就会用到DNS协议。如果浏览器有域名缓存，或者系统本地有相应的hosts项，那就不用再向DNS服务器发送请求，直接就可以解析。如果没有的话，主机就会依次向本地、上级的DNS服务器递归地发送请求。</li>
+<li>解析得到IP地址后，为了传输HTTP请求，还要和服务器建立TCP连接，也就是三次握手。传输层往下，网络层根据IP对数据包进行转发，再往下还有ARP协议通过IP地址获得下一次转发的MAC地址。</li>
+<li>TCP连接建立后，服务器收到HTTP请求，将网页资源封装，再传给主机。主机收到网页资源数据后，由浏览器进行解析和渲染，同时页面内如果还有其他资源，则还会构造相应的HTTP请求去获取这些资源文件。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://rtekix.github.io/posts/830442ea/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="RtekiX">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nothing is blessing to everything for me">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/830442ea/" class="post-title-link" itemprop="url">基础知识复习笔记3-I/O多路复用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-15 14:10:19" itemprop="dateCreated datePublished" datetime="2024-02-15T14:10:19+08:00">2024-02-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-02-17 16:16:39" itemprop="dateModified" datetime="2024-02-17T16:16:39+08:00">2024-02-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前看图解计算机基础知识的时候，看过几次I/O多路复用的内容，但感觉都没有抓到本质。面试的时候也被问过几次，回答得也不太好。所以重新梳理一下个人理解。</p>
+<h3 id="I-O"><a href="#I-O" class="headerlink" title="I/O"></a>I/O</h3><p>I/O就是输入输出，计算机的存储器（内存）和周边设备的数据传输，最主要的就是文件读取/写入。网络传输也是I/O的一部分，Linux中一切皆文件，网络编程用到的socket也是一个文件描述符。</p>
+<h4 id="单个进程的文件读取"><a href="#单个进程的文件读取" class="headerlink" title="单个进程的文件读取"></a>单个进程的文件读取</h4><ul>
+<li>文件管理是由操作系统完成的，所以实际的文件数据读取和传输需要切换到内核态。</li>
+<li>相较于内存，外存的文件读取是相当慢的。因此CPU不会白白浪费时间等待，而是会阻塞等待I/O的进程，切换去运行其他进程。直到数据传输准备完毕，内核唤醒等待进程，再继续运行。</li>
+<li>用户态的进程，需要有一个内核态的进程维护其状态。</li>
+</ul>
+<h4 id="多个进程的文件读取"><a href="#多个进程的文件读取" class="headerlink" title="多个进程的文件读取"></a>多个进程的文件读取</h4><ul>
+<li>为每一个进程的I/O流创建一个进程/线程维护其状态。当并发量很大时，系统资源吃不消。</li>
+</ul>
+<h4 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h4><p>用一个进程维护多个I/O连接（网络连接）</p>
+<h5 id="select"><a href="#select" class="headerlink" title="select"></a>select</h5><p>用户态维护一个连接表，最大长度固定。进程调用select尝试获取数据时，将连接表复制到内核里，由内核进程顺序遍历检查每个连接是否有数据事件更新，有的话做标记，然后再把更新后的表复制回用户态，用户态再遍历连接表，找到那些有数据事件更新的连接。</p>
+<p>所以总共遍历两次，复制两次</p>
+<h5 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h5><p>本质上和select一样，只是固定长度表变成了变长的链表</p>
+<h5 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h5><p>用户态调用epoll_create，在内核态创建epoll对象。内核用一个红黑树维护所有连接，一个链表维护当前有事件的连接。有连接发生事件时，内核自动将其加入到链表中。当用户调用 epoll_wait() 函数时，内核只返回当前有事件的、链表中的连接对象。</p>
+<p>插入新的连接维护对象，查找、更新，因为是红黑树所以都是 log(n)</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>I/O多路复用就是用一个进程维护多个I/O流的连接，因为每个连接都用一个进程或线程去维护开销是很大的。</p>
+<p>I/O多路复用有三种模式，select、poll和epoll。select是采取轮询的模式，将所有连接维护在一个线性表里，每次select都将表复制到内核，由内核检查并更新是否有数据事件发生，再将结果复制回用户态，遍历获取事件更新状态。</p>
+<p>poll和select类似，只是将线性表改成了链表，增加了最大并发连接数。</p>
+<p>epoll则是在内核中用一个红黑树维护所有连接，有连接发生事件时，内核自动将其加入到一个链表中。当用户调用函数想知道哪些连接有数据事件发生时，内核只需要返回链表中的连接对象。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://rtekix.github.io/posts/f553d691/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="RtekiX">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nothing is blessing to everything for me">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/f553d691/" class="post-title-link" itemprop="url">C++ thread 多线程任务队列</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-14 20:26:39" itemprop="dateCreated datePublished" datetime="2024-02-14T20:26:39+08:00">2024-02-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-02-17 16:16:39" itemprop="dateModified" datetime="2024-02-17T16:16:39+08:00">2024-02-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Semaphore</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Semaphore</span>(<span class="keyword">int</span> value = <span class="number">1</span>) : <span class="built_in">cnt</span>(value) &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">P</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lck</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        <span class="keyword">if</span> (--cnt &lt; <span class="number">0</span>)</span><br><span class="line">            cv.<span class="built_in">wait</span>(lck);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">V</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lck</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        <span class="keyword">if</span> (++cnt &lt;= <span class="number">0</span>)</span><br><span class="line">            cv.<span class="built_in">notify_one</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> cnt;</span><br><span class="line">    mutex mtx;</span><br><span class="line">    condition_variable cv;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TaskQueue</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">TaskQueue</span>(<span class="keyword">int</span> n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">srand</span>(<span class="built_in">time</span>(<span class="number">0</span>));</span><br><span class="line">        max_size = n;</span><br><span class="line">        notfull = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(n);</span><br><span class="line">        notempty = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(<span class="number">0</span>);</span><br><span class="line">        rwlock = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> e)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        notfull-&gt;<span class="built_in">P</span>(); <span class="comment">// 确保有空位</span></span><br><span class="line">        rwlock-&gt;<span class="built_in">P</span>();  <span class="comment">// 获取互斥锁</span></span><br><span class="line">        q.<span class="built_in">push</span>(e);</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;线程id &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot; 执行了add操作，添加数字&quot;</span> &lt;&lt; e &lt;&lt; endl;</span><br><span class="line">        rwlock-&gt;<span class="built_in">V</span>();</span><br><span class="line">        notempty-&gt;<span class="built_in">V</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        notempty-&gt;<span class="built_in">P</span>();</span><br><span class="line">        rwlock-&gt;<span class="built_in">P</span>();</span><br><span class="line">        <span class="keyword">int</span> e = q.<span class="built_in">front</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;线程id &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot; 执行了get操作，获取数字&quot;</span> &lt;&lt; e &lt;&lt; endl;</span><br><span class="line">        rwlock-&gt;<span class="built_in">V</span>();</span><br><span class="line">        notfull-&gt;<span class="built_in">V</span>();</span><br><span class="line">        <span class="keyword">return</span> e;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> max_size;</span><br><span class="line">    Semaphore* notfull, * notempty;</span><br><span class="line">    Semaphore* rwlock; <span class="comment">// 生产者和消费者的互斥锁</span></span><br><span class="line">    queue&lt;<span class="keyword">int</span>&gt; q;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fadd</span><span class="params">(TaskQueue&amp; task_queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (cnt &lt; <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> rnd = <span class="built_in">rand</span>() % <span class="number">100</span>;</span><br><span class="line">        task_queue.<span class="built_in">add</span>(rnd);</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fget</span><span class="params">(TaskQueue&amp; task_queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (cnt &lt; <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> x = task_queue.<span class="built_in">get</span>();</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">TaskQueue <span class="title">task_queue</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">    <span class="function">thread <span class="title">tt1</span><span class="params">(fadd, ref(task_queue))</span></span>;</span><br><span class="line">    <span class="function">thread <span class="title">tt2</span><span class="params">(fget, ref(task_queue))</span></span>;</span><br><span class="line">    tt1.<span class="built_in">join</span>();</span><br><span class="line">    tt2.<span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用future替代thread，future</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">TaskQueue <span class="title">task_queue</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">    vector&lt;future&lt;<span class="keyword">void</span>&gt;&gt; ts;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">            future&lt;<span class="keyword">void</span>&gt; t = std::<span class="built_in">async</span>(fadd, <span class="built_in">ref</span>(task_queue));</span><br><span class="line">            ts.<span class="built_in">emplace_back</span>(std::<span class="built_in">move</span>(t));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            future&lt;<span class="keyword">void</span>&gt; t = std::<span class="built_in">async</span>(fget, <span class="built_in">ref</span>(task_queue));</span><br><span class="line">            ts.<span class="built_in">emplace_back</span>(std::<span class="built_in">move</span>(t));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://rtekix.github.io/posts/4c5a7656/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="RtekiX">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nothing is blessing to everything for me">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/4c5a7656/" class="post-title-link" itemprop="url">基础知识复习笔记2-多线程编程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-13 22:32:08" itemprop="dateCreated datePublished" datetime="2024-02-13T22:32:08+08:00">2024-02-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-02-17 16:16:39" itemprop="dateModified" datetime="2024-02-17T16:16:39+08:00">2024-02-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="线程和进程"><a href="#线程和进程" class="headerlink" title="线程和进程"></a>线程和进程</h3><p>经典问题。这个问题在本科学习操作系统时理解比较深刻，通常习惯从以下几个方面进行比较：</p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><ul>
+<li>进程：进程是程序代码在计算机系统中运行时的一个状态体，代码是静态的，进程是动态的。进程是操作系统分配资源的基本单位，拥有独立的地址空间、代码段、数据段。</li>
+<li>线程：线程是进程中可以独立执行的单元，是CPU调度的基本单位。一个进程可以有多个线程，同一个进程内的线程共享进程的资源，每个线程也拥有自己的线程栈、程序计数器等资源。</li>
+</ul>
+<h4 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h4><ul>
+<li>进程是资源分配单位，线程是最小执行单位。</li>
+<li>进程切换开销大，每个进程都有自己的虚拟地址空间，也都有自己的页表。切换页表涉及到内存访问，页表切换后还会导致页表缓存（TLB）失效，都会导致额外时间开销。同一进程内线程切换不涉及虚拟地址空间切换，只需在线程栈保存上下文。</li>
+<li>多进程适合多核多机并行执行，多线程适合多核。</li>
+</ul>
+<h4 id="C-的多线程编程"><a href="#C-的多线程编程" class="headerlink" title="C++的多线程编程"></a>C++的多线程编程</h4><p>C++11之前没有标准线程库，需要使用 pthread 库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int pthread_create (pthread_t *thread,pthread_attr_t *attr,</span><br><span class="line">void *(*start_routine)(void *),void *arg);</span><br></pre></td></tr></table></figure>
+<p>将要运行的函数的指针绑定到 pthread_t 对象上，并执行线程任务。</p>
+<p>C++11增加了标准线程库 std::thread。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::thread t(foo, args...);</span><br></pre></td></tr></table></figure>
+<p>指定要运行的函数foo和参数args，创建线程t并运行。</p>
+<blockquote>
+<p>C++11有两种方式来等待线程结束：</p>
+<ul>
+<li>detach方式，启动的线程自主在后台运行，当前的代码继续往下执行，不等待新线程结束。<ul>
+<li>调用detach表示thread对象和其表示的线程完全分离；</li>
+<li>分离之后的线程是不在受约束和管制，会单独执行，直到执行完毕释放资源，可以看做是一个daemon线程；</li>
+<li>分离之后thread对象不再表示任何线程；</li>
+<li>分离之后joinable() == false，即使还在执行；</li>
+</ul>
+</li>
+<li>join方式，等待启动的线程完成，才会继续往下执行。假如前面的代码使用这种方式，其输出就会0,1,2,3，因为每次都是前一个线程输出完成了才会进行下一个循环，启动下一个新线程。<ul>
+<li>只有处于活动状态线程才能调用join，可以通过joinable()函数检查;</li>
+<li>joinable() == true表示当前线程是活动线程，才可以调用join函数；</li>
+<li>默认构造函数创建的对象是joinable() == false;</li>
+<li>join只能被调用一次，之后joinable就会变为false，表示线程执行完毕；</li>
+<li>调用 ternimate()的线程必须是 joinable() == false;</li>
+<li>如果线程不调用join()函数，即使执行完毕也是一个活动线程，即joinable() == true，依然可以调用join()函数；</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>C++的线程thread创建之后就会运行，结束，销毁，如果要实现可复用的线程池，需要换一种思路：</p>
+<ul>
+<li>创建N个线程，让这些线程执行一个while函数，持续尝试向一个任务队列获取执行任务（执行任务：（函数地址，参数））。</li>
+<li>线程获取到任务则执行，任务队列为空则阻塞休眠。</li>
+<li>任务队列得到新任务时，唤醒一个休眠中的线程。</li>
+<li>任务队列是一个生产者/消费者模型，需要互斥。</li>
+</ul>
+<h4 id="Java的多线程编程"><a href="#Java的多线程编程" class="headerlink" title="Java的多线程编程"></a>Java的多线程编程</h4><p>Java多线程主要通过三种方式实现</p>
+<ul>
+<li>继承Thread类，重写<code>public void run()</code>方法，调用start()方法创建并执行线程任务</li>
+<li>继承Runnable接口，重写<code>public void run()</code>方法，调用start()方法创建并执行线程任务</li>
+<li>继承Callable接口，重写<code>public E call()</code>方法，调用start()方法创建并执行线程任务。call()可以有返回值</li>
+</ul>
+<h5 id="三种方式的共同点"><a href="#三种方式的共同点" class="headerlink" title="三种方式的共同点"></a>三种方式的共同点</h5><ul>
+<li>Runnable和Callable本质上都是对Thread类的封装，其实创建执行线程还是由Thread完成的。所以说Java多线程也可以说就是new一个Thread对象，然后调用start()进行线程初始化、运行。</li>
+<li>无论是继承Thread类还是继承两个接口，直接调用run()方法也是可以执行函数内容的，但并不会创建新线程，而是在main线程里执行。所以说真正关键动作在start()中</li>
+</ul>
+<h4 id="Java的同步和互斥"><a href="#Java的同步和互斥" class="headerlink" title="Java的同步和互斥"></a>Java的同步和互斥</h4><p>主要了解了synchronized关键词和ReentrantLock</p>
+<h5 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h5><p>关键词，可以修饰方法、对象、代码块。被修饰的内容在有一个线程访问时，其他试图访问的线程都会被阻塞。如果修饰的是静态方法，则该类所有对象的该方法都会被上锁（也很容易理解，静态方法是类级共享的）。</p>
+<p>synchronized在早期给人的印象就是重量级锁，开销很大。因为它用到了操作系统底层的互斥锁，涉及到用户/内核态切换。但是Java新版本也有做一些改进：</p>
+<ul>
+<li><strong>锁粗化</strong>：把多个连续的加锁解锁块合并为一个临界代码块。比如连续的字符串append</li>
+<li><strong>锁消除</strong>：如果某个数据对象被认为是不会共享的，就不会对它上锁，比如一个函数内的局部变量，每个线程都是不同的，不会互相访问，就不会上锁</li>
+<li><strong>轻量级锁</strong>：用<font color="red">CAS原子指令</font>代替重量级锁。<font color="red">CAS</font>就是compare and swap，线程将一个读取一个数据的值A，进行操作得到C，写回之前将A和原来的数据值比较，如果相同就写回C，不同就自旋反复尝试。</li>
+<li><strong>偏向锁</strong>：通俗来说，偏向锁也是类似于82原则，一个被共享的的数据有80%的时间都在被同一个线程t1访问，只有20%的时间被其他线程访问。所以偏向锁就会给t1一个偏向锁认证，免去它访问时的CAS操作，只有当其他线程尝试获取偏向锁时，持有偏向锁的线程才会释放锁。</li>
+</ul>
+<h5 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h5><p>ReentrantLock就是可重入锁，一个线程获取到锁后，如果重复获取锁，不会被锁阻塞。重复获取n次锁，就要重复释放n次锁。</p>
+<p>一般的使用方式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">// 代码</span></span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    lock.unlock();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://rtekix.github.io/posts/67cafe3d/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="RtekiX">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nothing is blessing to everything for me">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/67cafe3d/" class="post-title-link" itemprop="url">基础知识复习笔记1-Java集合</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-12 19:55:55" itemprop="dateCreated datePublished" datetime="2024-02-12T19:55:55+08:00">2024-02-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-02-17 16:16:39" itemprop="dateModified" datetime="2024-02-17T16:16:39+08:00">2024-02-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>复习笔记系列记录一些C++/Java，本科专业课的一些知识，强化记忆</p>
+<p>本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。</p>
+<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_queue实际上底层都是deque容器，deque实现了它们所需的方法。Java中类似，所有容器都是从Collection和Map接口派生出来的，从Collection和Map接口又派生出许多子接口，由“集合（容器）”实现这些接口的方法。</p>
+<ul>
+<li><strong>Collection：</strong> 存放单一元素<ul>
+<li><strong>List</strong>：ArrayList，LinkedList</li>
+<li><strong>Set</strong>：HashSet，TreeSet，LinkedHashSet</li>
+<li><strong>Queue</strong>：PiorityQueue<ul>
+<li><strong>Deque</strong>：LinkedList，ArrayDeque</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Map：</strong> 存放键值对<ul>
+<li>HashMap，TreeMap，LinkedHashMap</li>
+</ul>
+</li>
+</ul>
+<p>以上黑体是接口，常规体是集合/容器。</p>
+<h4 id="ArrayList和LinkedList"><a href="#ArrayList和LinkedList" class="headerlink" title="ArrayList和LinkedList"></a>ArrayList和LinkedList</h4><p>ArrayList类似于C++的vector，底层用数组实现，可以随机访问、自动扩容。扩容机制也和vector类似，大约为1.5倍。</p>
+<p>LinkedList是双向链表，头尾插入删除O(1)，随机位置插入删除平均仍然是O(n)，所以实际上与ArrayList相比优势不大，但适合作为双向队列的接口实现。</p>
+<h4 id="HashSet，HashMap"><a href="#HashSet，HashMap" class="headerlink" title="HashSet，HashMap"></a>HashSet，HashMap</h4><h5 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h5><p>HashMap和HashSet底层实现相同，都是数组+链表。当冲突形成的拉链表长度大于8，而且数组长度大于64时，会将链表转化为红黑树，降低查找开销。数组长度不大于64则优先数组扩容。</p>
+<h5 id="下标计算"><a href="#下标计算" class="headerlink" title="下标计算"></a>下标计算</h5><p>HashSet类似于C++的unordered_set，元素存放无序、不可重复。计算元素存放位置时，先对元素进行一次hashCode()得到哈希值h，再将h和h的高16位或运算，得到最终的hash。然后<code>(n-1) &amp; hash</code>计算出下标。当n是2的幂次时，<code>(n-1)&amp;hash == hash % n</code>，所以HashMap表的长度总是2的幂次。</p>
+<h5 id="冲突处理"><a href="#冲突处理" class="headerlink" title="冲突处理"></a>冲突处理</h5><p>插入的时候，先对元素进行hashcode计算，如果冲突，则调用equals对比元素的值，相同则覆盖值，不同则按照哈希冲突拉链处理。</p>
+<h5 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h5><p>可以用foreach语法糖遍历，但遍历中不能对元素进行remove。如果需要遍历中对元素remove，需要用Iterator。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Iterator&lt;Map.Entry&lt;Object, Object&gt;&gt; it = mp.entrySet().iterator();</span><br><span class="line">while(it.hasNext()) &#123;</span><br><span class="line">    Map.Entry&lt;Object, Object&gt; entry = it.next();</span><br><span class="line">    System.out.println(entry.getKey() + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>foreach语法糖本质也是用迭代器遍历，但是remove会使用集合的remove方法，而不是迭代器的remove方法，导致出错。</p>
+<p>不建议使用map.keySet()获取键表，然后用get(key)的方法遍历，相当于遍历了两次，效率很低。</p>
+<h4 id="TreeSet和TreeMap"><a href="#TreeSet和TreeMap" class="headerlink" title="TreeSet和TreeMap"></a>TreeSet和TreeMap</h4><p>两者关系和HashSet、HashMap差不多，TreeMap是有序的，会默认按照键值升序排序。</p>
+<h5 id="底层实现-1"><a href="#底层实现-1" class="headerlink" title="底层实现"></a>底层实现</h5><p>红黑树，查找和增删的复杂度相同，效率低于HashMap。</p>
+<h5 id="自定义排序"><a href="#自定义排序" class="headerlink" title="自定义排序"></a>自定义排序</h5><ul>
+<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Node</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">char</span> ch;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">char</span> c)</span> </span>&#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hashCode和equals重写是为了让自定义类型在Set中去重</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Integer(value).hashCode() + <span class="keyword">new</span> Character(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">        Node n2 = (Node) o;</span><br><span class="line">        <span class="keyword">return</span> value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Node o)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value &lt; o.value ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>方法二：在创建TreeMap时定义比较函数compare：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;Character, Integer&gt; mp = new TreeMap&lt;&gt;(new Comparator&lt;Character&gt;() &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public int compare(Character o1, Character o2) &#123;</span><br><span class="line">      return o1 &lt; o2 ? 1 : -1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h4><p>PiorityQueue默认是小顶堆，自定义比较的方法和TreeMap一样。</p>
+<ul>
+<li>poll和take都是取出一个元素，poll不会抛出异常</li>
+<li>peek和element都是获取顶端元素，peek不会抛出异常</li>
+<li>offer和add都是添加一个元素，offer不会抛出异常</li>
+<li>Deque的offerFirst、pollLast等同理</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
       }
     }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
   }
-
-  // UC不支持跨域，所以直接显示
-  function asyncCb() {
-    if (browser.versions.uc) {
-      console.log('UCBrowser')
-      fontLoaded()
-    } else {
-      WebFont.load({
-        custom: {
-          families: ['Oswald-Regular'],
-        },
-        loading: function () {
-          // 所有字体开始加载
-          // console.log('font loading');
-        },
-        active: function () {
-          // 所有字体已渲染
-          fontLoaded()
-        },
-        inactive: function () {
-          // 字体预加载失败，无效字体或浏览器不支持加载
-          console.log('inactive: timeout')
-          fontLoaded()
-        },
-        timeout: 5000, // Set the timeout to two seconds
-      })
-    }
-  }
-
-  function asyncErr() {
-    console.warn('script load from CDN failed, will load local script')
-  }
-
-  // load webfont-loader async, and add callback function
-  function async(u, cb, err) {
-    var d = document,
-      t = 'script',
-      o = d.createElement(t),
-      s = d.getElementsByTagName(t)[0]
-    o.src = u
-    if (cb) {
-      o.addEventListener(
-        'load',
-        function (e) {
-          cb(null, e)
-        },
-        false
-      )
-    }
-    if (err) {
-      o.addEventListener(
-        'error',
-        function (e) {
-          err(null, e)
-        },
-        false
-      )
-    }
-    s.parentNode.insertBefore(o, s)
-  }
-
-  var asyncLoadWithFallBack = function (arr, success, reject) {
-    var currReject = function () {
-      reject()
-      arr.shift()
-      if (arr.length) async(arr[0], success, currReject)
-    }
-
-    async(arr[0], success, currReject)
-  }
-
-  asyncLoadWithFallBack(
-    [
-      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
-      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
-      "/lib/webfontloader.min.js",
-    ],
-    asyncCb,
-    asyncErr
-  )
 </script>
 
-            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
-            <div class="container container-unloaded">
-                <main class="main index-page">
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/e8b72eb/">
-                
-                <span class="abstract-title-text">2024-03-01-oppo一面</span>
-            </a>
-            <div class="abstract-content">
-                记录面试经验，总结个人得失
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/03/01">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/03/01</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="面试"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                面试
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="面试">面试</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/cda2b7f1/">
-                
-                <span class="abstract-title-text">QQ的存储空间为什么会越来越大</span>
-            </a>
-            <div class="abstract-content">
-                仅针对PC旧版的一个分析
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/26</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="随笔"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                随笔
-            </span>
-        </span>
-    
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/4a67726/">
-                
-                <span class="abstract-title-text">2024/2/21 oppo春招笔试</span>
-            </a>
-            <div class="abstract-content">
-                简单记录一下
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/21</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔试">笔试</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/ccf09792/">
-                
-                <span class="abstract-title-text">基础知识学习笔记6-Spring</span>
-            </a>
-            <div class="abstract-content">
-                IoC和AOP
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/18</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/a2044ae4/">
-                
-                <span class="abstract-title-text">基础知识复习笔记5-内存管理</span>
-            </a>
-            <div class="abstract-content">
-                Java和C++的
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/17">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/17</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/3d21fd56/">
-                
-                <span class="abstract-title-text">基础知识复习笔记4-计算机网络</span>
-            </a>
-            <div class="abstract-content">
-                记录一下常见的几个面试问题
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/17">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/16</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/830442ea/">
-                
-                <span class="abstract-title-text">基础知识复习笔记3-I/O多路复用</span>
-            </a>
-            <div class="abstract-content">
-                个人理解
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/17">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/15</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/f553d691/">
-                
-                <span class="abstract-title-text">C++ thread 多线程任务队列</span>
-            </a>
-            <div class="abstract-content">
-                本来想写线程池，但提交函数指针和参数有点复杂
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/17">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/14</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="C++练习">C++练习</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/4c5a7656/">
-                
-                <span class="abstract-title-text">基础知识复习笔记2-多线程编程</span>
-            </a>
-            <div class="abstract-content">
-                C++和Java的多线程
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/17">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/13</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/posts/67cafe3d/">
-                
-                <span class="abstract-title-text">基础知识复习笔记1-Java集合</span>
-            </a>
-            <div class="abstract-content">
-                重操旧业
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/17">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/12</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-        
-        
-            
-        
-        
-        <span class="post-category" data-categories="学习"">
-            <i class="fas fa-folder post-category-icon"></i>
-            <span class="post-category-text">
-                学习
-            </span>
-        </span>
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="笔记">笔记</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-    <!-- paginator  -->
-    
-        <nav class="page-nav">
-            <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">NEXT &gt;</a>
-        </nav>
-    
-</main>
-
-                <!-- profile -->
-                
-                    <div class="profile">
-    <img class="profile-avatar" alt="avatar" src= /avatar/shinobu.jpg />
-    <div class="profile-name">RtekiX</div>
-    
-        <div class="profile-signature">
-            black hole
         </div>
-    
-    
-        <div class="profile-social">
-            
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
 
+  <aside class="sidebar">
+    <div class="sidebar-inner">
 
-        </div>
-    
-    
-    
-    
-    
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="RtekiX"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">RtekiX</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
 </div>
 
-                
-            </div>
-            <footer class="footer footer-unloaded">
-    <!-- social  -->
-    
-        <div class="social">
-            
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
 
 
-        </div>
-    
-    <!-- powered by Hexo  -->
-    <div class="copyright">
-        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
-    </div>
-    <!-- website approve for Chinese user -->
-    
-    <!-- 不蒜子  -->
-    	
-</footer>
+      </div>
 
-        </div>
-        <!-- toc -->
-        
-        <!-- sidebar -->
-        <div class="sidebar sidebar-hide">
-    <ul class="sidebar-tabs sidebar-tabs-active-0">
-        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
-        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
-        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
-    </ul>
-    <div class="sidebar-content sidebar-content-show-archive">
-        <div class="sidebar-panel-archives">
-    <!-- 在 ejs 中将 archive 按照时间排序 -->
-    
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
-    
-    
-    
-    <div class="total-and-search">
-        <div class="total-archive">
-        Total : 16
-        </div>
-        <!-- search  -->
-        
     </div>
-    
-    <div class="post-archive">
-    
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
         
-            
-            
-            <div class="archive-year"> 2024 </div>
-            <ul class="year-list">
-            
+
         
-        <li class="archive-post-item">
-            <span class="archive-post-date">03/01</span>
-            <a class="archive-post-title" href="/posts/e8b72eb/">2024-03-01-oppo一面</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/26</span>
-            <a class="archive-post-title" href="/posts/cda2b7f1/">QQ的存储空间为什么会越来越大</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/21</span>
-            <a class="archive-post-title" href="/posts/4a67726/">2024/2/21 oppo春招笔试</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/18</span>
-            <a class="archive-post-title" href="/posts/ccf09792/">基础知识学习笔记6-Spring</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/17</span>
-            <a class="archive-post-title" href="/posts/a2044ae4/">基础知识复习笔记5-内存管理</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/16</span>
-            <a class="archive-post-title" href="/posts/3d21fd56/">基础知识复习笔记4-计算机网络</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span>
-            <a class="archive-post-title" href="/posts/830442ea/">基础知识复习笔记3-I/O多路复用</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/14</span>
-            <a class="archive-post-title" href="/posts/f553d691/">C++ thread 多线程任务队列</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/13</span>
-            <a class="archive-post-title" href="/posts/4c5a7656/">基础知识复习笔记2-多线程编程</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/12</span>
-            <a class="archive-post-title" href="/posts/67cafe3d/">基础知识复习笔记1-Java集合</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/06</span>
-            <a class="archive-post-title" href="/posts/24b990d7/">关于FCM服务的一些问题</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/28</span>
-            <a class="archive-post-title" href="/posts/1fa37b1/">SRS直播服务器</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/14</span>
-            <a class="archive-post-title" href="/posts/59b9e0e2/">露营物品列表</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/10</span>
-            <a class="archive-post-title" href="/posts/8a6b2b4c/">NEMU-PA1</a>
-        </li>
-    
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> 2023 </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">12/14</span>
-            <a class="archive-post-title" href="/posts/50a57998/">NEMU-pa0</a>
-        </li>
-    
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> 2021 </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">11/09</span>
-            <a class="archive-post-title" href="/posts/1075cfa9/">远程软件控制Manjaro</a>
-        </li>
-    
-    </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RtekiX</span>
 </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
 
-        <div class="sidebar-panel-tags">
-    <div class="sidebar-tags-name">
         
-            <span class="sidebar-tag-name" data-tags="笔试">
-                <span class="iconfont-archer">&#xe606;</span>
-                笔试
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="面试">
-                <span class="iconfont-archer">&#xe606;</span>
-                面试
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="C++练习">
-                <span class="iconfont-archer">&#xe606;</span>
-                C++练习
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="ICS实验">
-                <span class="iconfont-archer">&#xe606;</span>
-                ICS实验
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="笔记">
-                <span class="iconfont-archer">&#xe606;</span>
-                笔记
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Manjaro">
-                <span class="iconfont-archer">&#xe606;</span>
-                Manjaro
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="露营">
-                <span class="iconfont-archer">&#xe606;</span>
-                露营
-            </span>
-        
-    </div>
-    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
-    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
-        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
-    </div> 
-    <div class="sidebar-tags-list"></div>
-</div>
-
-        <div class="sidebar-panel-categories">
-    <div class="sidebar-categories-name">
-    
-        <span class="sidebar-category-name" data-categories="玩乐">
-            <span class="iconfont-archer">&#xe60a;</span>
-            玩乐
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="学习">
-            <span class="iconfont-archer">&#xe60a;</span>
-            学习
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="面试">
-            <span class="iconfont-archer">&#xe60a;</span>
-            面试
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="随笔">
-            <span class="iconfont-archer">&#xe60a;</span>
-            随笔
-        </span>
-    
-    </div>
-    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
-    <div class="sidebar-categories-list"></div>
-</div>
-
-    </div>
-</div>
-
-        <!-- site-meta -->
-        <script>
-    var siteMetaRoot = "/"
-    if (siteMetaRoot === "undefined") {
-        siteMetaRoot = '/'
-    }
-    var siteMeta = {
-        url: "https://rtekix.github.io",
-        root: siteMetaRoot,
-        author: "RtekiX"
-    }
-</script>
-
-        <!-- import experimental options here -->
-        <!-- Custom Font -->
 
 
-        <!-- main func -->
-        <script src="/scripts/main.js?v=20211217"></script>
-        <!-- dark mode -->
-        <script src="/scripts/dark.js?v=20211217"></script>
-        <!-- fancybox -->
-        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
-        <!-- algolia -->
-        
-        <!-- busuanzi -->
-        
-        <!-- CNZZ -->
-        
-        <!-- async load share.js -->
-        
-        <!-- mermaid -->
-        
-    </body>
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
 </html>

@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>2024/2/21 oppo春招笔试</title>
-    <url>/posts/4a67726/</url>
-    <content><![CDATA[<h3 id="选择题"><a href="#选择题" class="headerlink" title="选择题"></a>选择题</h3><p>MySQL分布式事务：XA事务，2pc。将分布式事务执行的过程分为两阶段，第一阶段所有需要执行操作的节点准备自身资源数据，检查是否可以提交，向事务管理节点发送precommit的消息。所有节点都准备就绪precommit后，才能开始实际执行事务，期间等待是阻塞的。</p>
-<p>Java垃圾回收：强引用，任何时候都不回收；软引用，空间不足时回收；弱引用和虚引用，任何时候都回收。</p>
-<h3 id="编程题"><a href="#编程题" class="headerlink" title="编程题"></a>编程题</h3><h4 id="第一题忘了，比较简单"><a href="#第一题忘了，比较简单" class="headerlink" title="第一题忘了，比较简单"></a>第一题忘了，比较简单</h4><h4 id="第二题"><a href="#第二题" class="headerlink" title="第二题"></a>第二题</h4><p>第二题题意是，一个数组中，任选两个元素删除，并将它们的和再加入数组，使数组的极差最小。</p>
-<h5 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h5><p>用优先队列读入元素，删除最小的两个元素，再加入数组。过了90%。</p>
-<p>忘记考虑的点：最小的两个元素相加后，可能大于原数组最大的元素，而我直接默认优先队列头的元素最大了，测试数据中可能出现了负数。</p>
-<h4 id="第三题"><a href="#第三题" class="headerlink" title="第三题"></a>第三题</h4><p>n个杯子中有k杯水，每个回合可能的行为：</p>
-<ul>
-<li>随机选择一个杯子</li>
-<li>如果杯子空：则回合结束</li>
-<li>如果杯子不空：上回合喝过水了，则放下杯子回合结束；上回合没喝水，则喝掉杯子里的水</li>
-</ul>
-<p>最终求所有水被喝完时的回合数的期望值。</p>
-<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><p>很明显是一个数学题。假如不考虑两次喝水之间的间隙，还剩i杯水的时候，喝到水的概率p=i/n。此时，喝一杯水的期望回合是：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">T = p*1 + p(1-p)*2 + p(1-p)^2*3 + ... + p(1-p)^n*(n+1)</span><br><span class="line">  = i/n(1-p)^2</span><br></pre></td></tr></table></figure>
-<p>然后令i=k，i=k-1, … i=1，累加即可</p>
-<p>没想出来的地方：两次喝水有间隙——卡在这里很久，实际上只需要在最后的结果加上k-1个回合就可以了。</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔试</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>2024-03-01-oppo一面</title>
     <url>/posts/e8b72eb/</url>
     <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>2月29日上午邮件通知面试，3月1日下午14:10开始，调试设备约5分钟，面试时长约30分钟，无手撕代码。</p>
@@ -53,6 +26,33 @@
       </categories>
       <tags>
         <tag>面试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>2024/2/21 oppo春招笔试</title>
+    <url>/posts/4a67726/</url>
+    <content><![CDATA[<h3 id="选择题"><a href="#选择题" class="headerlink" title="选择题"></a>选择题</h3><p>MySQL分布式事务：XA事务，2pc。将分布式事务执行的过程分为两阶段，第一阶段所有需要执行操作的节点准备自身资源数据，检查是否可以提交，向事务管理节点发送precommit的消息。所有节点都准备就绪precommit后，才能开始实际执行事务，期间等待是阻塞的。</p>
+<p>Java垃圾回收：强引用，任何时候都不回收；软引用，空间不足时回收；弱引用和虚引用，任何时候都回收。</p>
+<h3 id="编程题"><a href="#编程题" class="headerlink" title="编程题"></a>编程题</h3><h4 id="第一题忘了，比较简单"><a href="#第一题忘了，比较简单" class="headerlink" title="第一题忘了，比较简单"></a>第一题忘了，比较简单</h4><h4 id="第二题"><a href="#第二题" class="headerlink" title="第二题"></a>第二题</h4><p>第二题题意是，一个数组中，任选两个元素删除，并将它们的和再加入数组，使数组的极差最小。</p>
+<h5 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h5><p>用优先队列读入元素，删除最小的两个元素，再加入数组。过了90%。</p>
+<p>忘记考虑的点：最小的两个元素相加后，可能大于原数组最大的元素，而我直接默认优先队列头的元素最大了，测试数据中可能出现了负数。</p>
+<h4 id="第三题"><a href="#第三题" class="headerlink" title="第三题"></a>第三题</h4><p>n个杯子中有k杯水，每个回合可能的行为：</p>
+<ul>
+<li>随机选择一个杯子</li>
+<li>如果杯子空：则回合结束</li>
+<li>如果杯子不空：上回合喝过水了，则放下杯子回合结束；上回合没喝水，则喝掉杯子里的水</li>
+</ul>
+<p>最终求所有水被喝完时的回合数的期望值。</p>
+<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><p>很明显是一个数学题。假如不考虑两次喝水之间的间隙，还剩i杯水的时候，喝到水的概率p=i/n。此时，喝一杯水的期望回合是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">T = p*1 + p(1-p)*2 + p(1-p)^2*3 + ... + p(1-p)^n*(n+1)</span><br><span class="line">  = i/n(1-p)^2</span><br></pre></td></tr></table></figure>
+<p>然后令i=k，i=k-1, … i=1，累加即可</p>
+<p>没想出来的地方：两次喝水有间隙——卡在这里很久，实际上只需要在最后的结果加上k-1个回合就可以了。</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔试</tag>
       </tags>
   </entry>
   <entry>
@@ -149,9 +149,9 @@
 <p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
 <p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
 <h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#105;&#116;&#64;&#x67;&#105;&#x74;&#104;&#x75;&#x62;&#x2e;&#x63;&#x6f;&#x6d;">&#103;&#105;&#116;&#64;&#x67;&#105;&#x74;&#104;&#x75;&#x62;&#x2e;&#x63;&#x6f;&#x6d;</a>。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#105;&#x74;&#64;&#103;&#x69;&#x74;&#104;&#x75;&#98;&#46;&#x63;&#111;&#x6d;">&#103;&#105;&#x74;&#64;&#103;&#x69;&#x74;&#104;&#x75;&#98;&#46;&#x63;&#111;&#x6d;</a>。</p>
 <p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#103;&#105;&#116;&#64;&#103;&#105;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#111;&#109;">&#103;&#105;&#116;&#64;&#103;&#105;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#111;&#109;</a>/仓库地址，而不是http或https</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#103;&#105;&#116;&#x40;&#x67;&#x69;&#x74;&#104;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;">&#103;&#105;&#116;&#x40;&#x67;&#x69;&#x74;&#104;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;</a>/仓库地址，而不是http或https</p>
 <h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
 <p>以后再学</p>
 ]]></content>
@@ -287,37 +287,6 @@
       </tags>
   </entry>
   <entry>
-    <title>基础知识复习笔记3-I/O多路复用</title>
-    <url>/posts/830442ea/</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前看图解计算机基础知识的时候，看过几次I/O多路复用的内容，但感觉都没有抓到本质。面试的时候也被问过几次，回答得也不太好。所以重新梳理一下个人理解。</p>
-<h3 id="I-O"><a href="#I-O" class="headerlink" title="I/O"></a>I/O</h3><p>I/O就是输入输出，计算机的存储器（内存）和周边设备的数据传输，最主要的就是文件读取/写入。网络传输也是I/O的一部分，Linux中一切皆文件，网络编程用到的socket也是一个文件描述符。</p>
-<h4 id="单个进程的文件读取"><a href="#单个进程的文件读取" class="headerlink" title="单个进程的文件读取"></a>单个进程的文件读取</h4><ul>
-<li>文件管理是由操作系统完成的，所以实际的文件数据读取和传输需要切换到内核态。</li>
-<li>相较于内存，外存的文件读取是相当慢的。因此CPU不会白白浪费时间等待，而是会阻塞等待I/O的进程，切换去运行其他进程。直到数据传输准备完毕，内核唤醒等待进程，再继续运行。</li>
-<li>用户态的进程，需要有一个内核态的进程维护其状态。</li>
-</ul>
-<h4 id="多个进程的文件读取"><a href="#多个进程的文件读取" class="headerlink" title="多个进程的文件读取"></a>多个进程的文件读取</h4><ul>
-<li>为每一个进程的I/O流创建一个进程/线程维护其状态。当并发量很大时，系统资源吃不消。</li>
-</ul>
-<h4 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h4><p>用一个进程维护多个I/O连接（网络连接）</p>
-<h5 id="select"><a href="#select" class="headerlink" title="select"></a>select</h5><p>用户态维护一个连接表，最大长度固定。进程调用select尝试获取数据时，将连接表复制到内核里，由内核进程顺序遍历检查每个连接是否有数据事件更新，有的话做标记，然后再把更新后的表复制回用户态，用户态再遍历连接表，找到那些有数据事件更新的连接。</p>
-<p>所以总共遍历两次，复制两次</p>
-<h5 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h5><p>本质上和select一样，只是固定长度表变成了变长的链表</p>
-<h5 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h5><p>用户态调用epoll_create，在内核态创建epoll对象。内核用一个红黑树维护所有连接，一个链表维护当前有事件的连接。有连接发生事件时，内核自动将其加入到链表中。当用户调用 epoll_wait() 函数时，内核只返回当前有事件的、链表中的连接对象。</p>
-<p>插入新的连接维护对象，查找、更新，因为是红黑树所以都是 log(n)</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>I/O多路复用就是用一个进程维护多个I/O流的连接，因为每个连接都用一个进程或线程去维护开销是很大的。</p>
-<p>I/O多路复用有三种模式，select、poll和epoll。select是采取轮询的模式，将所有连接维护在一个线性表里，每次select都将表复制到内核，由内核检查并更新是否有数据事件发生，再将结果复制回用户态，遍历获取事件更新状态。</p>
-<p>poll和select类似，只是将线性表改成了链表，增加了最大并发连接数。</p>
-<p>epoll则是在内核中用一个红黑树维护所有连接，有连接发生事件时，内核自动将其加入到一个链表中。当用户调用函数想知道哪些连接有数据事件发生时，内核只需要返回链表中的连接对象。</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>基础知识复习笔记2-多线程编程</title>
     <url>/posts/4c5a7656/</url>
     <content><![CDATA[<h3 id="线程和进程"><a href="#线程和进程" class="headerlink" title="线程和进程"></a>线程和进程</h3><p>经典问题。这个问题在本科学习操作系统时理解比较深刻，通常习惯从以下几个方面进行比较：</p>
@@ -386,6 +355,37 @@
 <h5 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h5><p>ReentrantLock就是可重入锁，一个线程获取到锁后，如果重复获取锁，不会被锁阻塞。重复获取n次锁，就要重复释放n次锁。</p>
 <p>一般的使用方式</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">// 代码</span></span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    lock.unlock();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础知识复习笔记3-I/O多路复用</title>
+    <url>/posts/830442ea/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前看图解计算机基础知识的时候，看过几次I/O多路复用的内容，但感觉都没有抓到本质。面试的时候也被问过几次，回答得也不太好。所以重新梳理一下个人理解。</p>
+<h3 id="I-O"><a href="#I-O" class="headerlink" title="I/O"></a>I/O</h3><p>I/O就是输入输出，计算机的存储器（内存）和周边设备的数据传输，最主要的就是文件读取/写入。网络传输也是I/O的一部分，Linux中一切皆文件，网络编程用到的socket也是一个文件描述符。</p>
+<h4 id="单个进程的文件读取"><a href="#单个进程的文件读取" class="headerlink" title="单个进程的文件读取"></a>单个进程的文件读取</h4><ul>
+<li>文件管理是由操作系统完成的，所以实际的文件数据读取和传输需要切换到内核态。</li>
+<li>相较于内存，外存的文件读取是相当慢的。因此CPU不会白白浪费时间等待，而是会阻塞等待I/O的进程，切换去运行其他进程。直到数据传输准备完毕，内核唤醒等待进程，再继续运行。</li>
+<li>用户态的进程，需要有一个内核态的进程维护其状态。</li>
+</ul>
+<h4 id="多个进程的文件读取"><a href="#多个进程的文件读取" class="headerlink" title="多个进程的文件读取"></a>多个进程的文件读取</h4><ul>
+<li>为每一个进程的I/O流创建一个进程/线程维护其状态。当并发量很大时，系统资源吃不消。</li>
+</ul>
+<h4 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h4><p>用一个进程维护多个I/O连接（网络连接）</p>
+<h5 id="select"><a href="#select" class="headerlink" title="select"></a>select</h5><p>用户态维护一个连接表，最大长度固定。进程调用select尝试获取数据时，将连接表复制到内核里，由内核进程顺序遍历检查每个连接是否有数据事件更新，有的话做标记，然后再把更新后的表复制回用户态，用户态再遍历连接表，找到那些有数据事件更新的连接。</p>
+<p>所以总共遍历两次，复制两次</p>
+<h5 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h5><p>本质上和select一样，只是固定长度表变成了变长的链表</p>
+<h5 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h5><p>用户态调用epoll_create，在内核态创建epoll对象。内核用一个红黑树维护所有连接，一个链表维护当前有事件的连接。有连接发生事件时，内核自动将其加入到链表中。当用户调用 epoll_wait() 函数时，内核只返回当前有事件的、链表中的连接对象。</p>
+<p>插入新的连接维护对象，查找、更新，因为是红黑树所以都是 log(n)</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>I/O多路复用就是用一个进程维护多个I/O流的连接，因为每个连接都用一个进程或线程去维护开销是很大的。</p>
+<p>I/O多路复用有三种模式，select、poll和epoll。select是采取轮询的模式，将所有连接维护在一个线性表里，每次select都将表复制到内核，由内核检查并更新是否有数据事件发生，再将结果复制回用户态，遍历获取事件更新状态。</p>
+<p>poll和select类似，只是将线性表改成了链表，增加了最大并发连接数。</p>
+<p>epoll则是在内核中用一个红黑树维护所有连接，有连接发生事件时，内核自动将其加入到一个链表中。当用户调用函数想知道哪些连接有数据事件发生时，内核只需要返回链表中的连接对象。</p>
+]]></content>
       <categories>
         <category>学习</category>
       </categories>
