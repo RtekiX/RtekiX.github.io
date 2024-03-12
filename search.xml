@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>C++ thread 多线程任务队列</title>
-    <url>/posts/f553d691/</url>
-    <content><![CDATA[<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Semaphore</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Semaphore</span>(<span class="keyword">int</span> value = <span class="number">1</span>) : <span class="built_in">cnt</span>(value) &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">P</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lck</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        <span class="keyword">if</span> (--cnt &lt; <span class="number">0</span>)</span><br><span class="line">            cv.<span class="built_in">wait</span>(lck);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">V</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lck</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        <span class="keyword">if</span> (++cnt &lt;= <span class="number">0</span>)</span><br><span class="line">            cv.<span class="built_in">notify_one</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> cnt;</span><br><span class="line">    mutex mtx;</span><br><span class="line">    condition_variable cv;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TaskQueue</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">TaskQueue</span>(<span class="keyword">int</span> n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">srand</span>(<span class="built_in">time</span>(<span class="number">0</span>));</span><br><span class="line">        max_size = n;</span><br><span class="line">        notfull = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(n);</span><br><span class="line">        notempty = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(<span class="number">0</span>);</span><br><span class="line">        rwlock = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> e)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        notfull-&gt;<span class="built_in">P</span>(); <span class="comment">// 确保有空位</span></span><br><span class="line">        rwlock-&gt;<span class="built_in">P</span>();  <span class="comment">// 获取互斥锁</span></span><br><span class="line">        q.<span class="built_in">push</span>(e);</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;线程id &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot; 执行了add操作，添加数字&quot;</span> &lt;&lt; e &lt;&lt; endl;</span><br><span class="line">        rwlock-&gt;<span class="built_in">V</span>();</span><br><span class="line">        notempty-&gt;<span class="built_in">V</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        notempty-&gt;<span class="built_in">P</span>();</span><br><span class="line">        rwlock-&gt;<span class="built_in">P</span>();</span><br><span class="line">        <span class="keyword">int</span> e = q.<span class="built_in">front</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;线程id &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot; 执行了get操作，获取数字&quot;</span> &lt;&lt; e &lt;&lt; endl;</span><br><span class="line">        rwlock-&gt;<span class="built_in">V</span>();</span><br><span class="line">        notfull-&gt;<span class="built_in">V</span>();</span><br><span class="line">        <span class="keyword">return</span> e;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> max_size;</span><br><span class="line">    Semaphore* notfull, * notempty;</span><br><span class="line">    Semaphore* rwlock; <span class="comment">// 生产者和消费者的互斥锁</span></span><br><span class="line">    queue&lt;<span class="keyword">int</span>&gt; q;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fadd</span><span class="params">(TaskQueue&amp; task_queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (cnt &lt; <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> rnd = <span class="built_in">rand</span>() % <span class="number">100</span>;</span><br><span class="line">        task_queue.<span class="built_in">add</span>(rnd);</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fget</span><span class="params">(TaskQueue&amp; task_queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (cnt &lt; <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> x = task_queue.<span class="built_in">get</span>();</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">TaskQueue <span class="title">task_queue</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">    <span class="function">thread <span class="title">tt1</span><span class="params">(fadd, ref(task_queue))</span></span>;</span><br><span class="line">    <span class="function">thread <span class="title">tt2</span><span class="params">(fget, ref(task_queue))</span></span>;</span><br><span class="line">    tt1.<span class="built_in">join</span>();</span><br><span class="line">    tt2.<span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>用future替代thread，future</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">TaskQueue <span class="title">task_queue</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">    vector&lt;future&lt;<span class="keyword">void</span>&gt;&gt; ts;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">            future&lt;<span class="keyword">void</span>&gt; t = std::<span class="built_in">async</span>(fadd, <span class="built_in">ref</span>(task_queue));</span><br><span class="line">            ts.<span class="built_in">emplace_back</span>(std::<span class="built_in">move</span>(t));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            future&lt;<span class="keyword">void</span>&gt; t = std::<span class="built_in">async</span>(fget, <span class="built_in">ref</span>(task_queue));</span><br><span class="line">            ts.<span class="built_in">emplace_back</span>(std::<span class="built_in">move</span>(t));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    <title>2024-03-01-oppo一面</title>
+    <url>/posts/e8b72eb/</url>
+    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>2月29日上午邮件通知面试，3月1日下午14:10开始，调试设备约5分钟，面试时长约30分钟，无手撕代码。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><ul>
+<li><strong>自我介绍</strong>：主要介绍了我的本科、硕士经历，常用编程语言，业余项目。</li>
+<li><strong>个人介绍中提到了论文，介绍论文工作和贡献</strong>：主要从研究背景、解决方法、创新点三方面讲了一下。</li>
+<li><strong>论文中怎麽判断用户是否恶意，用哪些属性</strong>：我理解的意思是，怎么筛选重要属性和非重要属性。主要根据过往文献总结、个人经验，筛选出“粉丝、关注、博客数、是否开启定位、是否开启账号保护”这几项属性为比较重要的。</li>
+<li><strong>C++的内存管理</strong>：new和delete、智能指针</li>
+<li><strong>深入讲一下new</strong>：new主要做三部分工作，计算对象大小、在堆上开辟空间，调用类构造函数，将对象绑定到开辟空间的地址上（返回指针）</li>
+<li><strong>多线程编程了解哪些</strong>：用C++写过一个生产者消费者程序，用mutex、条件变量、int类型的资源标记数定义了信号量的P、V操作，用于临界资源管理。对C++的队列容器进行了包装，用三个信号量分别用于标志队列未满、队列未空以及当前是否有线程访问队列。</li>
+<li><strong>用的什么队列</strong>：猜测是联想到了Java中队列有很多种实现形式，说明了用的就是C++中的默认队列。<font color="red">这里回答有一点错误，C++的queue是一个容器适配器，类似于Java中的接口，默认实现方式其实是deque。</font>之后我也讲了一下deque的底层，是多块不连续内存加一个数组实现的。以及优先队列是堆。</li>
+<li><strong>介绍最有价值的项目</strong>：其实都是业余项目，简单讲了一下QQ聊天机器人的架构。Nonebot+Gocqhttp，Nonebot是Onebot协议的实现，类似于一个Python的SDK。Gocqhttp通俗来说是模拟QQ客户端的一个程序，与腾讯的消息服务器通信。我做的是Nonebot框架下的功能插件开发，包括点歌、记账、定时提醒等。顺便讲了一下消息传递的优先级模式。</li>
+<li><strong>反问</strong>：<ul>
+<li>研发有很多方向，具体是由谁定？——主要看个人兴趣</li>
+<li>Java了解比较浅，有没有关系？——有导师带，当然自己尽快学习上手最好</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>面试官人很好，基本是顺着我的舒适区提问，让我有点不好意思。因为没有手撕环节，整体流程体感比较快。</p>
+]]></content>
       <categories>
-        <category>学习</category>
+        <category>面试</category>
       </categories>
       <tags>
-        <tag>C++练习</tag>
+        <tag>面试</tag>
       </tags>
   </entry>
   <entry>
@@ -51,64 +65,6 @@
       </categories>
   </entry>
   <entry>
-    <title>C++智能指针简单造轮子</title>
-    <url>/posts/39e4cbdd/</url>
-    <content><![CDATA[<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Count</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Count</span>(<span class="keyword">int</span> cnt = <span class="number">1</span>) : _count(cnt)&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> _count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        _count++;</span><br><span class="line">        <span class="keyword">return</span> _count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">minus</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        _count--;</span><br><span class="line">        <span class="keyword">return</span> _count;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> _count;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SharedPtr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">SharedPtr</span>(T *ptr = <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        _ptr = ptr;</span><br><span class="line">        <span class="keyword">if</span> (ptr != <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            _cnt = <span class="keyword">new</span> <span class="built_in">Count</span>(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">SharedPtr</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">release</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">SharedPtr</span>(<span class="keyword">const</span> SharedPtr &amp;other)</span><br><span class="line">    &#123;</span><br><span class="line">        _ptr = other._ptr;</span><br><span class="line">        _cnt = other._cnt;</span><br><span class="line">        <span class="keyword">if</span> (_cnt-&gt;<span class="built_in">getCount</span>() != <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            _cnt-&gt;<span class="built_in">add</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    SharedPtr &amp;<span class="keyword">operator</span>=(<span class="keyword">const</span> SharedPtr &amp;other)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != other)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">release</span>();</span><br><span class="line">            _ptr = other._ptr;</span><br><span class="line">            _cnt = other._ptr;</span><br><span class="line">            _cnt-&gt;<span class="built_in">add</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    T <span class="keyword">operator</span>*()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> *_ptr;</span><br><span class="line">    &#125;</span><br><span class="line">    T &amp;<span class="keyword">operator</span>-&gt;()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> _ptr;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">use_count</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> _cnt-&gt;<span class="built_in">getCount</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">release</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (_ptr != <span class="literal">nullptr</span> &amp;&amp; _cnt-&gt;<span class="built_in">minus</span>() == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">delete</span> _ptr;</span><br><span class="line">            <span class="keyword">delete</span> _cnt;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    T *_ptr;</span><br><span class="line">    Count *_cnt;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">SharedPtr&lt;<span class="keyword">int</span>&gt; <span class="title">p</span><span class="params">(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">5</span>))</span></span>;</span><br><span class="line">    cout &lt;&lt; *p &lt;&lt; endl</span><br><span class="line">         &lt;&lt; p.<span class="built_in">use_count</span>();</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">SharedPtr&lt;<span class="keyword">int</span>&gt; <span class="title">q</span><span class="params">(p)</span></span>;</span><br><span class="line">        cout &lt;&lt; *q &lt;&lt; endl</span><br><span class="line">             &lt;&lt; q.<span class="built_in">use_count</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; *p &lt;&lt; endl</span><br><span class="line">         &lt;&lt; p.<span class="built_in">use_count</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>C++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>2024-03-01-oppo一面</title>
-    <url>/posts/e8b72eb/</url>
-    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>2月29日上午邮件通知面试，3月1日下午14:10开始，调试设备约5分钟，面试时长约30分钟，无手撕代码。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><ul>
-<li><strong>自我介绍</strong>：主要介绍了我的本科、硕士经历，常用编程语言，业余项目。</li>
-<li><strong>个人介绍中提到了论文，介绍论文工作和贡献</strong>：主要从研究背景、解决方法、创新点三方面讲了一下。</li>
-<li><strong>论文中怎麽判断用户是否恶意，用哪些属性</strong>：我理解的意思是，怎么筛选重要属性和非重要属性。主要根据过往文献总结、个人经验，筛选出“粉丝、关注、博客数、是否开启定位、是否开启账号保护”这几项属性为比较重要的。</li>
-<li><strong>C++的内存管理</strong>：new和delete、智能指针</li>
-<li><strong>深入讲一下new</strong>：new主要做三部分工作，计算对象大小、在堆上开辟空间，调用类构造函数，将对象绑定到开辟空间的地址上（返回指针）</li>
-<li><strong>多线程编程了解哪些</strong>：用C++写过一个生产者消费者程序，用mutex、条件变量、int类型的资源标记数定义了信号量的P、V操作，用于临界资源管理。对C++的队列容器进行了包装，用三个信号量分别用于标志队列未满、队列未空以及当前是否有线程访问队列。</li>
-<li><strong>用的什么队列</strong>：猜测是联想到了Java中队列有很多种实现形式，说明了用的就是C++中的默认队列。<font color="red">这里回答有一点错误，C++的queue是一个容器适配器，类似于Java中的接口，默认实现方式其实是deque。</font>之后我也讲了一下deque的底层，是多块不连续内存加一个数组实现的。以及优先队列是堆。</li>
-<li><strong>介绍最有价值的项目</strong>：其实都是业余项目，简单讲了一下QQ聊天机器人的架构。Nonebot+Gocqhttp，Nonebot是Onebot协议的实现，类似于一个Python的SDK。Gocqhttp通俗来说是模拟QQ客户端的一个程序，与腾讯的消息服务器通信。我做的是Nonebot框架下的功能插件开发，包括点歌、记账、定时提醒等。顺便讲了一下消息传递的优先级模式。</li>
-<li><strong>反问</strong>：<ul>
-<li>研发有很多方向，具体是由谁定？——主要看个人兴趣</li>
-<li>Java了解比较浅，有没有关系？——有导师带，当然自己尽快学习上手最好</li>
-</ul>
-</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>面试官人很好，基本是顺着我的舒适区提问，让我有点不好意思。因为没有手撕环节，整体流程体感比较快。</p>
-]]></content>
-      <categories>
-        <category>面试</category>
-      </categories>
-      <tags>
-        <tag>面试</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>QQ的存储空间为什么会越来越大</title>
-    <url>/posts/cda2b7f1/</url>
-    <content><![CDATA[<h3 id="注意到问题的缘由"><a href="#注意到问题的缘由" class="headerlink" title="注意到问题的缘由"></a>注意到问题的缘由</h3><p>我有定期清理硬盘空间的习惯，除了用dism++清理系统临时文件以外，还会手动去检查一些占用空间比较大的文件夹。</p>
-<p>事情就发生在上一次清理空间的时候。我习惯性地打开QQ存储文件主目录，然后删除 QQ/&lt;qq号&gt;/Image/Gourp2 里的所有文件。关于这里，还有一点想吐槽的：</p>
-<ul>
-<li>QQ为了加速图片检索，以Gourp2文件夹为根建了一颗B+树，所以点开文件夹会看到很多个名称长度为2的子文件夹，子文件夹下又有若干个名称长度为2的子文件夹，里面存储的就是文件前缀名相同的几张图片。结果就是删除的时候系统会做很多额外的检查，比如找文件索引、检查权限等等，因为删除实际上也是文件的移动，移动到回收站而已，整个删除过程速度非常慢。</li>
-</ul>
-<p>回到主题，删除完没用的群聊图片后，我发现QQ占用空间仍然很大，而且点击文件夹属性，存储空间计算时有一个断崖式的增长，也就是肯定存在一个大文件，进而才发现了 Msg3.0.db 和 Msg3.0index.db</p>
-<h3 id="Msg3-0-db"><a href="#Msg3-0-db" class="headerlink" title="Msg3.0.db"></a>Msg3.0.db</h3><p>Msg3.0.db 和 Msg3.0index.db 在我的电脑上一个占用11.3GB，一个占用7GB。</p>
-<p>根据文件名形式，猜测是SQLite，网上查了一下确实是。所以说QQ是将所有的聊天记录都存储在 Msg3.0.db 中，并且为其建立了 Msg3.0index.db 的索引。</p>
-<p>在QQ界面有一个消息管理器，所有消息记录都存储在 Msg3.0.db 中。如果不删除，那QQ占用空间就确实会随着时间越来越大，只删除图片缓存也没用。</p>
-<p>删除的时候，文件夹下会有相应的 db-journal 文件，实际上就是事务执行时的临时文件，用于回滚。事务执行结束后会清空为0字节，但不会删除，省去下次创建操作。</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-  </entry>
-  <entry>
     <title>2024/2/21-笔试</title>
     <url>/posts/4a67726/</url>
     <content><![CDATA[<h3 id="选择题"><a href="#选择题" class="headerlink" title="选择题"></a>选择题</h3><p>MySQL分布式事务：XA事务，2pc。将分布式事务执行的过程分为两阶段，第一阶段所有需要执行操作的节点准备自身资源数据，检查是否可以提交，向事务管理节点发送precommit的消息。所有节点都准备就绪precommit后，才能开始实际执行事务，期间等待是阻塞的。</p>
@@ -133,6 +89,32 @@
       </categories>
       <tags>
         <tag>笔试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C++ thread 多线程任务队列</title>
+    <url>/posts/f553d691/</url>
+    <content><![CDATA[<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Semaphore</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Semaphore</span>(<span class="keyword">int</span> value = <span class="number">1</span>) : <span class="built_in">cnt</span>(value) &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">P</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lck</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        <span class="keyword">if</span> (--cnt &lt; <span class="number">0</span>)</span><br><span class="line">            cv.<span class="built_in">wait</span>(lck);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">V</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lck</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        <span class="keyword">if</span> (++cnt &lt;= <span class="number">0</span>)</span><br><span class="line">            cv.<span class="built_in">notify_one</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> cnt;</span><br><span class="line">    mutex mtx;</span><br><span class="line">    condition_variable cv;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TaskQueue</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">TaskQueue</span>(<span class="keyword">int</span> n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">srand</span>(<span class="built_in">time</span>(<span class="number">0</span>));</span><br><span class="line">        max_size = n;</span><br><span class="line">        notfull = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(n);</span><br><span class="line">        notempty = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(<span class="number">0</span>);</span><br><span class="line">        rwlock = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> e)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        notfull-&gt;<span class="built_in">P</span>(); <span class="comment">// 确保有空位</span></span><br><span class="line">        rwlock-&gt;<span class="built_in">P</span>();  <span class="comment">// 获取互斥锁</span></span><br><span class="line">        q.<span class="built_in">push</span>(e);</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;线程id &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot; 执行了add操作，添加数字&quot;</span> &lt;&lt; e &lt;&lt; endl;</span><br><span class="line">        rwlock-&gt;<span class="built_in">V</span>();</span><br><span class="line">        notempty-&gt;<span class="built_in">V</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        notempty-&gt;<span class="built_in">P</span>();</span><br><span class="line">        rwlock-&gt;<span class="built_in">P</span>();</span><br><span class="line">        <span class="keyword">int</span> e = q.<span class="built_in">front</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;线程id &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot; 执行了get操作，获取数字&quot;</span> &lt;&lt; e &lt;&lt; endl;</span><br><span class="line">        rwlock-&gt;<span class="built_in">V</span>();</span><br><span class="line">        notfull-&gt;<span class="built_in">V</span>();</span><br><span class="line">        <span class="keyword">return</span> e;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> max_size;</span><br><span class="line">    Semaphore* notfull, * notempty;</span><br><span class="line">    Semaphore* rwlock; <span class="comment">// 生产者和消费者的互斥锁</span></span><br><span class="line">    queue&lt;<span class="keyword">int</span>&gt; q;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fadd</span><span class="params">(TaskQueue&amp; task_queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (cnt &lt; <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> rnd = <span class="built_in">rand</span>() % <span class="number">100</span>;</span><br><span class="line">        task_queue.<span class="built_in">add</span>(rnd);</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fget</span><span class="params">(TaskQueue&amp; task_queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (cnt &lt; <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> x = task_queue.<span class="built_in">get</span>();</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">TaskQueue <span class="title">task_queue</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">    <span class="function">thread <span class="title">tt1</span><span class="params">(fadd, ref(task_queue))</span></span>;</span><br><span class="line">    <span class="function">thread <span class="title">tt2</span><span class="params">(fget, ref(task_queue))</span></span>;</span><br><span class="line">    tt1.<span class="built_in">join</span>();</span><br><span class="line">    tt2.<span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用future替代thread，future</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">TaskQueue <span class="title">task_queue</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">    vector&lt;future&lt;<span class="keyword">void</span>&gt;&gt; ts;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">            future&lt;<span class="keyword">void</span>&gt; t = std::<span class="built_in">async</span>(fadd, <span class="built_in">ref</span>(task_queue));</span><br><span class="line">            ts.<span class="built_in">emplace_back</span>(std::<span class="built_in">move</span>(t));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            future&lt;<span class="keyword">void</span>&gt; t = std::<span class="built_in">async</span>(fget, <span class="built_in">ref</span>(task_queue));</span><br><span class="line">            ts.<span class="built_in">emplace_back</span>(std::<span class="built_in">move</span>(t));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>C++练习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C++智能指针简单造轮子</title>
+    <url>/posts/39e4cbdd/</url>
+    <content><![CDATA[<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Count</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Count</span>(<span class="keyword">int</span> cnt = <span class="number">1</span>) : _count(cnt)&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> _count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        _count++;</span><br><span class="line">        <span class="keyword">return</span> _count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">minus</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        _count--;</span><br><span class="line">        <span class="keyword">return</span> _count;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> _count;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SharedPtr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">SharedPtr</span>(T *ptr = <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        _ptr = ptr;</span><br><span class="line">        <span class="keyword">if</span> (ptr != <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            _cnt = <span class="keyword">new</span> <span class="built_in">Count</span>(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">SharedPtr</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">release</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">SharedPtr</span>(<span class="keyword">const</span> SharedPtr &amp;other)</span><br><span class="line">    &#123;</span><br><span class="line">        _ptr = other._ptr;</span><br><span class="line">        _cnt = other._cnt;</span><br><span class="line">        <span class="keyword">if</span> (_cnt-&gt;<span class="built_in">getCount</span>() != <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            _cnt-&gt;<span class="built_in">add</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    SharedPtr &amp;<span class="keyword">operator</span>=(<span class="keyword">const</span> SharedPtr &amp;other)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != other)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">release</span>();</span><br><span class="line">            _ptr = other._ptr;</span><br><span class="line">            _cnt = other._ptr;</span><br><span class="line">            _cnt-&gt;<span class="built_in">add</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    T <span class="keyword">operator</span>*()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> *_ptr;</span><br><span class="line">    &#125;</span><br><span class="line">    T &amp;<span class="keyword">operator</span>-&gt;()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> _ptr;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">use_count</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> _cnt-&gt;<span class="built_in">getCount</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">release</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (_ptr != <span class="literal">nullptr</span> &amp;&amp; _cnt-&gt;<span class="built_in">minus</span>() == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">delete</span> _ptr;</span><br><span class="line">            <span class="keyword">delete</span> _cnt;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    T *_ptr;</span><br><span class="line">    Count *_cnt;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">SharedPtr&lt;<span class="keyword">int</span>&gt; <span class="title">p</span><span class="params">(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">5</span>))</span></span>;</span><br><span class="line">    cout &lt;&lt; *p &lt;&lt; endl</span><br><span class="line">         &lt;&lt; p.<span class="built_in">use_count</span>();</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">SharedPtr&lt;<span class="keyword">int</span>&gt; <span class="title">q</span><span class="params">(p)</span></span>;</span><br><span class="line">        cout &lt;&lt; *q &lt;&lt; endl</span><br><span class="line">             &lt;&lt; q.<span class="built_in">use_count</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; *p &lt;&lt; endl</span><br><span class="line">         &lt;&lt; p.<span class="built_in">use_count</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -215,9 +197,9 @@
 <p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
 <p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
 <h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#x69;&#x74;&#x40;&#103;&#x69;&#116;&#x68;&#x75;&#98;&#46;&#x63;&#111;&#109;">&#103;&#x69;&#x74;&#x40;&#103;&#x69;&#116;&#x68;&#x75;&#98;&#46;&#x63;&#111;&#109;</a>。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#x74;&#x68;&#x75;&#98;&#46;&#99;&#x6f;&#109;">&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#x74;&#x68;&#x75;&#98;&#46;&#99;&#x6f;&#109;</a>。</p>
 <p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#103;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#x68;&#117;&#x62;&#x2e;&#x63;&#111;&#x6d;">&#103;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#x68;&#117;&#x62;&#x2e;&#x63;&#111;&#x6d;</a>/仓库地址，而不是http或https</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#x74;&#104;&#117;&#98;&#46;&#99;&#111;&#x6d;">&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#x74;&#104;&#117;&#98;&#46;&#99;&#111;&#x6d;</a>/仓库地址，而不是http或https</p>
 <h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
 <p>以后再学</p>
 ]]></content>
@@ -227,6 +209,45 @@
       <tags>
         <tag>ICS实验</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>QQ的存储空间为什么会越来越大</title>
+    <url>/posts/cda2b7f1/</url>
+    <content><![CDATA[<h3 id="注意到问题的缘由"><a href="#注意到问题的缘由" class="headerlink" title="注意到问题的缘由"></a>注意到问题的缘由</h3><p>我有定期清理硬盘空间的习惯，除了用dism++清理系统临时文件以外，还会手动去检查一些占用空间比较大的文件夹。</p>
+<p>事情就发生在上一次清理空间的时候。我习惯性地打开QQ存储文件主目录，然后删除 QQ/&lt;qq号&gt;/Image/Gourp2 里的所有文件。关于这里，还有一点想吐槽的：</p>
+<ul>
+<li>QQ为了加速图片检索，以Gourp2文件夹为根建了一颗B+树，所以点开文件夹会看到很多个名称长度为2的子文件夹，子文件夹下又有若干个名称长度为2的子文件夹，里面存储的就是文件前缀名相同的几张图片。结果就是删除的时候系统会做很多额外的检查，比如找文件索引、检查权限等等，因为删除实际上也是文件的移动，移动到回收站而已，整个删除过程速度非常慢。</li>
+</ul>
+<p>回到主题，删除完没用的群聊图片后，我发现QQ占用空间仍然很大，而且点击文件夹属性，存储空间计算时有一个断崖式的增长，也就是肯定存在一个大文件，进而才发现了 Msg3.0.db 和 Msg3.0index.db</p>
+<h3 id="Msg3-0-db"><a href="#Msg3-0-db" class="headerlink" title="Msg3.0.db"></a>Msg3.0.db</h3><p>Msg3.0.db 和 Msg3.0index.db 在我的电脑上一个占用11.3GB，一个占用7GB。</p>
+<p>根据文件名形式，猜测是SQLite，网上查了一下确实是。所以说QQ是将所有的聊天记录都存储在 Msg3.0.db 中，并且为其建立了 Msg3.0index.db 的索引。</p>
+<p>在QQ界面有一个消息管理器，所有消息记录都存储在 Msg3.0.db 中。如果不删除，那QQ占用空间就确实会随着时间越来越大，只删除图片缓存也没用。</p>
+<p>删除的时候，文件夹下会有相应的 db-journal 文件，实际上就是事务执行时的临时文件，用于回滚。事务执行结束后会清空为0字节，但不会删除，省去下次创建操作。</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>SRS直播服务器</title>
+    <url>/posts/1fa37b1/</url>
+    <content><![CDATA[<h3 id="使用SRS-Stack构建"><a href="#使用SRS-Stack构建" class="headerlink" title="使用SRS-Stack构建"></a>使用SRS-Stack构建</h3><p>腾讯云轻量应用服务器提供了应用模板，在控制台重装为音视频流服务器即可快速启动SRS服务。</p>
+<h3 id="使用Docker构建"><a href="#使用Docker构建" class="headerlink" title="使用Docker构建"></a>使用Docker构建</h3><p>SRS文档提供了服务启动脚本，在服务器中安装好docker后运行即可。</p>
+<h4 id="需要注意的点"><a href="#需要注意的点" class="headerlink" title="需要注意的点"></a>需要注意的点</h4><ol>
+<li>docker hub配置镜像源，配置文件为/etc/docker/daemon.json</li>
+<li>在腾讯云控制台开放1935、8080、8000端口，用于推流和访问直播服务器管理后台</li>
+<li>docker默认的推流地址是rmtp://host/live，推流码是livestream</li>
+</ol>
+<h3 id="遇到的问题："><a href="#遇到的问题：" class="headerlink" title="遇到的问题："></a>遇到的问题：</h3><ul>
+<li>默认推流方式需要观看者安装VLC等能接收rmtp流的播放器</li>
+<li>SRS提供的网页端流播放器在url中明文携带参数内容，url很长，且容易暴露信息</li>
+<li>域名备案很麻烦，暂时搁置。备案不了域名就无法使用WebRTC-HTTPS。不管是访问后台还是观众观看都是不安全的IP地址访问</li>
+<li>服务器带宽限制，直播很卡，只能用OKANE解决的问题</li>
+</ul>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
   </entry>
   <entry>
     <title>关于FCM服务的一些问题</title>
@@ -260,58 +281,6 @@
       <categories>
         <category>随笔</category>
       </categories>
-  </entry>
-  <entry>
-    <title>SRS直播服务器</title>
-    <url>/posts/1fa37b1/</url>
-    <content><![CDATA[<h3 id="使用SRS-Stack构建"><a href="#使用SRS-Stack构建" class="headerlink" title="使用SRS-Stack构建"></a>使用SRS-Stack构建</h3><p>腾讯云轻量应用服务器提供了应用模板，在控制台重装为音视频流服务器即可快速启动SRS服务。</p>
-<h3 id="使用Docker构建"><a href="#使用Docker构建" class="headerlink" title="使用Docker构建"></a>使用Docker构建</h3><p>SRS文档提供了服务启动脚本，在服务器中安装好docker后运行即可。</p>
-<h4 id="需要注意的点"><a href="#需要注意的点" class="headerlink" title="需要注意的点"></a>需要注意的点</h4><ol>
-<li>docker hub配置镜像源，配置文件为/etc/docker/daemon.json</li>
-<li>在腾讯云控制台开放1935、8080、8000端口，用于推流和访问直播服务器管理后台</li>
-<li>docker默认的推流地址是rmtp://host/live，推流码是livestream</li>
-</ol>
-<h3 id="遇到的问题："><a href="#遇到的问题：" class="headerlink" title="遇到的问题："></a>遇到的问题：</h3><ul>
-<li>默认推流方式需要观看者安装VLC等能接收rmtp流的播放器</li>
-<li>SRS提供的网页端流播放器在url中明文携带参数内容，url很长，且容易暴露信息</li>
-<li>域名备案很麻烦，暂时搁置。备案不了域名就无法使用WebRTC-HTTPS。不管是访问后台还是观众观看都是不安全的IP地址访问</li>
-<li>服务器带宽限制，直播很卡，只能用OKANE解决的问题</li>
-</ul>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>基础知识复习笔记3-I/O多路复用</title>
-    <url>/posts/830442ea/</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前看图解计算机基础知识的时候，看过几次I/O多路复用的内容，但感觉都没有抓到本质。面试的时候也被问过几次，回答得也不太好。所以重新梳理一下个人理解。</p>
-<h3 id="I-O"><a href="#I-O" class="headerlink" title="I/O"></a>I/O</h3><p>I/O就是输入输出，计算机的存储器（内存）和周边设备的数据传输，最主要的就是文件读取/写入。网络传输也是I/O的一部分，Linux中一切皆文件，网络编程用到的socket也是一个文件描述符。</p>
-<h4 id="单个进程的文件读取"><a href="#单个进程的文件读取" class="headerlink" title="单个进程的文件读取"></a>单个进程的文件读取</h4><ul>
-<li>文件管理是由操作系统完成的，所以实际的文件数据读取和传输需要切换到内核态。</li>
-<li>相较于内存，外存的文件读取是相当慢的。因此CPU不会白白浪费时间等待，而是会阻塞等待I/O的进程，切换去运行其他进程。直到数据传输准备完毕，内核唤醒等待进程，再继续运行。</li>
-<li>用户态的进程，需要有一个内核态的进程维护其状态。</li>
-</ul>
-<h4 id="多个进程的文件读取"><a href="#多个进程的文件读取" class="headerlink" title="多个进程的文件读取"></a>多个进程的文件读取</h4><ul>
-<li>为每一个进程的I/O流创建一个进程/线程维护其状态。当并发量很大时，系统资源吃不消。</li>
-</ul>
-<h4 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h4><p>用一个进程维护多个I/O连接（网络连接）</p>
-<h5 id="select"><a href="#select" class="headerlink" title="select"></a>select</h5><p>用户态维护一个连接表，最大长度固定。进程调用select尝试获取数据时，将连接表复制到内核里，由内核进程顺序遍历检查每个连接是否有数据事件更新，有的话做标记，然后再把更新后的表复制回用户态，用户态再遍历连接表，找到那些有数据事件更新的连接。</p>
-<p>所以总共遍历两次，复制两次</p>
-<h5 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h5><p>本质上和select一样，只是固定长度表变成了变长的链表</p>
-<h5 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h5><p>用户态调用epoll_create，在内核态创建epoll对象。内核用一个红黑树维护所有连接，一个链表维护当前有事件的连接。有连接发生事件时，内核自动将其加入到链表中。当用户调用 epoll_wait() 函数时，内核只返回当前有事件的、链表中的连接对象。</p>
-<p>插入新的连接维护对象，查找、更新，因为是红黑树所以都是 log(n)</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>I/O多路复用就是用一个进程维护多个I/O流的连接，因为每个连接都用一个进程或线程去维护开销是很大的。</p>
-<p>I/O多路复用有三种模式，select、poll和epoll。select是采取轮询的模式，将所有连接维护在一个线性表里，每次select都将表复制到内核，由内核检查并更新是否有数据事件发生，再将结果复制回用户态，遍历获取事件更新状态。</p>
-<p>poll和select类似，只是将线性表改成了链表，增加了最大并发连接数。</p>
-<p>epoll则是在内核中用一个红黑树维护所有连接，有连接发生事件时，内核自动将其加入到一个链表中。当用户调用函数想知道哪些连接有数据事件发生时，内核只需要返回链表中的连接对象。</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
   </entry>
   <entry>
     <title>基础知识复习笔记1-Java集合</title>
@@ -442,6 +411,84 @@
       </tags>
   </entry>
   <entry>
+    <title>基础知识复习笔记3-I/O多路复用</title>
+    <url>/posts/830442ea/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前看图解计算机基础知识的时候，看过几次I/O多路复用的内容，但感觉都没有抓到本质。面试的时候也被问过几次，回答得也不太好。所以重新梳理一下个人理解。</p>
+<h3 id="I-O"><a href="#I-O" class="headerlink" title="I/O"></a>I/O</h3><p>I/O就是输入输出，计算机的存储器（内存）和周边设备的数据传输，最主要的就是文件读取/写入。网络传输也是I/O的一部分，Linux中一切皆文件，网络编程用到的socket也是一个文件描述符。</p>
+<h4 id="单个进程的文件读取"><a href="#单个进程的文件读取" class="headerlink" title="单个进程的文件读取"></a>单个进程的文件读取</h4><ul>
+<li>文件管理是由操作系统完成的，所以实际的文件数据读取和传输需要切换到内核态。</li>
+<li>相较于内存，外存的文件读取是相当慢的。因此CPU不会白白浪费时间等待，而是会阻塞等待I/O的进程，切换去运行其他进程。直到数据传输准备完毕，内核唤醒等待进程，再继续运行。</li>
+<li>用户态的进程，需要有一个内核态的进程维护其状态。</li>
+</ul>
+<h4 id="多个进程的文件读取"><a href="#多个进程的文件读取" class="headerlink" title="多个进程的文件读取"></a>多个进程的文件读取</h4><ul>
+<li>为每一个进程的I/O流创建一个进程/线程维护其状态。当并发量很大时，系统资源吃不消。</li>
+</ul>
+<h4 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h4><p>用一个进程维护多个I/O连接（网络连接）</p>
+<h5 id="select"><a href="#select" class="headerlink" title="select"></a>select</h5><p>用户态维护一个连接表，最大长度固定。进程调用select尝试获取数据时，将连接表复制到内核里，由内核进程顺序遍历检查每个连接是否有数据事件更新，有的话做标记，然后再把更新后的表复制回用户态，用户态再遍历连接表，找到那些有数据事件更新的连接。</p>
+<p>所以总共遍历两次，复制两次</p>
+<h5 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h5><p>本质上和select一样，只是固定长度表变成了变长的链表</p>
+<h5 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h5><p>用户态调用epoll_create，在内核态创建epoll对象。内核用一个红黑树维护所有连接，一个链表维护当前有事件的连接。有连接发生事件时，内核自动将其加入到链表中。当用户调用 epoll_wait() 函数时，内核只返回当前有事件的、链表中的连接对象。</p>
+<p>插入新的连接维护对象，查找、更新，因为是红黑树所以都是 log(n)</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>I/O多路复用就是用一个进程维护多个I/O流的连接，因为每个连接都用一个进程或线程去维护开销是很大的。</p>
+<p>I/O多路复用有三种模式，select、poll和epoll。select是采取轮询的模式，将所有连接维护在一个线性表里，每次select都将表复制到内核，由内核检查并更新是否有数据事件发生，再将结果复制回用户态，遍历获取事件更新状态。</p>
+<p>poll和select类似，只是将线性表改成了链表，增加了最大并发连接数。</p>
+<p>epoll则是在内核中用一个红黑树维护所有连接，有连接发生事件时，内核自动将其加入到一个链表中。当用户调用函数想知道哪些连接有数据事件发生时，内核只需要返回链表中的连接对象。</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础知识复习笔记4-计算机网络</title>
+    <url>/posts/3d21fd56/</url>
+    <content><![CDATA[<h3 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a>TCP和UDP的区别</h3><p>TCP和UDP都是传输层协议，负责端到端的数据传输，主要区别是：</p>
+<ul>
+<li>TCP是有连接的，UDP是无连接的。TCP传输数据前需要三次握手建立连接，UDP只需要知道对方IP和端口即可发送数据。</li>
+<li>TCP是可靠传输协议，UDP是不可靠的。UDP只管发送数据，不会关心数据包是否到达。TCP则需要保证每一个数据分片都能可靠地交付给对方，所以引入了序列号、确认号、超时重传等机制。</li>
+</ul>
+<h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><ul>
+<li>第一次握手是客户端向服务提供端发起SYNC同步请求，并且附带自己的序列号。</li>
+<li>第二次握手是服务提供方接收到连接请求后，返回一个确认数据包，这个数据包也包含了他自己的序列号，以及SYNC同步标志。</li>
+<li>客户端收到第二次握手的确认包后，再返回一个ACK确认数据包，连接才建立，之后发送数据。</li>
+</ul>
+<h5 id="为什么要三次而不是两次"><a href="#为什么要三次而不是两次" class="headerlink" title="为什么要三次而不是两次"></a>为什么要三次而不是两次</h5><ul>
+<li>如果只有两次握手，实际上只有客户端确认了服务端能够连接，服务端是不知道客户端的连接状态的。假如第二次握手丢失，客户端放弃了连接，而服务端直接就开始发送数据，会造成资源浪费。</li>
+<li>假如第一次握手的数据包在网络中滞留，过一段时间，早就失效的数据包传到服务端，服务端以为是新的连接请求，于是产生第二次握手，然后就以为连接建立了，但实际上这时候客户端已经没有传输需求了，也不会回应服务端，也会造成资源浪费。</li>
+</ul>
+<h5 id="为什么不是四次"><a href="#为什么不是四次" class="headerlink" title="为什么不是四次"></a>为什么不是四次</h5><p>第二次握手实际上把确认收到，和发起连接请求合并到一起了。</p>
+<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><ul>
+<li>第一次挥手：客户端发送FIN数据包，表明打算断开连接，它不再发送数据，但是可以接收数据，进入FIN-WAIT1状态。</li>
+<li>第二次挥手：服务端收到FIN数据，回复一个ACK，表明它知道对方打算断开连接。客户端收到后，进入FIN-WAIT2状态。服务端进入CLOSE-WAIT状态。</li>
+<li>中间 ：服务端继续发送未传输完毕的数据</li>
+<li>第三次挥手：服务端发送FIN数据包，请求关闭连接，进入LAST-ACK状态。</li>
+<li>第四次挥手：客户端回复ACK，进入TIME-WAIT状态，等到两个报文段最长寿命后，CLOSE连接。如果这段时间内收到了服务端的第三次挥手重传，说明第四次挥手没成功发送过去，重传。</li>
+</ul>
+<h5 id="为什么要等两个报文段最长寿命"><a href="#为什么要等两个报文段最长寿命" class="headerlink" title="为什么要等两个报文段最长寿命"></a>为什么要等两个报文段最长寿命</h5><p>因为第四次挥手后，客户端无法得知对方是否收到数据包，并且关闭连接。两个报文段最长寿命就是一发一收的时间，如果这个时间段内没有收到超时重传的消息，就认为服务端收到了最后的ACK。</p>
+<p>如果不等待的话，服务端可能没收到第四次挥手数据，连接无法正常关闭造成资源浪费。</p>
+<h4 id="TCP的拥塞控制、流量控制、滑动窗口等等"><a href="#TCP的拥塞控制、流量控制、滑动窗口等等" class="headerlink" title="TCP的拥塞控制、流量控制、滑动窗口等等"></a>TCP的拥塞控制、流量控制、滑动窗口等等</h4><h5 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h5><p>拥塞控制是针对网络的，避免网络中存在过多的报文造成网络信道拥堵。主要用慢开始、拥塞避免算法，快速重传、快速回复。</p>
+<p><strong>慢开始、拥塞避免</strong><br>发送方维护一个拥塞窗口大小，最开始拥塞窗口为1个单位，每次成功收到确认后就将窗口大小加倍。当窗口大小大于阈值时，就执行拥塞避免算法，每次窗口大小加一个单位。</p>
+<p>如果出现数据丢失，将窗口设为1，执行慢开始算法，并且阈值设为数据丢失时的窗口大小的一半。</p>
+<p><strong>快重传、快恢复</strong><br>快重传是，如果发送方收到连续三个重复确认就立刻重传对方尚未收到的报文段，而不是等重传计时器时间到期。</p>
+<p>同时，因为能收到三个重复ACK，所以认为网络虽然拥堵，但还是有一定的运输能力，所以窗口不会设为1，而是设为阈值减半后的大小，并且继续执行拥塞避免算法。</p>
+<h5 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h5><p>流量控制是针对发送方和接收方数据处理能力的。双方各自维护一个窗口，并且在发送数据时会告知对方自己空闲窗口大小，如果窗口没有空闲，就会减缓数据发送速度。</p>
+<h5 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h5><p>滑动窗口的设置是为了避免出现每一个数据包发送后都要等待确认才能发送下一个数据包这样的情况，效率很低。滑动窗口外的左侧，可以看作是已经发送、确认的数据包；滑动窗口内的话，只有最左侧边缘的连续的数据包被确认了，窗口才会向右移动。</p>
+<h3 id="输入网址后发生的事情"><a href="#输入网址后发生的事情" class="headerlink" title="输入网址后发生的事情"></a>输入网址后发生的事情</h3><ol>
+<li>URL解析：url是统一资源定位符，为了访问服务器的资源，需要将url解析为IP地址，就会用到DNS协议。如果浏览器有域名缓存，或者系统本地有相应的hosts项，那就不用再向DNS服务器发送请求，直接就可以解析。如果没有的话，主机就会依次向本地、上级的DNS服务器递归地发送请求。</li>
+<li>解析得到IP地址后，为了传输HTTP请求，还要和服务器建立TCP连接，也就是三次握手。传输层往下，网络层根据IP对数据包进行转发，再往下还有ARP协议通过IP地址获得下一次转发的MAC地址。</li>
+<li>TCP连接建立后，服务器收到HTTP请求，将网页资源封装，再传给主机。主机收到网页资源数据后，由浏览器进行解析和渲染，同时页面内如果还有其他资源，则还会构造相应的HTTP请求去获取这些资源文件。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>基础知识复习笔记5-内存管理</title>
     <url>/posts/a2044ae4/</url>
     <content><![CDATA[<h3 id="C-的程序内存布局"><a href="#C-的程序内存布局" class="headerlink" title="C++的程序内存布局"></a>C++的程序内存布局</h3><p>从上往下是：</p>
@@ -548,53 +595,6 @@
 </li>
 </ul>
 <h4 id="面向切片编程"><a href="#面向切片编程" class="headerlink" title="面向切片编程"></a>面向切片编程</h4><p>面向切片编程和面向对象编程并不冲突，目的是将一些通用的操作和功能与业务功能代码分离开，提高代码的可读性和可维护性。比如像日志记录，如果每个类都重复实现日志的功能，就会有很多重复的冗余代码，维护起来很麻烦。所以面向切片就是把这些代码分离出来。</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础知识复习笔记4-计算机网络</title>
-    <url>/posts/3d21fd56/</url>
-    <content><![CDATA[<h3 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a>TCP和UDP的区别</h3><p>TCP和UDP都是传输层协议，负责端到端的数据传输，主要区别是：</p>
-<ul>
-<li>TCP是有连接的，UDP是无连接的。TCP传输数据前需要三次握手建立连接，UDP只需要知道对方IP和端口即可发送数据。</li>
-<li>TCP是可靠传输协议，UDP是不可靠的。UDP只管发送数据，不会关心数据包是否到达。TCP则需要保证每一个数据分片都能可靠地交付给对方，所以引入了序列号、确认号、超时重传等机制。</li>
-</ul>
-<h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><ul>
-<li>第一次握手是客户端向服务提供端发起SYNC同步请求，并且附带自己的序列号。</li>
-<li>第二次握手是服务提供方接收到连接请求后，返回一个确认数据包，这个数据包也包含了他自己的序列号，以及SYNC同步标志。</li>
-<li>客户端收到第二次握手的确认包后，再返回一个ACK确认数据包，连接才建立，之后发送数据。</li>
-</ul>
-<h5 id="为什么要三次而不是两次"><a href="#为什么要三次而不是两次" class="headerlink" title="为什么要三次而不是两次"></a>为什么要三次而不是两次</h5><ul>
-<li>如果只有两次握手，实际上只有客户端确认了服务端能够连接，服务端是不知道客户端的连接状态的。假如第二次握手丢失，客户端放弃了连接，而服务端直接就开始发送数据，会造成资源浪费。</li>
-<li>假如第一次握手的数据包在网络中滞留，过一段时间，早就失效的数据包传到服务端，服务端以为是新的连接请求，于是产生第二次握手，然后就以为连接建立了，但实际上这时候客户端已经没有传输需求了，也不会回应服务端，也会造成资源浪费。</li>
-</ul>
-<h5 id="为什么不是四次"><a href="#为什么不是四次" class="headerlink" title="为什么不是四次"></a>为什么不是四次</h5><p>第二次握手实际上把确认收到，和发起连接请求合并到一起了。</p>
-<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><ul>
-<li>第一次挥手：客户端发送FIN数据包，表明打算断开连接，它不再发送数据，但是可以接收数据，进入FIN-WAIT1状态。</li>
-<li>第二次挥手：服务端收到FIN数据，回复一个ACK，表明它知道对方打算断开连接。客户端收到后，进入FIN-WAIT2状态。服务端进入CLOSE-WAIT状态。</li>
-<li>中间 ：服务端继续发送未传输完毕的数据</li>
-<li>第三次挥手：服务端发送FIN数据包，请求关闭连接，进入LAST-ACK状态。</li>
-<li>第四次挥手：客户端回复ACK，进入TIME-WAIT状态，等到两个报文段最长寿命后，CLOSE连接。如果这段时间内收到了服务端的第三次挥手重传，说明第四次挥手没成功发送过去，重传。</li>
-</ul>
-<h5 id="为什么要等两个报文段最长寿命"><a href="#为什么要等两个报文段最长寿命" class="headerlink" title="为什么要等两个报文段最长寿命"></a>为什么要等两个报文段最长寿命</h5><p>因为第四次挥手后，客户端无法得知对方是否收到数据包，并且关闭连接。两个报文段最长寿命就是一发一收的时间，如果这个时间段内没有收到超时重传的消息，就认为服务端收到了最后的ACK。</p>
-<p>如果不等待的话，服务端可能没收到第四次挥手数据，连接无法正常关闭造成资源浪费。</p>
-<h4 id="TCP的拥塞控制、流量控制、滑动窗口等等"><a href="#TCP的拥塞控制、流量控制、滑动窗口等等" class="headerlink" title="TCP的拥塞控制、流量控制、滑动窗口等等"></a>TCP的拥塞控制、流量控制、滑动窗口等等</h4><h5 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h5><p>拥塞控制是针对网络的，避免网络中存在过多的报文造成网络信道拥堵。主要用慢开始、拥塞避免算法，快速重传、快速回复。</p>
-<p><strong>慢开始、拥塞避免</strong><br>发送方维护一个拥塞窗口大小，最开始拥塞窗口为1个单位，每次成功收到确认后就将窗口大小加倍。当窗口大小大于阈值时，就执行拥塞避免算法，每次窗口大小加一个单位。</p>
-<p>如果出现数据丢失，将窗口设为1，执行慢开始算法，并且阈值设为数据丢失时的窗口大小的一半。</p>
-<p><strong>快重传、快恢复</strong><br>快重传是，如果发送方收到连续三个重复确认就立刻重传对方尚未收到的报文段，而不是等重传计时器时间到期。</p>
-<p>同时，因为能收到三个重复ACK，所以认为网络虽然拥堵，但还是有一定的运输能力，所以窗口不会设为1，而是设为阈值减半后的大小，并且继续执行拥塞避免算法。</p>
-<h5 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h5><p>流量控制是针对发送方和接收方数据处理能力的。双方各自维护一个窗口，并且在发送数据时会告知对方自己空闲窗口大小，如果窗口没有空闲，就会减缓数据发送速度。</p>
-<h5 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h5><p>滑动窗口的设置是为了避免出现每一个数据包发送后都要等待确认才能发送下一个数据包这样的情况，效率很低。滑动窗口外的左侧，可以看作是已经发送、确认的数据包；滑动窗口内的话，只有最左侧边缘的连续的数据包被确认了，窗口才会向右移动。</p>
-<h3 id="输入网址后发生的事情"><a href="#输入网址后发生的事情" class="headerlink" title="输入网址后发生的事情"></a>输入网址后发生的事情</h3><ol>
-<li>URL解析：url是统一资源定位符，为了访问服务器的资源，需要将url解析为IP地址，就会用到DNS协议。如果浏览器有域名缓存，或者系统本地有相应的hosts项，那就不用再向DNS服务器发送请求，直接就可以解析。如果没有的话，主机就会依次向本地、上级的DNS服务器递归地发送请求。</li>
-<li>解析得到IP地址后，为了传输HTTP请求，还要和服务器建立TCP连接，也就是三次握手。传输层往下，网络层根据IP对数据包进行转发，再往下还有ARP协议通过IP地址获得下一次转发的MAC地址。</li>
-<li>TCP连接建立后，服务器收到HTTP请求，将网页资源封装，再传给主机。主机收到网页资源数据后，由浏览器进行解析和渲染，同时页面内如果还有其他资源，则还会构造相应的HTTP请求去获取这些资源文件。</li>
-</ol>
 ]]></content>
       <categories>
         <category>学习</category>
