@@ -213,7 +213,7 @@
     <!-- Google tag (gtag.js) -->
     
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 7.1.1"></head>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script type="text/javascript">
@@ -511,9 +511,9 @@
 <li>如果杯子不空：上回合喝过水了，则放下杯子回合结束；上回合没喝水，则喝掉杯子里的水</li>
 </ul>
 <p>最终求所有水被喝完时的回合数的期望值。</p>
-<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><p>很明显是一个数学题。假如不考虑两次喝水之间的间隙，还剩i杯水的时候，喝到水的概率p=i/n。此时，喝一杯水的期望回合是：</p>
+<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><p>很明显是一个数学题。假如不考虑两次喝水之间的间隙，还剩i杯水的时候，喝到水的概率p&#x3D;i&#x2F;n。此时，喝一杯水的期望回合是：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T = p*1 + p(1-p)*2 + p(1-p)^2*3 + ... + p(1-p)^n*(n+1)</span><br><span class="line">  = i/n(1-p)^2</span><br></pre></td></tr></table></figure>
-<p>然后令i=k，i=k-1, … i=1，累加即可</p>
+<p>然后令i&#x3D;k，i&#x3D;k-1, … i&#x3D;1，累加即可</p>
 <p>没想出来的地方：两次喝水有间隙——卡在这里很久，实际上只需要在最后的结果加上k-1个回合就可以了。</p>
 
     </article>
@@ -765,7 +765,22 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -898,7 +913,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 20
+        Total : 21
         </div>
         <!-- search  -->
         
@@ -912,6 +927,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/16</span>
+            <a class="archive-post-title" href="/posts/631ff09e/">后端面试</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">03/12</span>
@@ -1056,6 +1077,11 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="C++练习">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++练习
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="面试">
                 <span class="iconfont-archer">&#xe606;</span>
                 面试
@@ -1064,11 +1090,6 @@
             <span class="sidebar-tag-name" data-tags="笔试">
                 <span class="iconfont-archer">&#xe606;</span>
                 笔试
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="C++练习">
-                <span class="iconfont-archer">&#xe606;</span>
-                C++练习
             </span>
         
             <span class="sidebar-tag-name" data-tags="C++">
@@ -1112,6 +1133,11 @@
             玩乐
         </span>
     
+        <span class="sidebar-category-name" data-categories="学习">
+            <span class="iconfont-archer">&#xe60a;</span>
+            学习
+        </span>
+    
         <span class="sidebar-category-name" data-categories="面试">
             <span class="iconfont-archer">&#xe60a;</span>
             面试
@@ -1120,11 +1146,6 @@
         <span class="sidebar-category-name" data-categories="笔试">
             <span class="iconfont-archer">&#xe60a;</span>
             笔试
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="学习">
-            <span class="iconfont-archer">&#xe60a;</span>
-            学习
         </span>
     
         <span class="sidebar-category-name" data-categories="随笔">

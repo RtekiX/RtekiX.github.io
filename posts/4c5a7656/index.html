@@ -213,7 +213,7 @@
     <!-- Google tag (gtag.js) -->
     
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 7.1.1"></head>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script type="text/javascript">
@@ -522,16 +522,16 @@
 <li>调用detach表示thread对象和其表示的线程完全分离；</li>
 <li>分离之后的线程是不在受约束和管制，会单独执行，直到执行完毕释放资源，可以看做是一个daemon线程；</li>
 <li>分离之后thread对象不再表示任何线程；</li>
-<li>分离之后joinable() == false，即使还在执行；</li>
+<li>分离之后joinable() &#x3D;&#x3D; false，即使还在执行；</li>
 </ul>
 </li>
 <li>join方式，等待启动的线程完成，才会继续往下执行。假如前面的代码使用这种方式，其输出就会0,1,2,3，因为每次都是前一个线程输出完成了才会进行下一个循环，启动下一个新线程。<ul>
 <li>只有处于活动状态线程才能调用join，可以通过joinable()函数检查;</li>
-<li>joinable() == true表示当前线程是活动线程，才可以调用join函数；</li>
-<li>默认构造函数创建的对象是joinable() == false;</li>
+<li>joinable() &#x3D;&#x3D; true表示当前线程是活动线程，才可以调用join函数；</li>
+<li>默认构造函数创建的对象是joinable() &#x3D;&#x3D; false;</li>
 <li>join只能被调用一次，之后joinable就会变为false，表示线程执行完毕；</li>
-<li>调用 ternimate()的线程必须是 joinable() == false;</li>
-<li>如果线程不调用join()函数，即使执行完毕也是一个活动线程，即joinable() == true，依然可以调用join()函数；</li>
+<li>调用 ternimate()的线程必须是 joinable() &#x3D;&#x3D; false;</li>
+<li>如果线程不调用join()函数，即使执行完毕也是一个活动线程，即joinable() &#x3D;&#x3D; true，依然可以调用join()函数；</li>
 </ul>
 </li>
 </ul>
@@ -541,7 +541,7 @@
 <li>创建N个线程，让这些线程执行一个while函数，持续尝试向一个任务队列获取执行任务（执行任务：（函数地址，参数））。</li>
 <li>线程获取到任务则执行，任务队列为空则阻塞休眠。</li>
 <li>任务队列得到新任务时，唤醒一个休眠中的线程。</li>
-<li>任务队列是一个生产者/消费者模型，需要互斥。</li>
+<li>任务队列是一个生产者&#x2F;消费者模型，需要互斥。</li>
 </ul>
 <h4 id="Java的多线程编程"><a href="#Java的多线程编程" class="headerlink" title="Java的多线程编程"></a>Java的多线程编程</h4><p>Java多线程主要通过三种方式实现</p>
 <ul>
@@ -555,7 +555,7 @@
 </ul>
 <h4 id="Java的同步和互斥"><a href="#Java的同步和互斥" class="headerlink" title="Java的同步和互斥"></a>Java的同步和互斥</h4><p>主要了解了synchronized关键词和ReentrantLock</p>
 <h5 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h5><p>关键词，可以修饰方法、对象、代码块。被修饰的内容在有一个线程访问时，其他试图访问的线程都会被阻塞。如果修饰的是静态方法，则该类所有对象的该方法都会被上锁（也很容易理解，静态方法是类级共享的）。</p>
-<p>synchronized在早期给人的印象就是重量级锁，开销很大。因为它用到了操作系统底层的互斥锁，涉及到用户/内核态切换。但是Java新版本也有做一些改进：</p>
+<p>synchronized在早期给人的印象就是重量级锁，开销很大。因为它用到了操作系统底层的互斥锁，涉及到用户&#x2F;内核态切换。但是Java新版本也有做一些改进：</p>
 <ul>
 <li><strong>锁粗化</strong>：把多个连续的加锁解锁块合并为一个临界代码块。比如连续的字符串append</li>
 <li><strong>锁消除</strong>：如果某个数据对象被认为是不会共享的，就不会对它上锁，比如一个函数内的局部变量，每个线程都是不同的，不会互相访问，就不会上锁</li>
@@ -564,7 +564,7 @@
 </ul>
 <h5 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h5><p>ReentrantLock就是可重入锁，一个线程获取到锁后，如果重复获取锁，不会被锁阻塞。重复获取n次锁，就要重复释放n次锁。</p>
 <p>一般的使用方式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">// 代码</span></span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    lock.unlock();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Lock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();</span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">// 代码</span></span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    lock.unlock();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
     </article>
     <!-- license -->
     
@@ -814,7 +814,22 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -947,7 +962,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 20
+        Total : 21
         </div>
         <!-- search  -->
         
@@ -961,6 +976,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/16</span>
+            <a class="archive-post-title" href="/posts/631ff09e/">后端面试</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">03/12</span>
@@ -1105,6 +1126,11 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="C++练习">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++练习
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="面试">
                 <span class="iconfont-archer">&#xe606;</span>
                 面试
@@ -1113,11 +1139,6 @@
             <span class="sidebar-tag-name" data-tags="笔试">
                 <span class="iconfont-archer">&#xe606;</span>
                 笔试
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="C++练习">
-                <span class="iconfont-archer">&#xe606;</span>
-                C++练习
             </span>
         
             <span class="sidebar-tag-name" data-tags="C++">
@@ -1161,6 +1182,11 @@
             玩乐
         </span>
     
+        <span class="sidebar-category-name" data-categories="学习">
+            <span class="iconfont-archer">&#xe60a;</span>
+            学习
+        </span>
+    
         <span class="sidebar-category-name" data-categories="面试">
             <span class="iconfont-archer">&#xe60a;</span>
             面试
@@ -1169,11 +1195,6 @@
         <span class="sidebar-category-name" data-categories="笔试">
             <span class="iconfont-archer">&#xe60a;</span>
             笔试
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="学习">
-            <span class="iconfont-archer">&#xe60a;</span>
-            学习
         </span>
     
         <span class="sidebar-category-name" data-categories="随笔">

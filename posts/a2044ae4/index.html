@@ -19,12 +19,12 @@
         <meta name="keywords" content="Nothing is blessing to everything for me,RtekiX">
     
     <meta name="description" content="">
-    <meta name="description" content="C++的程序内存布局从上往下是：  内核空间：操作系统内核 环境变量，命令行参数 栈（高地址向低地址增长）：存放局部变量，函数参数，返回地址等，由编译器管理 （空闲区域） 堆（低地址向高地址增长）：由程序员new&#x2F;delete管理，容量远大于栈 BSS段：未初始化的数据 data段：已初始化的数据，全局变量，静态变量 text段：代码区  智能指针C++没有垃圾回收机制，只能由程序员手动管理内存，">
+    <meta name="description" content="C++的程序内存布局从上往下是：  内核空间：操作系统内核 环境变量，命令行参数 栈（高地址向低地址增长）：存放局部变量，函数参数，返回地址等，由编译器管理 （空闲区域） 堆（低地址向高地址增长）：由程序员new&#x2F;delete管理，容量远大于栈 BSS段：未初始化的数据 data段：已初始化的数据，全局变量，静态变量 text段：代码区  智能指针C++没有垃圾回收机制，只能由程序员手动">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基础知识复习笔记5-内存管理">
 <meta property="og:url" content="https://rtekix.github.io/posts/a2044ae4/index.html">
 <meta property="og:site_name" content="Nothing is blessing to everything for me">
-<meta property="og:description" content="C++的程序内存布局从上往下是：  内核空间：操作系统内核 环境变量，命令行参数 栈（高地址向低地址增长）：存放局部变量，函数参数，返回地址等，由编译器管理 （空闲区域） 堆（低地址向高地址增长）：由程序员new&#x2F;delete管理，容量远大于栈 BSS段：未初始化的数据 data段：已初始化的数据，全局变量，静态变量 text段：代码区  智能指针C++没有垃圾回收机制，只能由程序员手动管理内存，">
+<meta property="og:description" content="C++的程序内存布局从上往下是：  内核空间：操作系统内核 环境变量，命令行参数 栈（高地址向低地址增长）：存放局部变量，函数参数，返回地址等，由编译器管理 （空闲区域） 堆（低地址向高地址增长）：由程序员new&#x2F;delete管理，容量远大于栈 BSS段：未初始化的数据 data段：已初始化的数据，全局变量，静态变量 text段：代码区  智能指针C++没有垃圾回收机制，只能由程序员手动">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-02-17T13:33:08.000Z">
 <meta property="article:modified_time" content="2024-02-17T14:28:34.031Z">
@@ -213,7 +213,7 @@
     <!-- Google tag (gtag.js) -->
     
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 7.1.1"></head>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script type="text/javascript">
@@ -505,7 +505,7 @@
 <li>环境变量，命令行参数</li>
 <li>栈（高地址向低地址增长）：存放局部变量，函数参数，返回地址等，由编译器管理</li>
 <li>（空闲区域）</li>
-<li>堆（低地址向高地址增长）：由程序员new/delete管理，容量远大于栈</li>
+<li>堆（低地址向高地址增长）：由程序员new&#x2F;delete管理，容量远大于栈</li>
 <li>BSS段：未初始化的数据</li>
 <li>data段：已初始化的数据，全局变量，静态变量</li>
 <li>text段：代码区</li>
@@ -514,7 +514,7 @@
 <ul>
 <li>内存泄漏：某段代码每次执行都会申请一小段内存，结束后却不释放，久而久之就会吞噬系统的空闲内存，最终导致程序甚至系统崩溃。<ul>
 <li>如果一段程序随着时间运行，内存占用越来越大且没有饱和的趋势，可能就出现了内存泄漏。</li>
-<li>内存泄漏的静态检测方法，首先就是对代码进行检查，看是否有new/delete不匹配的地方。</li>
+<li>内存泄漏的静态检测方法，首先就是对代码进行检查，看是否有new&#x2F;delete不匹配的地方。</li>
 <li>也可以用工具进行检查，比如valgrind可以检查程序是否有非法使用内存的问题。</li>
 </ul>
 </li>
@@ -809,7 +809,22 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -942,7 +957,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 20
+        Total : 21
         </div>
         <!-- search  -->
         
@@ -956,6 +971,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/16</span>
+            <a class="archive-post-title" href="/posts/631ff09e/">后端面试</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">03/12</span>
@@ -1100,6 +1121,11 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="C++练习">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++练习
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="面试">
                 <span class="iconfont-archer">&#xe606;</span>
                 面试
@@ -1108,11 +1134,6 @@
             <span class="sidebar-tag-name" data-tags="笔试">
                 <span class="iconfont-archer">&#xe606;</span>
                 笔试
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="C++练习">
-                <span class="iconfont-archer">&#xe606;</span>
-                C++练习
             </span>
         
             <span class="sidebar-tag-name" data-tags="C++">
@@ -1156,6 +1177,11 @@
             玩乐
         </span>
     
+        <span class="sidebar-category-name" data-categories="学习">
+            <span class="iconfont-archer">&#xe60a;</span>
+            学习
+        </span>
+    
         <span class="sidebar-category-name" data-categories="面试">
             <span class="iconfont-archer">&#xe60a;</span>
             面试
@@ -1164,11 +1190,6 @@
         <span class="sidebar-category-name" data-categories="笔试">
             <span class="iconfont-archer">&#xe60a;</span>
             笔试
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="学习">
-            <span class="iconfont-archer">&#xe60a;</span>
-            学习
         </span>
     
         <span class="sidebar-category-name" data-categories="随笔">

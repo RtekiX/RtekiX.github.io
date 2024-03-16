@@ -19,12 +19,12 @@
         <meta name="keywords" content="Nothing is blessing to everything for me,RtekiX">
     
     <meta name="description" content="">
-    <meta name="description" content="前言复习笔记系列记录一些C++&#x2F;Java，本科专业课的一些知识，强化记忆 本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。 集合Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_q">
+    <meta name="description" content="前言复习笔记系列记录一些C++&#x2F;Java，本科专业课的一些知识，强化记忆 本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。 集合Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和prior">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基础知识复习笔记1-Java集合">
 <meta property="og:url" content="https://rtekix.github.io/posts/67cafe3d/index.html">
 <meta property="og:site_name" content="Nothing is blessing to everything for me">
-<meta property="og:description" content="前言复习笔记系列记录一些C++&#x2F;Java，本科专业课的一些知识，强化记忆 本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。 集合Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_q">
+<meta property="og:description" content="前言复习笔记系列记录一些C++&#x2F;Java，本科专业课的一些知识，强化记忆 本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。 集合Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和prior">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-02-12T11:55:55.000Z">
 <meta property="article:modified_time" content="2024-02-17T08:16:39.073Z">
@@ -213,7 +213,7 @@
     <!-- Google tag (gtag.js) -->
     
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 7.1.1"></head>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script type="text/javascript">
@@ -499,7 +499,7 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>复习笔记系列记录一些C++/Java，本科专业课的一些知识，强化记忆</p>
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>复习笔记系列记录一些C++&#x2F;Java，本科专业课的一些知识，强化记忆</p>
 <p>本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。</p>
 <h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_queue实际上底层都是deque容器，deque实现了它们所需的方法。Java中类似，所有容器都是从Collection和Map接口派生出来的，从Collection和Map接口又派生出许多子接口，由“集合（容器）”实现这些接口的方法。</p>
 <ul>
@@ -517,7 +517,7 @@
 </ul>
 </li>
 </ul>
-<p>以上黑体是接口，常规体是集合/容器。</p>
+<p>以上黑体是接口，常规体是集合&#x2F;容器。</p>
 <h4 id="ArrayList和LinkedList"><a href="#ArrayList和LinkedList" class="headerlink" title="ArrayList和LinkedList"></a>ArrayList和LinkedList</h4><p>ArrayList类似于C++的vector，底层用数组实现，可以随机访问、自动扩容。扩容机制也和vector类似，大约为1.5倍。</p>
 <p>LinkedList是双向链表，头尾插入删除O(1)，随机位置插入删除平均仍然是O(n)，所以实际上与ArrayList相比优势不大，但适合作为双向队列的接口实现。</p>
 <h4 id="HashSet，HashMap"><a href="#HashSet，HashMap" class="headerlink" title="HashSet，HashMap"></a>HashSet，HashMap</h4><h5 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h5><p>HashMap和HashSet底层实现相同，都是数组+链表。当冲突形成的拉链表长度大于8，而且数组长度大于64时，会将链表转化为红黑树，降低查找开销。数组长度不大于64则优先数组扩容。</p>
@@ -530,7 +530,7 @@
 <h4 id="TreeSet和TreeMap"><a href="#TreeSet和TreeMap" class="headerlink" title="TreeSet和TreeMap"></a>TreeSet和TreeMap</h4><p>两者关系和HashSet、HashMap差不多，TreeMap是有序的，会默认按照键值升序排序。</p>
 <h5 id="底层实现-1"><a href="#底层实现-1" class="headerlink" title="底层实现"></a>底层实现</h5><p>红黑树，查找和增删的复杂度相同，效率低于HashMap。</p>
 <h5 id="自定义排序"><a href="#自定义排序" class="headerlink" title="自定义排序"></a>自定义排序</h5><ul>
-<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Node</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">char</span> ch;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">char</span> c)</span> </span>&#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hashCode和equals重写是为了让自定义类型在Set中去重</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Integer(value).hashCode() + <span class="keyword">new</span> Character(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">        Node n2 = (Node) o;</span><br><span class="line">        <span class="keyword">return</span> value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Node o)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value &lt; o.value ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Node</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Node&gt;&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> value;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">char</span> ch;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(<span class="type">int</span> v, <span class="type">char</span> c)</span> &#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hashCode和equals重写是为了让自定义类型在Set中去重</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Integer</span>(value).hashCode() + <span class="keyword">new</span> <span class="title class_">Character</span>(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">n2</span> <span class="operator">=</span> (Node) o;</span><br><span class="line">        <span class="keyword">return</span> value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Node o)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> value &lt; o.value ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 <li>方法二：在创建TreeMap时定义比较函数compare：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;Character, Integer&gt; mp = new TreeMap&lt;&gt;(new Comparator&lt;Character&gt;() &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public int compare(Character o1, Character o2) &#123;</span><br><span class="line">      return o1 &lt; o2 ? 1 : -1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h4><p>PiorityQueue默认是小顶堆，自定义比较的方法和TreeMap一样。</p>
@@ -790,7 +790,22 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -923,7 +938,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 20
+        Total : 21
         </div>
         <!-- search  -->
         
@@ -937,6 +952,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/16</span>
+            <a class="archive-post-title" href="/posts/631ff09e/">后端面试</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">03/12</span>
@@ -1081,6 +1102,11 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="C++练习">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++练习
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="面试">
                 <span class="iconfont-archer">&#xe606;</span>
                 面试
@@ -1089,11 +1115,6 @@
             <span class="sidebar-tag-name" data-tags="笔试">
                 <span class="iconfont-archer">&#xe606;</span>
                 笔试
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="C++练习">
-                <span class="iconfont-archer">&#xe606;</span>
-                C++练习
             </span>
         
             <span class="sidebar-tag-name" data-tags="C++">
@@ -1137,6 +1158,11 @@
             玩乐
         </span>
     
+        <span class="sidebar-category-name" data-categories="学习">
+            <span class="iconfont-archer">&#xe60a;</span>
+            学习
+        </span>
+    
         <span class="sidebar-category-name" data-categories="面试">
             <span class="iconfont-archer">&#xe60a;</span>
             面试
@@ -1145,11 +1171,6 @@
         <span class="sidebar-category-name" data-categories="笔试">
             <span class="iconfont-archer">&#xe60a;</span>
             笔试
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="学习">
-            <span class="iconfont-archer">&#xe60a;</span>
-            学习
         </span>
     
         <span class="sidebar-category-name" data-categories="随笔">

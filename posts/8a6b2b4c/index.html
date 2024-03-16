@@ -19,12 +19,12 @@
         <meta name="keywords" content="Nothing is blessing to everything for me,RtekiX">
     
     <meta name="description" content="">
-    <meta name="description" content="NEMU是什么个人理解：是NJU编写的一个模拟器，名字来源于QEMU（quick emulator)。NEMU运行于GNU&#x2F;Linux操作系统上，用C语言模拟了一个虚拟的计算机系统，包括CPU、内存、IO设备等。 12345678910111213                         +---------------------+  +---------------------+">
+    <meta name="description" content="NEMU是什么个人理解：是NJU编写的一个模拟器，名字来源于QEMU（quick emulator)。NEMU运行于GNU&#x2F;Linux操作系统上，用C语言模拟了一个虚拟的计算机系统，包括CPU、内存、IO设备等。 12345678910111213                         +---------------------+  +--------------------">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NEMU-PA1">
 <meta property="og:url" content="https://rtekix.github.io/posts/8a6b2b4c/index.html">
 <meta property="og:site_name" content="Nothing is blessing to everything for me">
-<meta property="og:description" content="NEMU是什么个人理解：是NJU编写的一个模拟器，名字来源于QEMU（quick emulator)。NEMU运行于GNU&#x2F;Linux操作系统上，用C语言模拟了一个虚拟的计算机系统，包括CPU、内存、IO设备等。 12345678910111213                         +---------------------+  +---------------------+">
+<meta property="og:description" content="NEMU是什么个人理解：是NJU编写的一个模拟器，名字来源于QEMU（quick emulator)。NEMU运行于GNU&#x2F;Linux操作系统上，用C语言模拟了一个虚拟的计算机系统，包括CPU、内存、IO设备等。 12345678910111213                         +---------------------+  +--------------------">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://rtekix.github.io/posts/8a6b2b4c/1.jpg">
 <meta property="article:published_time" content="2024-01-10T02:43:31.000Z">
@@ -215,7 +215,7 @@
     <!-- Google tag (gtag.js) -->
     
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 7.1.1"></head>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script type="text/javascript">
@@ -501,14 +501,14 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h3 id="NEMU是什么"><a href="#NEMU是什么" class="headerlink" title="NEMU是什么"></a>NEMU是什么</h3><p><font color="red">个人理解：</font>是NJU编写的一个模拟器，名字来源于<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/QEMU">QEMU（quick emulator)</a>。NEMU运行于GNU/Linux操作系统上，用C语言模拟了一个虚拟的计算机系统，包括CPU、内存、IO设备等。</p>
+        <h3 id="NEMU是什么"><a href="#NEMU是什么" class="headerlink" title="NEMU是什么"></a>NEMU是什么</h3><p><font color="red">个人理解：</font>是NJU编写的一个模拟器，名字来源于<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/QEMU">QEMU（quick emulator)</a>。NEMU运行于GNU&#x2F;Linux操作系统上，用C语言模拟了一个虚拟的计算机系统，包括CPU、内存、IO设备等。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">                         +---------------------+  +---------------------+</span><br><span class="line">                         |     Super Mario     |  |    &quot;Hello World&quot;    |</span><br><span class="line">                         +---------------------+  +---------------------+</span><br><span class="line">                         |    Simulated NES    |  |      Simulated      |</span><br><span class="line">                         |       hardware      |  |       hardware      |</span><br><span class="line">+---------------------+  +---------------------+  +---------------------+</span><br><span class="line">|    &quot;Hello World&quot;    |  |     NES Emulator    |  |        NEMU         |</span><br><span class="line">+---------------------+  +---------------------+  +---------------------+</span><br><span class="line">|      GNU/Linux      |  |      GNU/Linux      |  |      GNU/Linux      |</span><br><span class="line">+---------------------+  +---------------------+  +---------------------+</span><br><span class="line">|    Real hardware    |  |    Real hardware    |  |    Real hardware    |</span><br><span class="line">+---------------------+  +---------------------+  +---------------------+</span><br><span class="line">          (a)                      (b)                     (c)</span><br></pre></td></tr></table></figure>
 <p>图(c)中NEMU和Simulated hardware之间应该还有一层抽象计算机层，描述一个计算机系统需要有哪些硬件和接口。有了抽象计算机层，可以实现<br>多种不同指令架构集的计算机而不改变虚拟机器上层程序的设计形式。</p>
 <p>手册给了x86、riscv32和mips32三种指令集选择，选了mips32</p>
 <hr>
 <h3 id="计算机可以没有寄存器吗"><a href="#计算机可以没有寄存器吗" class="headerlink" title="计算机可以没有寄存器吗"></a>计算机可以没有寄存器吗</h3><h4 id="回答这个问题之前先看看MIPS32手册"><a href="#回答这个问题之前先看看MIPS32手册" class="headerlink" title="回答这个问题之前先看看MIPS32手册"></a>回答这个问题之前先看看MIPS32手册</h4><ol>
 <li>MIPS32架构定义了CPU寄存器和FPU寄存器：<ul>
-<li>CPU寄存器包括r0 ~ r31，共32个通用寄存器；Program Counter；HI/LO（存放乘除指令结果）。r0可以代表默认0，r31在 <strong>JAL, BLTZAL, BLTZALL, BGEZAL, BGEZALL</strong> 指令中表示默认目标地址。</li>
+<li>CPU寄存器包括r0 ~ r31，共32个通用寄存器；Program Counter；HI&#x2F;LO（存放乘除指令结果）。r0可以代表默认0，r31在 <strong>JAL, BLTZAL, BLTZALL, BGEZAL, BGEZALL</strong> 指令中表示默认目标地址。</li>
 <li>FPU寄存器包括32个通用寄存器，存放单精度浮点数；5个控制寄存器（暂时不清楚用法）。</li>
 </ul>
 </li>
@@ -516,10 +516,11 @@
 <li>对齐策略：<ul>
 <li>半字（2 byte）数据要对齐0，2，4…</li>
 <li>字数据（4 byte）数据对齐0，4，8…</li>
-<li>双字数据（8 byte）数据对齐0，8，16…<h4 id="个人思考"><a href="#个人思考" class="headerlink" title="个人思考"></a>个人思考</h4>计算机的寄存器用于暂存数据和指令，如果没有寄存器，那就需要其他介质作为替代，比如内存。如果没有内存，也可以是外部指令流输入控制计算机运行，但是为了暂存中间结果，始终需要有一个存储器模块。</li>
+<li>双字数据（8 byte）数据对齐0，8，16…</li>
 </ul>
 </li>
 </ol>
+<h4 id="个人思考"><a href="#个人思考" class="headerlink" title="个人思考"></a>个人思考</h4><p>计算机的寄存器用于暂存数据和指令，如果没有寄存器，那就需要其他介质作为替代，比如内存。如果没有内存，也可以是外部指令流输入控制计算机运行，但是为了暂存中间结果，始终需要有一个存储器模块。</p>
 <p>MIPS手册描述了编程模型的6个方面：</p>
 <ul>
 <li>CPU数据形式：<ul>
@@ -806,7 +807,22 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -939,7 +955,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 20
+        Total : 21
         </div>
         <!-- search  -->
         
@@ -953,6 +969,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/16</span>
+            <a class="archive-post-title" href="/posts/631ff09e/">后端面试</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">03/12</span>
@@ -1097,6 +1119,11 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="C++练习">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++练习
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="面试">
                 <span class="iconfont-archer">&#xe606;</span>
                 面试
@@ -1105,11 +1132,6 @@
             <span class="sidebar-tag-name" data-tags="笔试">
                 <span class="iconfont-archer">&#xe606;</span>
                 笔试
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="C++练习">
-                <span class="iconfont-archer">&#xe606;</span>
-                C++练习
             </span>
         
             <span class="sidebar-tag-name" data-tags="C++">
@@ -1153,6 +1175,11 @@
             玩乐
         </span>
     
+        <span class="sidebar-category-name" data-categories="学习">
+            <span class="iconfont-archer">&#xe60a;</span>
+            学习
+        </span>
+    
         <span class="sidebar-category-name" data-categories="面试">
             <span class="iconfont-archer">&#xe60a;</span>
             面试
@@ -1161,11 +1188,6 @@
         <span class="sidebar-category-name" data-categories="笔试">
             <span class="iconfont-archer">&#xe60a;</span>
             笔试
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="学习">
-            <span class="iconfont-archer">&#xe60a;</span>
-            学习
         </span>
     
         <span class="sidebar-category-name" data-categories="随笔">

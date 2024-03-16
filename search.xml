@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>C++ thread 多线程任务队列</title>
+    <url>/posts/f553d691/</url>
+    <content><![CDATA[<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Semaphore</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Semaphore</span>(<span class="type">int</span> value = <span class="number">1</span>) : <span class="built_in">cnt</span>(value) &#123;&#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">P</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lck</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        <span class="keyword">if</span> (--cnt &lt; <span class="number">0</span>)</span><br><span class="line">            cv.<span class="built_in">wait</span>(lck);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">V</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lck</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        <span class="keyword">if</span> (++cnt &lt;= <span class="number">0</span>)</span><br><span class="line">            cv.<span class="built_in">notify_one</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> cnt;</span><br><span class="line">    mutex mtx;</span><br><span class="line">    condition_variable cv;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TaskQueue</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">TaskQueue</span>(<span class="type">int</span> n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">srand</span>(<span class="built_in">time</span>(<span class="number">0</span>));</span><br><span class="line">        max_size = n;</span><br><span class="line">        notfull = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(n);</span><br><span class="line">        notempty = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(<span class="number">0</span>);</span><br><span class="line">        rwlock = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> e)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        notfull-&gt;<span class="built_in">P</span>(); <span class="comment">// 确保有空位</span></span><br><span class="line">        rwlock-&gt;<span class="built_in">P</span>();  <span class="comment">// 获取互斥锁</span></span><br><span class="line">        q.<span class="built_in">push</span>(e);</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;线程id &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot; 执行了add操作，添加数字&quot;</span> &lt;&lt; e &lt;&lt; endl;</span><br><span class="line">        rwlock-&gt;<span class="built_in">V</span>();</span><br><span class="line">        notempty-&gt;<span class="built_in">V</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">get</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        notempty-&gt;<span class="built_in">P</span>();</span><br><span class="line">        rwlock-&gt;<span class="built_in">P</span>();</span><br><span class="line">        <span class="type">int</span> e = q.<span class="built_in">front</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;线程id &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot; 执行了get操作，获取数字&quot;</span> &lt;&lt; e &lt;&lt; endl;</span><br><span class="line">        rwlock-&gt;<span class="built_in">V</span>();</span><br><span class="line">        notfull-&gt;<span class="built_in">V</span>();</span><br><span class="line">        <span class="keyword">return</span> e;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> max_size;</span><br><span class="line">    Semaphore* notfull, * notempty;</span><br><span class="line">    Semaphore* rwlock; <span class="comment">// 生产者和消费者的互斥锁</span></span><br><span class="line">    queue&lt;<span class="type">int</span>&gt; q;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">fadd</span><span class="params">(TaskQueue&amp; task_queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (cnt &lt; <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> rnd = <span class="built_in">rand</span>() % <span class="number">100</span>;</span><br><span class="line">        task_queue.<span class="built_in">add</span>(rnd);</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">fget</span><span class="params">(TaskQueue&amp; task_queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (cnt &lt; <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> x = task_queue.<span class="built_in">get</span>();</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">TaskQueue <span class="title">task_queue</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">    <span class="function">thread <span class="title">tt1</span><span class="params">(fadd, ref(task_queue))</span></span>;</span><br><span class="line">    <span class="function">thread <span class="title">tt2</span><span class="params">(fget, ref(task_queue))</span></span>;</span><br><span class="line">    tt1.<span class="built_in">join</span>();</span><br><span class="line">    tt2.<span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用future替代thread，future</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">TaskQueue <span class="title">task_queue</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">    vector&lt;future&lt;<span class="type">void</span>&gt;&gt; ts;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">            future&lt;<span class="type">void</span>&gt; t = std::<span class="built_in">async</span>(fadd, <span class="built_in">ref</span>(task_queue));</span><br><span class="line">            ts.<span class="built_in">emplace_back</span>(std::<span class="built_in">move</span>(t));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            future&lt;<span class="type">void</span>&gt; t = std::<span class="built_in">async</span>(fget, <span class="built_in">ref</span>(task_queue));</span><br><span class="line">            ts.<span class="built_in">emplace_back</span>(std::<span class="built_in">move</span>(t));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>C++练习</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>2024-03-01-oppo一面</title>
     <url>/posts/e8b72eb/</url>
     <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>2月29日上午邮件通知面试，3月1日下午14:10开始，调试设备约5分钟，面试时长约30分钟，无手撕代码。</p>
@@ -32,11 +46,11 @@
     <title>2024-03-06 笔试</title>
     <url>/posts/c8a3261c/</url>
     <content><![CDATA[<h3 id="最长连续回文子串"><a href="#最长连续回文子串" class="headerlink" title="最长连续回文子串"></a>最长连续回文子串</h3><p>定义dp数组，dp[i][j]表示字符串i到j是否为回文串。</p>
-<p>如果i、j相同，dp[i][j] = dp[i+1][j-1]</p>
+<p>如果i、j相同，dp[i][j] &#x3D; dp[i+1][j-1]</p>
 <p>笔试的时候定义错了，定义成一维，应当注意</p>
 <h3 id="最长连续回文子序列"><a href="#最长连续回文子序列" class="headerlink" title="最长连续回文子序列"></a>最长连续回文子序列</h3><p>这个写出来了，定义dp数组，dp[i][j]表示字符串i到j范围内最长回文子序列的长度。</p>
-<p>如果i、j相同，dp[i][j] = dp[i+1][j-1] + 2</p>
-<p>如果i、j不同，dp[i][j] = max(dp[i+1][j], dp[i][j-1])</p>
+<p>如果i、j相同，dp[i][j] &#x3D; dp[i+1][j-1] + 2</p>
+<p>如果i、j不同，dp[i][j] &#x3D; max(dp[i+1][j], dp[i][j-1])</p>
 <h3 id="N个男生，N个女生，交叉安排成一个圆环"><a href="#N个男生，N个女生，交叉安排成一个圆环" class="headerlink" title="N个男生，N个女生，交叉安排成一个圆环"></a>N个男生，N个女生，交叉安排成一个圆环</h3><p>其中部分女生不愿意站在某些男生的旁边，如果被安排到了，满意度-1，求满意度的最大值</p>
 <p>思路：一个女生只能且必须映射到两个男生中间，采用贪心映射法。对于每个女生，在映射表中找还有没有两个能映射的、且他不讨厌的男生，如果有，则安排成功；如果没有，则满意度减一。</p>
 <p>没AC</p>
@@ -47,9 +61,9 @@
 <p>示例:</p>
 <p>输入: 25<br>输出: 9<br>解释: (2, 12, 20, 21, 22, 23, 24, 25)(注意 22 应该算作两次)</p>
 <p>分别统计每一位上，数字为2的个数</p>
-<p>如果当前位大于2，个数 =（当前位的左边部分+1）* 10^当前位的右半部分的长度</p>
-<p>如果当前位小于2，个数 =（当前位的左边部分）* 10^当前位的右半部分的长度</p>
-<p>如果当前位等于2，个数 =（当前位的左边部分）* 10^当前位的右半部分的长度+当前位的右半部分+1</p>
+<p>如果当前位大于2，个数 &#x3D;（当前位的左边部分+1）* 10^当前位的右半部分的长度</p>
+<p>如果当前位小于2，个数 &#x3D;（当前位的左边部分）* 10^当前位的右半部分的长度</p>
+<p>如果当前位等于2，个数 &#x3D;（当前位的左边部分）* 10^当前位的右半部分的长度+当前位的右半部分+1</p>
 <p><font color="red">暴力统计也过了，很无语</font></p>
 <h3 id="字符串排序"><a href="#字符串排序" class="headerlink" title="字符串排序"></a>字符串排序</h3><p>一个字符串A可以任意连续字符按照从小到大的顺序排序，判断它是否能排列为另一个字符串S</p>
 <p>直接字典序判断A是否大于等于S，过了80%</p>
@@ -79,9 +93,9 @@
 <li>如果杯子不空：上回合喝过水了，则放下杯子回合结束；上回合没喝水，则喝掉杯子里的水</li>
 </ul>
 <p>最终求所有水被喝完时的回合数的期望值。</p>
-<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><p>很明显是一个数学题。假如不考虑两次喝水之间的间隙，还剩i杯水的时候，喝到水的概率p=i/n。此时，喝一杯水的期望回合是：</p>
+<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><p>很明显是一个数学题。假如不考虑两次喝水之间的间隙，还剩i杯水的时候，喝到水的概率p&#x3D;i&#x2F;n。此时，喝一杯水的期望回合是：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">T = p*1 + p(1-p)*2 + p(1-p)^2*3 + ... + p(1-p)^n*(n+1)</span><br><span class="line">  = i/n(1-p)^2</span><br></pre></td></tr></table></figure>
-<p>然后令i=k，i=k-1, … i=1，累加即可</p>
+<p>然后令i&#x3D;k，i&#x3D;k-1, … i&#x3D;1，累加即可</p>
 <p>没想出来的地方：两次喝水有间隙——卡在这里很久，实际上只需要在最后的结果加上k-1个回合就可以了。</p>
 ]]></content>
       <categories>
@@ -92,23 +106,9 @@
       </tags>
   </entry>
   <entry>
-    <title>C++ thread 多线程任务队列</title>
-    <url>/posts/f553d691/</url>
-    <content><![CDATA[<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Semaphore</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Semaphore</span>(<span class="keyword">int</span> value = <span class="number">1</span>) : <span class="built_in">cnt</span>(value) &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">P</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lck</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        <span class="keyword">if</span> (--cnt &lt; <span class="number">0</span>)</span><br><span class="line">            cv.<span class="built_in">wait</span>(lck);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">V</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lck</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        <span class="keyword">if</span> (++cnt &lt;= <span class="number">0</span>)</span><br><span class="line">            cv.<span class="built_in">notify_one</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> cnt;</span><br><span class="line">    mutex mtx;</span><br><span class="line">    condition_variable cv;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TaskQueue</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">TaskQueue</span>(<span class="keyword">int</span> n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">srand</span>(<span class="built_in">time</span>(<span class="number">0</span>));</span><br><span class="line">        max_size = n;</span><br><span class="line">        notfull = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(n);</span><br><span class="line">        notempty = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(<span class="number">0</span>);</span><br><span class="line">        rwlock = <span class="keyword">new</span> <span class="built_in">Semaphore</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> e)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        notfull-&gt;<span class="built_in">P</span>(); <span class="comment">// 确保有空位</span></span><br><span class="line">        rwlock-&gt;<span class="built_in">P</span>();  <span class="comment">// 获取互斥锁</span></span><br><span class="line">        q.<span class="built_in">push</span>(e);</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;线程id &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot; 执行了add操作，添加数字&quot;</span> &lt;&lt; e &lt;&lt; endl;</span><br><span class="line">        rwlock-&gt;<span class="built_in">V</span>();</span><br><span class="line">        notempty-&gt;<span class="built_in">V</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        notempty-&gt;<span class="built_in">P</span>();</span><br><span class="line">        rwlock-&gt;<span class="built_in">P</span>();</span><br><span class="line">        <span class="keyword">int</span> e = q.<span class="built_in">front</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;线程id &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot; 执行了get操作，获取数字&quot;</span> &lt;&lt; e &lt;&lt; endl;</span><br><span class="line">        rwlock-&gt;<span class="built_in">V</span>();</span><br><span class="line">        notfull-&gt;<span class="built_in">V</span>();</span><br><span class="line">        <span class="keyword">return</span> e;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> max_size;</span><br><span class="line">    Semaphore* notfull, * notempty;</span><br><span class="line">    Semaphore* rwlock; <span class="comment">// 生产者和消费者的互斥锁</span></span><br><span class="line">    queue&lt;<span class="keyword">int</span>&gt; q;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fadd</span><span class="params">(TaskQueue&amp; task_queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (cnt &lt; <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> rnd = <span class="built_in">rand</span>() % <span class="number">100</span>;</span><br><span class="line">        task_queue.<span class="built_in">add</span>(rnd);</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fget</span><span class="params">(TaskQueue&amp; task_queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (cnt &lt; <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> x = task_queue.<span class="built_in">get</span>();</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">TaskQueue <span class="title">task_queue</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">    <span class="function">thread <span class="title">tt1</span><span class="params">(fadd, ref(task_queue))</span></span>;</span><br><span class="line">    <span class="function">thread <span class="title">tt2</span><span class="params">(fget, ref(task_queue))</span></span>;</span><br><span class="line">    tt1.<span class="built_in">join</span>();</span><br><span class="line">    tt2.<span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>用future替代thread，future</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">TaskQueue <span class="title">task_queue</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">    vector&lt;future&lt;<span class="keyword">void</span>&gt;&gt; ts;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">            future&lt;<span class="keyword">void</span>&gt; t = std::<span class="built_in">async</span>(fadd, <span class="built_in">ref</span>(task_queue));</span><br><span class="line">            ts.<span class="built_in">emplace_back</span>(std::<span class="built_in">move</span>(t));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            future&lt;<span class="keyword">void</span>&gt; t = std::<span class="built_in">async</span>(fget, <span class="built_in">ref</span>(task_queue));</span><br><span class="line">            ts.<span class="built_in">emplace_back</span>(std::<span class="built_in">move</span>(t));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>C++练习</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>C++智能指针简单造轮子</title>
     <url>/posts/39e4cbdd/</url>
-    <content><![CDATA[<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Count</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Count</span>(<span class="keyword">int</span> cnt = <span class="number">1</span>) : _count(cnt)&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> _count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        _count++;</span><br><span class="line">        <span class="keyword">return</span> _count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">minus</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        _count--;</span><br><span class="line">        <span class="keyword">return</span> _count;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> _count;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SharedPtr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">SharedPtr</span>(T *ptr = <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        _ptr = ptr;</span><br><span class="line">        <span class="keyword">if</span> (ptr != <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            _cnt = <span class="keyword">new</span> <span class="built_in">Count</span>(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">SharedPtr</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">release</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">SharedPtr</span>(<span class="keyword">const</span> SharedPtr &amp;other)</span><br><span class="line">    &#123;</span><br><span class="line">        _ptr = other._ptr;</span><br><span class="line">        _cnt = other._cnt;</span><br><span class="line">        <span class="keyword">if</span> (_cnt-&gt;<span class="built_in">getCount</span>() != <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            _cnt-&gt;<span class="built_in">add</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    SharedPtr &amp;<span class="keyword">operator</span>=(<span class="keyword">const</span> SharedPtr &amp;other)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != other)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">release</span>();</span><br><span class="line">            _ptr = other._ptr;</span><br><span class="line">            _cnt = other._ptr;</span><br><span class="line">            _cnt-&gt;<span class="built_in">add</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    T <span class="keyword">operator</span>*()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> *_ptr;</span><br><span class="line">    &#125;</span><br><span class="line">    T &amp;<span class="keyword">operator</span>-&gt;()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> _ptr;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">use_count</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> _cnt-&gt;<span class="built_in">getCount</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">release</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (_ptr != <span class="literal">nullptr</span> &amp;&amp; _cnt-&gt;<span class="built_in">minus</span>() == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">delete</span> _ptr;</span><br><span class="line">            <span class="keyword">delete</span> _cnt;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    T *_ptr;</span><br><span class="line">    Count *_cnt;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">SharedPtr&lt;<span class="keyword">int</span>&gt; <span class="title">p</span><span class="params">(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">5</span>))</span></span>;</span><br><span class="line">    cout &lt;&lt; *p &lt;&lt; endl</span><br><span class="line">         &lt;&lt; p.<span class="built_in">use_count</span>();</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">SharedPtr&lt;<span class="keyword">int</span>&gt; <span class="title">q</span><span class="params">(p)</span></span>;</span><br><span class="line">        cout &lt;&lt; *q &lt;&lt; endl</span><br><span class="line">             &lt;&lt; q.<span class="built_in">use_count</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; *p &lt;&lt; endl</span><br><span class="line">         &lt;&lt; p.<span class="built_in">use_count</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Count</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Count</span>(<span class="type">int</span> cnt = <span class="number">1</span>) : _count(cnt)&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">getCount</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> _count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">add</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        _count++;</span><br><span class="line">        <span class="keyword">return</span> _count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">minus</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        _count--;</span><br><span class="line">        <span class="keyword">return</span> _count;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> _count;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SharedPtr</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">SharedPtr</span>(T *ptr = <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        _ptr = ptr;</span><br><span class="line">        <span class="keyword">if</span> (ptr != <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            _cnt = <span class="keyword">new</span> <span class="built_in">Count</span>(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">SharedPtr</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">release</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">SharedPtr</span>(<span class="type">const</span> SharedPtr &amp;other)</span><br><span class="line">    &#123;</span><br><span class="line">        _ptr = other._ptr;</span><br><span class="line">        _cnt = other._cnt;</span><br><span class="line">        <span class="keyword">if</span> (_cnt-&gt;<span class="built_in">getCount</span>() != <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            _cnt-&gt;<span class="built_in">add</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    SharedPtr &amp;<span class="keyword">operator</span>=(<span class="type">const</span> SharedPtr &amp;other)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != other)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">release</span>();</span><br><span class="line">            _ptr = other._ptr;</span><br><span class="line">            _cnt = other._ptr;</span><br><span class="line">            _cnt-&gt;<span class="built_in">add</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    T <span class="keyword">operator</span>*()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> *_ptr;</span><br><span class="line">    &#125;</span><br><span class="line">    T &amp;<span class="keyword">operator</span>-&gt;()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> _ptr;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">use_count</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> _cnt-&gt;<span class="built_in">getCount</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">release</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (_ptr != <span class="literal">nullptr</span> &amp;&amp; _cnt-&gt;<span class="built_in">minus</span>() == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">delete</span> _ptr;</span><br><span class="line">            <span class="keyword">delete</span> _cnt;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    T *_ptr;</span><br><span class="line">    Count *_cnt;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">SharedPtr&lt;<span class="type">int</span>&gt; <span class="title">p</span><span class="params">(<span class="keyword">new</span> <span class="type">int</span>(<span class="number">5</span>))</span></span>;</span><br><span class="line">    cout &lt;&lt; *p &lt;&lt; endl</span><br><span class="line">         &lt;&lt; p.<span class="built_in">use_count</span>();</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">SharedPtr&lt;<span class="type">int</span>&gt; <span class="title">q</span><span class="params">(p)</span></span>;</span><br><span class="line">        cout &lt;&lt; *q &lt;&lt; endl</span><br><span class="line">             &lt;&lt; q.<span class="built_in">use_count</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; *p &lt;&lt; endl</span><br><span class="line">         &lt;&lt; p.<span class="built_in">use_count</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>学习</category>
@@ -120,14 +120,14 @@
   <entry>
     <title>NEMU-PA1</title>
     <url>/posts/8a6b2b4c/</url>
-    <content><![CDATA[<h3 id="NEMU是什么"><a href="#NEMU是什么" class="headerlink" title="NEMU是什么"></a>NEMU是什么</h3><p><font color="red">个人理解：</font>是NJU编写的一个模拟器，名字来源于<a href="https://zh.wikipedia.org/wiki/QEMU">QEMU（quick emulator)</a>。NEMU运行于GNU/Linux操作系统上，用C语言模拟了一个虚拟的计算机系统，包括CPU、内存、IO设备等。</p>
+    <content><![CDATA[<h3 id="NEMU是什么"><a href="#NEMU是什么" class="headerlink" title="NEMU是什么"></a>NEMU是什么</h3><p><font color="red">个人理解：</font>是NJU编写的一个模拟器，名字来源于<a href="https://zh.wikipedia.org/wiki/QEMU">QEMU（quick emulator)</a>。NEMU运行于GNU&#x2F;Linux操作系统上，用C语言模拟了一个虚拟的计算机系统，包括CPU、内存、IO设备等。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">                         +---------------------+  +---------------------+</span><br><span class="line">                         |     Super Mario     |  |    &quot;Hello World&quot;    |</span><br><span class="line">                         +---------------------+  +---------------------+</span><br><span class="line">                         |    Simulated NES    |  |      Simulated      |</span><br><span class="line">                         |       hardware      |  |       hardware      |</span><br><span class="line">+---------------------+  +---------------------+  +---------------------+</span><br><span class="line">|    &quot;Hello World&quot;    |  |     NES Emulator    |  |        NEMU         |</span><br><span class="line">+---------------------+  +---------------------+  +---------------------+</span><br><span class="line">|      GNU/Linux      |  |      GNU/Linux      |  |      GNU/Linux      |</span><br><span class="line">+---------------------+  +---------------------+  +---------------------+</span><br><span class="line">|    Real hardware    |  |    Real hardware    |  |    Real hardware    |</span><br><span class="line">+---------------------+  +---------------------+  +---------------------+</span><br><span class="line">          (a)                      (b)                     (c)</span><br></pre></td></tr></table></figure>
 <p>图(c)中NEMU和Simulated hardware之间应该还有一层抽象计算机层，描述一个计算机系统需要有哪些硬件和接口。有了抽象计算机层，可以实现<br>多种不同指令架构集的计算机而不改变虚拟机器上层程序的设计形式。</p>
 <p>手册给了x86、riscv32和mips32三种指令集选择，选了mips32</p>
 <hr>
 <h3 id="计算机可以没有寄存器吗"><a href="#计算机可以没有寄存器吗" class="headerlink" title="计算机可以没有寄存器吗"></a>计算机可以没有寄存器吗</h3><h4 id="回答这个问题之前先看看MIPS32手册"><a href="#回答这个问题之前先看看MIPS32手册" class="headerlink" title="回答这个问题之前先看看MIPS32手册"></a>回答这个问题之前先看看MIPS32手册</h4><ol>
 <li>MIPS32架构定义了CPU寄存器和FPU寄存器：<ul>
-<li>CPU寄存器包括r0 ~ r31，共32个通用寄存器；Program Counter；HI/LO（存放乘除指令结果）。r0可以代表默认0，r31在 <strong>JAL, BLTZAL, BLTZALL, BGEZAL, BGEZALL</strong> 指令中表示默认目标地址。</li>
+<li>CPU寄存器包括r0 ~ r31，共32个通用寄存器；Program Counter；HI&#x2F;LO（存放乘除指令结果）。r0可以代表默认0，r31在 <strong>JAL, BLTZAL, BLTZALL, BGEZAL, BGEZALL</strong> 指令中表示默认目标地址。</li>
 <li>FPU寄存器包括32个通用寄存器，存放单精度浮点数；5个控制寄存器（暂时不清楚用法）。</li>
 </ul>
 </li>
@@ -135,10 +135,11 @@
 <li>对齐策略：<ul>
 <li>半字（2 byte）数据要对齐0，2，4…</li>
 <li>字数据（4 byte）数据对齐0，4，8…</li>
-<li>双字数据（8 byte）数据对齐0，8，16…<h4 id="个人思考"><a href="#个人思考" class="headerlink" title="个人思考"></a>个人思考</h4>计算机的寄存器用于暂存数据和指令，如果没有寄存器，那就需要其他介质作为替代，比如内存。如果没有内存，也可以是外部指令流输入控制计算机运行，但是为了暂存中间结果，始终需要有一个存储器模块。</li>
+<li>双字数据（8 byte）数据对齐0，8，16…</li>
 </ul>
 </li>
 </ol>
+<h4 id="个人思考"><a href="#个人思考" class="headerlink" title="个人思考"></a>个人思考</h4><p>计算机的寄存器用于暂存数据和指令，如果没有寄存器，那就需要其他介质作为替代，比如内存。如果没有内存，也可以是外部指令流输入控制计算机运行，但是为了暂存中间结果，始终需要有一个存储器模块。</p>
 <p>MIPS手册描述了编程模型的6个方面：</p>
 <ul>
 <li>CPU数据形式：<ul>
@@ -184,37 +185,10 @@
       </tags>
   </entry>
   <entry>
-    <title>NEMU-pa0</title>
-    <url>/posts/50a57998/</url>
-    <content><![CDATA[<p>主要问题有</p>
-<ul>
-<li>虚拟机网络问题</li>
-<li>github TLS问题</li>
-</ul>
-<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>因为我主机用了代理，允许局域网连接。<br>想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，<br>相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。<br>然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，<br>主机有点像一个默认“网关”？</p>
-<hr>
-<p><font color="red">2023/12/15 update</font></p>
-<p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
-<p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
-<h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#x74;&#x68;&#x75;&#98;&#46;&#99;&#x6f;&#109;">&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#x74;&#x68;&#x75;&#98;&#46;&#99;&#x6f;&#109;</a>。</p>
-<p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#x74;&#104;&#117;&#98;&#46;&#99;&#111;&#x6d;">&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#x74;&#104;&#117;&#98;&#46;&#99;&#111;&#x6d;</a>/仓库地址，而不是http或https</p>
-<h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
-<p>以后再学</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>ICS实验</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>QQ的存储空间为什么会越来越大</title>
     <url>/posts/cda2b7f1/</url>
     <content><![CDATA[<h3 id="注意到问题的缘由"><a href="#注意到问题的缘由" class="headerlink" title="注意到问题的缘由"></a>注意到问题的缘由</h3><p>我有定期清理硬盘空间的习惯，除了用dism++清理系统临时文件以外，还会手动去检查一些占用空间比较大的文件夹。</p>
-<p>事情就发生在上一次清理空间的时候。我习惯性地打开QQ存储文件主目录，然后删除 QQ/&lt;qq号&gt;/Image/Gourp2 里的所有文件。关于这里，还有一点想吐槽的：</p>
+<p>事情就发生在上一次清理空间的时候。我习惯性地打开QQ存储文件主目录，然后删除 QQ&#x2F;&lt;qq号&gt;&#x2F;Image&#x2F;Gourp2 里的所有文件。关于这里，还有一点想吐槽的：</p>
 <ul>
 <li>QQ为了加速图片检索，以Gourp2文件夹为根建了一颗B+树，所以点开文件夹会看到很多个名称长度为2的子文件夹，子文件夹下又有若干个名称长度为2的子文件夹，里面存储的就是文件前缀名相同的几张图片。结果就是删除的时候系统会做很多额外的检查，比如找文件索引、检查权限等等，因为删除实际上也是文件的移动，移动到回收站而已，整个删除过程速度非常慢。</li>
 </ul>
@@ -229,14 +203,67 @@
       </categories>
   </entry>
   <entry>
+    <title>NEMU-pa0</title>
+    <url>/posts/50a57998/</url>
+    <content><![CDATA[<p>主要问题有</p>
+<ul>
+<li>虚拟机网络问题</li>
+<li>github TLS问题</li>
+</ul>
+<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>因为我主机用了代理，允许局域网连接。<br>想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，<br>相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。<br>然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，<br>主机有点像一个默认“网关”？</p>
+<hr>
+<p><font color="red">2023&#x2F;12&#x2F;15 update</font></p>
+<p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
+<p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
+<h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#x67;&#105;&#116;&#x40;&#103;&#105;&#x74;&#x68;&#117;&#x62;&#46;&#x63;&#x6f;&#x6d;">&#x67;&#105;&#116;&#x40;&#103;&#105;&#x74;&#x68;&#117;&#x62;&#46;&#x63;&#x6f;&#x6d;</a>。</p>
+<p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#103;&#105;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#x75;&#98;&#x2e;&#99;&#x6f;&#109;">&#103;&#105;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#x75;&#98;&#x2e;&#99;&#x6f;&#109;</a>&#x2F;仓库地址，而不是http或https</p>
+<h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
+<p>以后再学</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>ICS实验</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>后端面试</title>
+    <url>/posts/631ff09e/</url>
+    <content><![CDATA[<h3 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h3><p>面试了大约1个小时，面试官对于每个回答的问题会及时给出反馈，还会提一些建议，人很好，挂了我也值了。</p>
+<ul>
+<li>MySQL，多了解一些锁相关的知识。比如什么查询会锁表之类的</li>
+<li>存储引擎，除了InnoDB再了解一些别的</li>
+<li>三次握手和四次挥手，几个状态，从来没记过，现在还债了</li>
+<li>Linux命令，查看网络端口<ul>
+<li>lsof -i [端口号] 查看端口占用</li>
+<li>netstat -tunlp | grep 端口号，列出tcp&#x2F;udp连接，然后过滤查看端口号</li>
+</ul>
+</li>
+<li>布隆过滤器的用处：<ul>
+<li>数据库，避免缓存穿透</li>
+<li>做黑名单</li>
+</ul>
+</li>
+</ul>
+<p><strong>面试的时候有些东西我讲得比较啰嗦，比如缓存穿透那里，可以更简洁一些</strong></p>
+<p>非常不错的面试体验，必须再重申挂了我也值了</p>
+]]></content>
+      <categories>
+        <category>面试</category>
+      </categories>
+  </entry>
+  <entry>
     <title>SRS直播服务器</title>
     <url>/posts/1fa37b1/</url>
     <content><![CDATA[<h3 id="使用SRS-Stack构建"><a href="#使用SRS-Stack构建" class="headerlink" title="使用SRS-Stack构建"></a>使用SRS-Stack构建</h3><p>腾讯云轻量应用服务器提供了应用模板，在控制台重装为音视频流服务器即可快速启动SRS服务。</p>
 <h3 id="使用Docker构建"><a href="#使用Docker构建" class="headerlink" title="使用Docker构建"></a>使用Docker构建</h3><p>SRS文档提供了服务启动脚本，在服务器中安装好docker后运行即可。</p>
 <h4 id="需要注意的点"><a href="#需要注意的点" class="headerlink" title="需要注意的点"></a>需要注意的点</h4><ol>
-<li>docker hub配置镜像源，配置文件为/etc/docker/daemon.json</li>
+<li>docker hub配置镜像源，配置文件为&#x2F;etc&#x2F;docker&#x2F;daemon.json</li>
 <li>在腾讯云控制台开放1935、8080、8000端口，用于推流和访问直播服务器管理后台</li>
-<li>docker默认的推流地址是rmtp://host/live，推流码是livestream</li>
+<li>docker默认的推流地址是rmtp:&#x2F;&#x2F;host&#x2F;live，推流码是livestream</li>
 </ol>
 <h3 id="遇到的问题："><a href="#遇到的问题：" class="headerlink" title="遇到的问题："></a>遇到的问题：</h3><ul>
 <li>默认推流方式需要观看者安装VLC等能接收rmtp流的播放器</li>
@@ -283,203 +310,28 @@
       </categories>
   </entry>
   <entry>
-    <title>基础知识复习笔记1-Java集合</title>
-    <url>/posts/67cafe3d/</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>复习笔记系列记录一些C++/Java，本科专业课的一些知识，强化记忆</p>
-<p>本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。</p>
-<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_queue实际上底层都是deque容器，deque实现了它们所需的方法。Java中类似，所有容器都是从Collection和Map接口派生出来的，从Collection和Map接口又派生出许多子接口，由“集合（容器）”实现这些接口的方法。</p>
-<ul>
-<li><strong>Collection：</strong> 存放单一元素<ul>
-<li><strong>List</strong>：ArrayList，LinkedList</li>
-<li><strong>Set</strong>：HashSet，TreeSet，LinkedHashSet</li>
-<li><strong>Queue</strong>：PiorityQueue<ul>
-<li><strong>Deque</strong>：LinkedList，ArrayDeque</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><strong>Map：</strong> 存放键值对<ul>
-<li>HashMap，TreeMap，LinkedHashMap</li>
-</ul>
-</li>
-</ul>
-<p>以上黑体是接口，常规体是集合/容器。</p>
-<h4 id="ArrayList和LinkedList"><a href="#ArrayList和LinkedList" class="headerlink" title="ArrayList和LinkedList"></a>ArrayList和LinkedList</h4><p>ArrayList类似于C++的vector，底层用数组实现，可以随机访问、自动扩容。扩容机制也和vector类似，大约为1.5倍。</p>
-<p>LinkedList是双向链表，头尾插入删除O(1)，随机位置插入删除平均仍然是O(n)，所以实际上与ArrayList相比优势不大，但适合作为双向队列的接口实现。</p>
-<h4 id="HashSet，HashMap"><a href="#HashSet，HashMap" class="headerlink" title="HashSet，HashMap"></a>HashSet，HashMap</h4><h5 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h5><p>HashMap和HashSet底层实现相同，都是数组+链表。当冲突形成的拉链表长度大于8，而且数组长度大于64时，会将链表转化为红黑树，降低查找开销。数组长度不大于64则优先数组扩容。</p>
-<h5 id="下标计算"><a href="#下标计算" class="headerlink" title="下标计算"></a>下标计算</h5><p>HashSet类似于C++的unordered_set，元素存放无序、不可重复。计算元素存放位置时，先对元素进行一次hashCode()得到哈希值h，再将h和h的高16位或运算，得到最终的hash。然后<code>(n-1) &amp; hash</code>计算出下标。当n是2的幂次时，<code>(n-1)&amp;hash == hash % n</code>，所以HashMap表的长度总是2的幂次。</p>
-<h5 id="冲突处理"><a href="#冲突处理" class="headerlink" title="冲突处理"></a>冲突处理</h5><p>插入的时候，先对元素进行hashcode计算，如果冲突，则调用equals对比元素的值，相同则覆盖值，不同则按照哈希冲突拉链处理。</p>
-<h5 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h5><p>可以用foreach语法糖遍历，但遍历中不能对元素进行remove。如果需要遍历中对元素remove，需要用Iterator。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Iterator&lt;Map.Entry&lt;Object, Object&gt;&gt; it = mp.entrySet().iterator();</span><br><span class="line">while(it.hasNext()) &#123;</span><br><span class="line">    Map.Entry&lt;Object, Object&gt; entry = it.next();</span><br><span class="line">    System.out.println(entry.getKey() + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>foreach语法糖本质也是用迭代器遍历，但是remove会使用集合的remove方法，而不是迭代器的remove方法，导致出错。</p>
-<p>不建议使用map.keySet()获取键表，然后用get(key)的方法遍历，相当于遍历了两次，效率很低。</p>
-<h4 id="TreeSet和TreeMap"><a href="#TreeSet和TreeMap" class="headerlink" title="TreeSet和TreeMap"></a>TreeSet和TreeMap</h4><p>两者关系和HashSet、HashMap差不多，TreeMap是有序的，会默认按照键值升序排序。</p>
-<h5 id="底层实现-1"><a href="#底层实现-1" class="headerlink" title="底层实现"></a>底层实现</h5><p>红黑树，查找和增删的复杂度相同，效率低于HashMap。</p>
-<h5 id="自定义排序"><a href="#自定义排序" class="headerlink" title="自定义排序"></a>自定义排序</h5><ul>
-<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Node</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">char</span> ch;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">char</span> c)</span> </span>&#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hashCode和equals重写是为了让自定义类型在Set中去重</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Integer(value).hashCode() + <span class="keyword">new</span> Character(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">        Node n2 = (Node) o;</span><br><span class="line">        <span class="keyword">return</span> value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Node o)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value &lt; o.value ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li>方法二：在创建TreeMap时定义比较函数compare：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Character, Integer&gt; mp = new TreeMap&lt;&gt;(new Comparator&lt;Character&gt;() &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public int compare(Character o1, Character o2) &#123;</span><br><span class="line">      return o1 &lt; o2 ? 1 : -1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h4><p>PiorityQueue默认是小顶堆，自定义比较的方法和TreeMap一样。</p>
-<ul>
-<li>poll和take都是取出一个元素，poll不会抛出异常</li>
-<li>peek和element都是获取顶端元素，peek不会抛出异常</li>
-<li>offer和add都是添加一个元素，offer不会抛出异常</li>
-<li>Deque的offerFirst、pollLast等同理</li>
-</ul>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础知识复习笔记2-多线程编程</title>
-    <url>/posts/4c5a7656/</url>
-    <content><![CDATA[<h3 id="线程和进程"><a href="#线程和进程" class="headerlink" title="线程和进程"></a>线程和进程</h3><p>经典问题。这个问题在本科学习操作系统时理解比较深刻，通常习惯从以下几个方面进行比较：</p>
-<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><ul>
-<li>进程：进程是程序代码在计算机系统中运行时的一个状态体，代码是静态的，进程是动态的。进程是操作系统分配资源的基本单位，拥有独立的地址空间、代码段、数据段。</li>
-<li>线程：线程是进程中可以独立执行的单元，是CPU调度的基本单位。一个进程可以有多个线程，同一个进程内的线程共享进程的资源，每个线程也拥有自己的线程栈、程序计数器等资源。</li>
-</ul>
-<h4 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h4><ul>
-<li>进程是资源分配单位，线程是最小执行单位。</li>
-<li>进程切换开销大，每个进程都有自己的虚拟地址空间，也都有自己的页表。切换页表涉及到内存访问，页表切换后还会导致页表缓存（TLB）失效，都会导致额外时间开销。同一进程内线程切换不涉及虚拟地址空间切换，只需在线程栈保存上下文。</li>
-<li>多进程适合多核多机并行执行，多线程适合多核。</li>
-</ul>
-<h4 id="C-的多线程编程"><a href="#C-的多线程编程" class="headerlink" title="C++的多线程编程"></a>C++的多线程编程</h4><p>C++11之前没有标准线程库，需要使用 pthread 库。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int pthread_create (pthread_t *thread,pthread_attr_t *attr,</span><br><span class="line">void *(*start_routine)(void *),void *arg);</span><br></pre></td></tr></table></figure>
-<p>将要运行的函数的指针绑定到 pthread_t 对象上，并执行线程任务。</p>
-<p>C++11增加了标准线程库 std::thread。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">std::thread t(foo, args...);</span><br></pre></td></tr></table></figure>
-<p>指定要运行的函数foo和参数args，创建线程t并运行。</p>
-<blockquote>
-<p>C++11有两种方式来等待线程结束：</p>
-<ul>
-<li>detach方式，启动的线程自主在后台运行，当前的代码继续往下执行，不等待新线程结束。<ul>
-<li>调用detach表示thread对象和其表示的线程完全分离；</li>
-<li>分离之后的线程是不在受约束和管制，会单独执行，直到执行完毕释放资源，可以看做是一个daemon线程；</li>
-<li>分离之后thread对象不再表示任何线程；</li>
-<li>分离之后joinable() == false，即使还在执行；</li>
-</ul>
-</li>
-<li>join方式，等待启动的线程完成，才会继续往下执行。假如前面的代码使用这种方式，其输出就会0,1,2,3，因为每次都是前一个线程输出完成了才会进行下一个循环，启动下一个新线程。<ul>
-<li>只有处于活动状态线程才能调用join，可以通过joinable()函数检查;</li>
-<li>joinable() == true表示当前线程是活动线程，才可以调用join函数；</li>
-<li>默认构造函数创建的对象是joinable() == false;</li>
-<li>join只能被调用一次，之后joinable就会变为false，表示线程执行完毕；</li>
-<li>调用 ternimate()的线程必须是 joinable() == false;</li>
-<li>如果线程不调用join()函数，即使执行完毕也是一个活动线程，即joinable() == true，依然可以调用join()函数；</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<p>C++的线程thread创建之后就会运行，结束，销毁，如果要实现可复用的线程池，需要换一种思路：</p>
-<ul>
-<li>创建N个线程，让这些线程执行一个while函数，持续尝试向一个任务队列获取执行任务（执行任务：（函数地址，参数））。</li>
-<li>线程获取到任务则执行，任务队列为空则阻塞休眠。</li>
-<li>任务队列得到新任务时，唤醒一个休眠中的线程。</li>
-<li>任务队列是一个生产者/消费者模型，需要互斥。</li>
-</ul>
-<h4 id="Java的多线程编程"><a href="#Java的多线程编程" class="headerlink" title="Java的多线程编程"></a>Java的多线程编程</h4><p>Java多线程主要通过三种方式实现</p>
-<ul>
-<li>继承Thread类，重写<code>public void run()</code>方法，调用start()方法创建并执行线程任务</li>
-<li>继承Runnable接口，重写<code>public void run()</code>方法，调用start()方法创建并执行线程任务</li>
-<li>继承Callable接口，重写<code>public E call()</code>方法，调用start()方法创建并执行线程任务。call()可以有返回值</li>
-</ul>
-<h5 id="三种方式的共同点"><a href="#三种方式的共同点" class="headerlink" title="三种方式的共同点"></a>三种方式的共同点</h5><ul>
-<li>Runnable和Callable本质上都是对Thread类的封装，其实创建执行线程还是由Thread完成的。所以说Java多线程也可以说就是new一个Thread对象，然后调用start()进行线程初始化、运行。</li>
-<li>无论是继承Thread类还是继承两个接口，直接调用run()方法也是可以执行函数内容的，但并不会创建新线程，而是在main线程里执行。所以说真正关键动作在start()中</li>
-</ul>
-<h4 id="Java的同步和互斥"><a href="#Java的同步和互斥" class="headerlink" title="Java的同步和互斥"></a>Java的同步和互斥</h4><p>主要了解了synchronized关键词和ReentrantLock</p>
-<h5 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h5><p>关键词，可以修饰方法、对象、代码块。被修饰的内容在有一个线程访问时，其他试图访问的线程都会被阻塞。如果修饰的是静态方法，则该类所有对象的该方法都会被上锁（也很容易理解，静态方法是类级共享的）。</p>
-<p>synchronized在早期给人的印象就是重量级锁，开销很大。因为它用到了操作系统底层的互斥锁，涉及到用户/内核态切换。但是Java新版本也有做一些改进：</p>
-<ul>
-<li><strong>锁粗化</strong>：把多个连续的加锁解锁块合并为一个临界代码块。比如连续的字符串append</li>
-<li><strong>锁消除</strong>：如果某个数据对象被认为是不会共享的，就不会对它上锁，比如一个函数内的局部变量，每个线程都是不同的，不会互相访问，就不会上锁</li>
-<li><strong>轻量级锁</strong>：用<font color="red">CAS原子指令</font>代替重量级锁。<font color="red">CAS</font>就是compare and swap，线程将一个读取一个数据的值A，进行操作得到C，写回之前将A和原来的数据值比较，如果相同就写回C，不同就自旋反复尝试。</li>
-<li><strong>偏向锁</strong>：通俗来说，偏向锁也是类似于82原则，一个被共享的的数据有80%的时间都在被同一个线程t1访问，只有20%的时间被其他线程访问。所以偏向锁就会给t1一个偏向锁认证，免去它访问时的CAS操作，只有当其他线程尝试获取偏向锁时，持有偏向锁的线程才会释放锁。</li>
-</ul>
-<h5 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h5><p>ReentrantLock就是可重入锁，一个线程获取到锁后，如果重复获取锁，不会被锁阻塞。重复获取n次锁，就要重复释放n次锁。</p>
-<p>一般的使用方式</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">// 代码</span></span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    lock.unlock();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>基础知识复习笔记3-I/O多路复用</title>
     <url>/posts/830442ea/</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前看图解计算机基础知识的时候，看过几次I/O多路复用的内容，但感觉都没有抓到本质。面试的时候也被问过几次，回答得也不太好。所以重新梳理一下个人理解。</p>
-<h3 id="I-O"><a href="#I-O" class="headerlink" title="I/O"></a>I/O</h3><p>I/O就是输入输出，计算机的存储器（内存）和周边设备的数据传输，最主要的就是文件读取/写入。网络传输也是I/O的一部分，Linux中一切皆文件，网络编程用到的socket也是一个文件描述符。</p>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前看图解计算机基础知识的时候，看过几次I&#x2F;O多路复用的内容，但感觉都没有抓到本质。面试的时候也被问过几次，回答得也不太好。所以重新梳理一下个人理解。</p>
+<h3 id="I-O"><a href="#I-O" class="headerlink" title="I&#x2F;O"></a>I&#x2F;O</h3><p>I&#x2F;O就是输入输出，计算机的存储器（内存）和周边设备的数据传输，最主要的就是文件读取&#x2F;写入。网络传输也是I&#x2F;O的一部分，Linux中一切皆文件，网络编程用到的socket也是一个文件描述符。</p>
 <h4 id="单个进程的文件读取"><a href="#单个进程的文件读取" class="headerlink" title="单个进程的文件读取"></a>单个进程的文件读取</h4><ul>
 <li>文件管理是由操作系统完成的，所以实际的文件数据读取和传输需要切换到内核态。</li>
-<li>相较于内存，外存的文件读取是相当慢的。因此CPU不会白白浪费时间等待，而是会阻塞等待I/O的进程，切换去运行其他进程。直到数据传输准备完毕，内核唤醒等待进程，再继续运行。</li>
+<li>相较于内存，外存的文件读取是相当慢的。因此CPU不会白白浪费时间等待，而是会阻塞等待I&#x2F;O的进程，切换去运行其他进程。直到数据传输准备完毕，内核唤醒等待进程，再继续运行。</li>
 <li>用户态的进程，需要有一个内核态的进程维护其状态。</li>
 </ul>
 <h4 id="多个进程的文件读取"><a href="#多个进程的文件读取" class="headerlink" title="多个进程的文件读取"></a>多个进程的文件读取</h4><ul>
-<li>为每一个进程的I/O流创建一个进程/线程维护其状态。当并发量很大时，系统资源吃不消。</li>
+<li>为每一个进程的I&#x2F;O流创建一个进程&#x2F;线程维护其状态。当并发量很大时，系统资源吃不消。</li>
 </ul>
-<h4 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h4><p>用一个进程维护多个I/O连接（网络连接）</p>
+<h4 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I&#x2F;O多路复用"></a>I&#x2F;O多路复用</h4><p>用一个进程维护多个I&#x2F;O连接（网络连接）</p>
 <h5 id="select"><a href="#select" class="headerlink" title="select"></a>select</h5><p>用户态维护一个连接表，最大长度固定。进程调用select尝试获取数据时，将连接表复制到内核里，由内核进程顺序遍历检查每个连接是否有数据事件更新，有的话做标记，然后再把更新后的表复制回用户态，用户态再遍历连接表，找到那些有数据事件更新的连接。</p>
 <p>所以总共遍历两次，复制两次</p>
 <h5 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h5><p>本质上和select一样，只是固定长度表变成了变长的链表</p>
 <h5 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h5><p>用户态调用epoll_create，在内核态创建epoll对象。内核用一个红黑树维护所有连接，一个链表维护当前有事件的连接。有连接发生事件时，内核自动将其加入到链表中。当用户调用 epoll_wait() 函数时，内核只返回当前有事件的、链表中的连接对象。</p>
 <p>插入新的连接维护对象，查找、更新，因为是红黑树所以都是 log(n)</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>I/O多路复用就是用一个进程维护多个I/O流的连接，因为每个连接都用一个进程或线程去维护开销是很大的。</p>
-<p>I/O多路复用有三种模式，select、poll和epoll。select是采取轮询的模式，将所有连接维护在一个线性表里，每次select都将表复制到内核，由内核检查并更新是否有数据事件发生，再将结果复制回用户态，遍历获取事件更新状态。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>I&#x2F;O多路复用就是用一个进程维护多个I&#x2F;O流的连接，因为每个连接都用一个进程或线程去维护开销是很大的。</p>
+<p>I&#x2F;O多路复用有三种模式，select、poll和epoll。select是采取轮询的模式，将所有连接维护在一个线性表里，每次select都将表复制到内核，由内核检查并更新是否有数据事件发生，再将结果复制回用户态，遍历获取事件更新状态。</p>
 <p>poll和select类似，只是将线性表改成了链表，增加了最大并发连接数。</p>
 <p>epoll则是在内核中用一个红黑树维护所有连接，有连接发生事件时，内核自动将其加入到一个链表中。当用户调用函数想知道哪些连接有数据事件发生时，内核只需要返回链表中的连接对象。</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础知识复习笔记4-计算机网络</title>
-    <url>/posts/3d21fd56/</url>
-    <content><![CDATA[<h3 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a>TCP和UDP的区别</h3><p>TCP和UDP都是传输层协议，负责端到端的数据传输，主要区别是：</p>
-<ul>
-<li>TCP是有连接的，UDP是无连接的。TCP传输数据前需要三次握手建立连接，UDP只需要知道对方IP和端口即可发送数据。</li>
-<li>TCP是可靠传输协议，UDP是不可靠的。UDP只管发送数据，不会关心数据包是否到达。TCP则需要保证每一个数据分片都能可靠地交付给对方，所以引入了序列号、确认号、超时重传等机制。</li>
-</ul>
-<h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><ul>
-<li>第一次握手是客户端向服务提供端发起SYNC同步请求，并且附带自己的序列号。</li>
-<li>第二次握手是服务提供方接收到连接请求后，返回一个确认数据包，这个数据包也包含了他自己的序列号，以及SYNC同步标志。</li>
-<li>客户端收到第二次握手的确认包后，再返回一个ACK确认数据包，连接才建立，之后发送数据。</li>
-</ul>
-<h5 id="为什么要三次而不是两次"><a href="#为什么要三次而不是两次" class="headerlink" title="为什么要三次而不是两次"></a>为什么要三次而不是两次</h5><ul>
-<li>如果只有两次握手，实际上只有客户端确认了服务端能够连接，服务端是不知道客户端的连接状态的。假如第二次握手丢失，客户端放弃了连接，而服务端直接就开始发送数据，会造成资源浪费。</li>
-<li>假如第一次握手的数据包在网络中滞留，过一段时间，早就失效的数据包传到服务端，服务端以为是新的连接请求，于是产生第二次握手，然后就以为连接建立了，但实际上这时候客户端已经没有传输需求了，也不会回应服务端，也会造成资源浪费。</li>
-</ul>
-<h5 id="为什么不是四次"><a href="#为什么不是四次" class="headerlink" title="为什么不是四次"></a>为什么不是四次</h5><p>第二次握手实际上把确认收到，和发起连接请求合并到一起了。</p>
-<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><ul>
-<li>第一次挥手：客户端发送FIN数据包，表明打算断开连接，它不再发送数据，但是可以接收数据，进入FIN-WAIT1状态。</li>
-<li>第二次挥手：服务端收到FIN数据，回复一个ACK，表明它知道对方打算断开连接。客户端收到后，进入FIN-WAIT2状态。服务端进入CLOSE-WAIT状态。</li>
-<li>中间 ：服务端继续发送未传输完毕的数据</li>
-<li>第三次挥手：服务端发送FIN数据包，请求关闭连接，进入LAST-ACK状态。</li>
-<li>第四次挥手：客户端回复ACK，进入TIME-WAIT状态，等到两个报文段最长寿命后，CLOSE连接。如果这段时间内收到了服务端的第三次挥手重传，说明第四次挥手没成功发送过去，重传。</li>
-</ul>
-<h5 id="为什么要等两个报文段最长寿命"><a href="#为什么要等两个报文段最长寿命" class="headerlink" title="为什么要等两个报文段最长寿命"></a>为什么要等两个报文段最长寿命</h5><p>因为第四次挥手后，客户端无法得知对方是否收到数据包，并且关闭连接。两个报文段最长寿命就是一发一收的时间，如果这个时间段内没有收到超时重传的消息，就认为服务端收到了最后的ACK。</p>
-<p>如果不等待的话，服务端可能没收到第四次挥手数据，连接无法正常关闭造成资源浪费。</p>
-<h4 id="TCP的拥塞控制、流量控制、滑动窗口等等"><a href="#TCP的拥塞控制、流量控制、滑动窗口等等" class="headerlink" title="TCP的拥塞控制、流量控制、滑动窗口等等"></a>TCP的拥塞控制、流量控制、滑动窗口等等</h4><h5 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h5><p>拥塞控制是针对网络的，避免网络中存在过多的报文造成网络信道拥堵。主要用慢开始、拥塞避免算法，快速重传、快速回复。</p>
-<p><strong>慢开始、拥塞避免</strong><br>发送方维护一个拥塞窗口大小，最开始拥塞窗口为1个单位，每次成功收到确认后就将窗口大小加倍。当窗口大小大于阈值时，就执行拥塞避免算法，每次窗口大小加一个单位。</p>
-<p>如果出现数据丢失，将窗口设为1，执行慢开始算法，并且阈值设为数据丢失时的窗口大小的一半。</p>
-<p><strong>快重传、快恢复</strong><br>快重传是，如果发送方收到连续三个重复确认就立刻重传对方尚未收到的报文段，而不是等重传计时器时间到期。</p>
-<p>同时，因为能收到三个重复ACK，所以认为网络虽然拥堵，但还是有一定的运输能力，所以窗口不会设为1，而是设为阈值减半后的大小，并且继续执行拥塞避免算法。</p>
-<h5 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h5><p>流量控制是针对发送方和接收方数据处理能力的。双方各自维护一个窗口，并且在发送数据时会告知对方自己空闲窗口大小，如果窗口没有空闲，就会减缓数据发送速度。</p>
-<h5 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h5><p>滑动窗口的设置是为了避免出现每一个数据包发送后都要等待确认才能发送下一个数据包这样的情况，效率很低。滑动窗口外的左侧，可以看作是已经发送、确认的数据包；滑动窗口内的话，只有最左侧边缘的连续的数据包被确认了，窗口才会向右移动。</p>
-<h3 id="输入网址后发生的事情"><a href="#输入网址后发生的事情" class="headerlink" title="输入网址后发生的事情"></a>输入网址后发生的事情</h3><ol>
-<li>URL解析：url是统一资源定位符，为了访问服务器的资源，需要将url解析为IP地址，就会用到DNS协议。如果浏览器有域名缓存，或者系统本地有相应的hosts项，那就不用再向DNS服务器发送请求，直接就可以解析。如果没有的话，主机就会依次向本地、上级的DNS服务器递归地发送请求。</li>
-<li>解析得到IP地址后，为了传输HTTP请求，还要和服务器建立TCP连接，也就是三次握手。传输层往下，网络层根据IP对数据包进行转发，再往下还有ARP协议通过IP地址获得下一次转发的MAC地址。</li>
-<li>TCP连接建立后，服务器收到HTTP请求，将网页资源封装，再传给主机。主机收到网页资源数据后，由浏览器进行解析和渲染，同时页面内如果还有其他资源，则还会构造相应的HTTP请求去获取这些资源文件。</li>
-</ol>
 ]]></content>
       <categories>
         <category>学习</category>
@@ -497,7 +349,7 @@
 <li>环境变量，命令行参数</li>
 <li>栈（高地址向低地址增长）：存放局部变量，函数参数，返回地址等，由编译器管理</li>
 <li>（空闲区域）</li>
-<li>堆（低地址向高地址增长）：由程序员new/delete管理，容量远大于栈</li>
+<li>堆（低地址向高地址增长）：由程序员new&#x2F;delete管理，容量远大于栈</li>
 <li>BSS段：未初始化的数据</li>
 <li>data段：已初始化的数据，全局变量，静态变量</li>
 <li>text段：代码区</li>
@@ -506,7 +358,7 @@
 <ul>
 <li>内存泄漏：某段代码每次执行都会申请一小段内存，结束后却不释放，久而久之就会吞噬系统的空闲内存，最终导致程序甚至系统崩溃。<ul>
 <li>如果一段程序随着时间运行，内存占用越来越大且没有饱和的趋势，可能就出现了内存泄漏。</li>
-<li>内存泄漏的静态检测方法，首先就是对代码进行检查，看是否有new/delete不匹配的地方。</li>
+<li>内存泄漏的静态检测方法，首先就是对代码进行检查，看是否有new&#x2F;delete不匹配的地方。</li>
 <li>也可以用工具进行检查，比如valgrind可以检查程序是否有非法使用内存的问题。</li>
 </ul>
 </li>
@@ -563,7 +415,7 @@
     <title>基础知识复习笔记7-泛型和模板类</title>
     <url>/posts/10facbba/</url>
     <content><![CDATA[<h3 id="模板类"><a href="#模板类" class="headerlink" title="模板类"></a>模板类</h3><p>模板类是C++泛型编程的实现之一，STL的容器都是模板类实现的。模板类可以不具体指定数据的类型，实现一份代码多处复用。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> E,...&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">demo</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">demo</span>(T x, E, y) &#123;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">T <span class="title">fun</span><span class="params">(E v)</span> </span>&#123;</span><br><span class="line">        T t;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">        <span class="keyword">return</span> t; </span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    T a;</span><br><span class="line">    E b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> E,...&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">demo</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">demo</span>(T x, E, y) &#123;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">T <span class="title">fun</span><span class="params">(E v)</span> </span>&#123;</span><br><span class="line">        T t;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">        <span class="keyword">return</span> t; </span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    T a;</span><br><span class="line">    E b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>模板函数类似。</p>
 <h3 id="Java泛型"><a href="#Java泛型" class="headerlink" title="Java泛型"></a>Java泛型</h3><p>Java的泛型写法和C++类似，前面不需要加template标识。</p>
@@ -575,6 +427,134 @@
 <li>类型参数T和通配符?。类型参数用于声明泛型类，?用在泛型类的使用中。</li>
 </ul>
 ]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础知识复习笔记1-Java集合</title>
+    <url>/posts/67cafe3d/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>复习笔记系列记录一些C++&#x2F;Java，本科专业课的一些知识，强化记忆</p>
+<p>本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。</p>
+<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_queue实际上底层都是deque容器，deque实现了它们所需的方法。Java中类似，所有容器都是从Collection和Map接口派生出来的，从Collection和Map接口又派生出许多子接口，由“集合（容器）”实现这些接口的方法。</p>
+<ul>
+<li><strong>Collection：</strong> 存放单一元素<ul>
+<li><strong>List</strong>：ArrayList，LinkedList</li>
+<li><strong>Set</strong>：HashSet，TreeSet，LinkedHashSet</li>
+<li><strong>Queue</strong>：PiorityQueue<ul>
+<li><strong>Deque</strong>：LinkedList，ArrayDeque</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Map：</strong> 存放键值对<ul>
+<li>HashMap，TreeMap，LinkedHashMap</li>
+</ul>
+</li>
+</ul>
+<p>以上黑体是接口，常规体是集合&#x2F;容器。</p>
+<h4 id="ArrayList和LinkedList"><a href="#ArrayList和LinkedList" class="headerlink" title="ArrayList和LinkedList"></a>ArrayList和LinkedList</h4><p>ArrayList类似于C++的vector，底层用数组实现，可以随机访问、自动扩容。扩容机制也和vector类似，大约为1.5倍。</p>
+<p>LinkedList是双向链表，头尾插入删除O(1)，随机位置插入删除平均仍然是O(n)，所以实际上与ArrayList相比优势不大，但适合作为双向队列的接口实现。</p>
+<h4 id="HashSet，HashMap"><a href="#HashSet，HashMap" class="headerlink" title="HashSet，HashMap"></a>HashSet，HashMap</h4><h5 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h5><p>HashMap和HashSet底层实现相同，都是数组+链表。当冲突形成的拉链表长度大于8，而且数组长度大于64时，会将链表转化为红黑树，降低查找开销。数组长度不大于64则优先数组扩容。</p>
+<h5 id="下标计算"><a href="#下标计算" class="headerlink" title="下标计算"></a>下标计算</h5><p>HashSet类似于C++的unordered_set，元素存放无序、不可重复。计算元素存放位置时，先对元素进行一次hashCode()得到哈希值h，再将h和h的高16位或运算，得到最终的hash。然后<code>(n-1) &amp; hash</code>计算出下标。当n是2的幂次时，<code>(n-1)&amp;hash == hash % n</code>，所以HashMap表的长度总是2的幂次。</p>
+<h5 id="冲突处理"><a href="#冲突处理" class="headerlink" title="冲突处理"></a>冲突处理</h5><p>插入的时候，先对元素进行hashcode计算，如果冲突，则调用equals对比元素的值，相同则覆盖值，不同则按照哈希冲突拉链处理。</p>
+<h5 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h5><p>可以用foreach语法糖遍历，但遍历中不能对元素进行remove。如果需要遍历中对元素remove，需要用Iterator。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Iterator&lt;Map.Entry&lt;Object, Object&gt;&gt; it = mp.entrySet().iterator();</span><br><span class="line">while(it.hasNext()) &#123;</span><br><span class="line">    Map.Entry&lt;Object, Object&gt; entry = it.next();</span><br><span class="line">    System.out.println(entry.getKey() + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>foreach语法糖本质也是用迭代器遍历，但是remove会使用集合的remove方法，而不是迭代器的remove方法，导致出错。</p>
+<p>不建议使用map.keySet()获取键表，然后用get(key)的方法遍历，相当于遍历了两次，效率很低。</p>
+<h4 id="TreeSet和TreeMap"><a href="#TreeSet和TreeMap" class="headerlink" title="TreeSet和TreeMap"></a>TreeSet和TreeMap</h4><p>两者关系和HashSet、HashMap差不多，TreeMap是有序的，会默认按照键值升序排序。</p>
+<h5 id="底层实现-1"><a href="#底层实现-1" class="headerlink" title="底层实现"></a>底层实现</h5><p>红黑树，查找和增删的复杂度相同，效率低于HashMap。</p>
+<h5 id="自定义排序"><a href="#自定义排序" class="headerlink" title="自定义排序"></a>自定义排序</h5><ul>
+<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">  <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Node</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Node&gt;&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> value;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">char</span> ch;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(<span class="type">int</span> v, <span class="type">char</span> c)</span> &#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hashCode和equals重写是为了让自定义类型在Set中去重</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Integer</span>(value).hashCode() + <span class="keyword">new</span> <span class="title class_">Character</span>(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">n2</span> <span class="operator">=</span> (Node) o;</span><br><span class="line">        <span class="keyword">return</span> value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Node o)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> value &lt; o.value ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>方法二：在创建TreeMap时定义比较函数compare：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Character, Integer&gt; mp = new TreeMap&lt;&gt;(new Comparator&lt;Character&gt;() &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public int compare(Character o1, Character o2) &#123;</span><br><span class="line">      return o1 &lt; o2 ? 1 : -1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h4><p>PiorityQueue默认是小顶堆，自定义比较的方法和TreeMap一样。</p>
+<ul>
+<li>poll和take都是取出一个元素，poll不会抛出异常</li>
+<li>peek和element都是获取顶端元素，peek不会抛出异常</li>
+<li>offer和add都是添加一个元素，offer不会抛出异常</li>
+<li>Deque的offerFirst、pollLast等同理</li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础知识复习笔记2-多线程编程</title>
+    <url>/posts/4c5a7656/</url>
+    <content><![CDATA[<h3 id="线程和进程"><a href="#线程和进程" class="headerlink" title="线程和进程"></a>线程和进程</h3><p>经典问题。这个问题在本科学习操作系统时理解比较深刻，通常习惯从以下几个方面进行比较：</p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><ul>
+<li>进程：进程是程序代码在计算机系统中运行时的一个状态体，代码是静态的，进程是动态的。进程是操作系统分配资源的基本单位，拥有独立的地址空间、代码段、数据段。</li>
+<li>线程：线程是进程中可以独立执行的单元，是CPU调度的基本单位。一个进程可以有多个线程，同一个进程内的线程共享进程的资源，每个线程也拥有自己的线程栈、程序计数器等资源。</li>
+</ul>
+<h4 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h4><ul>
+<li>进程是资源分配单位，线程是最小执行单位。</li>
+<li>进程切换开销大，每个进程都有自己的虚拟地址空间，也都有自己的页表。切换页表涉及到内存访问，页表切换后还会导致页表缓存（TLB）失效，都会导致额外时间开销。同一进程内线程切换不涉及虚拟地址空间切换，只需在线程栈保存上下文。</li>
+<li>多进程适合多核多机并行执行，多线程适合多核。</li>
+</ul>
+<h4 id="C-的多线程编程"><a href="#C-的多线程编程" class="headerlink" title="C++的多线程编程"></a>C++的多线程编程</h4><p>C++11之前没有标准线程库，需要使用 pthread 库。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int pthread_create (pthread_t *thread,pthread_attr_t *attr,</span><br><span class="line">void *(*start_routine)(void *),void *arg);</span><br></pre></td></tr></table></figure>
+<p>将要运行的函数的指针绑定到 pthread_t 对象上，并执行线程任务。</p>
+<p>C++11增加了标准线程库 std::thread。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">std::thread t(foo, args...);</span><br></pre></td></tr></table></figure>
+<p>指定要运行的函数foo和参数args，创建线程t并运行。</p>
+<blockquote>
+<p>C++11有两种方式来等待线程结束：</p>
+<ul>
+<li>detach方式，启动的线程自主在后台运行，当前的代码继续往下执行，不等待新线程结束。<ul>
+<li>调用detach表示thread对象和其表示的线程完全分离；</li>
+<li>分离之后的线程是不在受约束和管制，会单独执行，直到执行完毕释放资源，可以看做是一个daemon线程；</li>
+<li>分离之后thread对象不再表示任何线程；</li>
+<li>分离之后joinable() &#x3D;&#x3D; false，即使还在执行；</li>
+</ul>
+</li>
+<li>join方式，等待启动的线程完成，才会继续往下执行。假如前面的代码使用这种方式，其输出就会0,1,2,3，因为每次都是前一个线程输出完成了才会进行下一个循环，启动下一个新线程。<ul>
+<li>只有处于活动状态线程才能调用join，可以通过joinable()函数检查;</li>
+<li>joinable() &#x3D;&#x3D; true表示当前线程是活动线程，才可以调用join函数；</li>
+<li>默认构造函数创建的对象是joinable() &#x3D;&#x3D; false;</li>
+<li>join只能被调用一次，之后joinable就会变为false，表示线程执行完毕；</li>
+<li>调用 ternimate()的线程必须是 joinable() &#x3D;&#x3D; false;</li>
+<li>如果线程不调用join()函数，即使执行完毕也是一个活动线程，即joinable() &#x3D;&#x3D; true，依然可以调用join()函数；</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>C++的线程thread创建之后就会运行，结束，销毁，如果要实现可复用的线程池，需要换一种思路：</p>
+<ul>
+<li>创建N个线程，让这些线程执行一个while函数，持续尝试向一个任务队列获取执行任务（执行任务：（函数地址，参数））。</li>
+<li>线程获取到任务则执行，任务队列为空则阻塞休眠。</li>
+<li>任务队列得到新任务时，唤醒一个休眠中的线程。</li>
+<li>任务队列是一个生产者&#x2F;消费者模型，需要互斥。</li>
+</ul>
+<h4 id="Java的多线程编程"><a href="#Java的多线程编程" class="headerlink" title="Java的多线程编程"></a>Java的多线程编程</h4><p>Java多线程主要通过三种方式实现</p>
+<ul>
+<li>继承Thread类，重写<code>public void run()</code>方法，调用start()方法创建并执行线程任务</li>
+<li>继承Runnable接口，重写<code>public void run()</code>方法，调用start()方法创建并执行线程任务</li>
+<li>继承Callable接口，重写<code>public E call()</code>方法，调用start()方法创建并执行线程任务。call()可以有返回值</li>
+</ul>
+<h5 id="三种方式的共同点"><a href="#三种方式的共同点" class="headerlink" title="三种方式的共同点"></a>三种方式的共同点</h5><ul>
+<li>Runnable和Callable本质上都是对Thread类的封装，其实创建执行线程还是由Thread完成的。所以说Java多线程也可以说就是new一个Thread对象，然后调用start()进行线程初始化、运行。</li>
+<li>无论是继承Thread类还是继承两个接口，直接调用run()方法也是可以执行函数内容的，但并不会创建新线程，而是在main线程里执行。所以说真正关键动作在start()中</li>
+</ul>
+<h4 id="Java的同步和互斥"><a href="#Java的同步和互斥" class="headerlink" title="Java的同步和互斥"></a>Java的同步和互斥</h4><p>主要了解了synchronized关键词和ReentrantLock</p>
+<h5 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h5><p>关键词，可以修饰方法、对象、代码块。被修饰的内容在有一个线程访问时，其他试图访问的线程都会被阻塞。如果修饰的是静态方法，则该类所有对象的该方法都会被上锁（也很容易理解，静态方法是类级共享的）。</p>
+<p>synchronized在早期给人的印象就是重量级锁，开销很大。因为它用到了操作系统底层的互斥锁，涉及到用户&#x2F;内核态切换。但是Java新版本也有做一些改进：</p>
+<ul>
+<li><strong>锁粗化</strong>：把多个连续的加锁解锁块合并为一个临界代码块。比如连续的字符串append</li>
+<li><strong>锁消除</strong>：如果某个数据对象被认为是不会共享的，就不会对它上锁，比如一个函数内的局部变量，每个线程都是不同的，不会互相访问，就不会上锁</li>
+<li><strong>轻量级锁</strong>：用<font color="red">CAS原子指令</font>代替重量级锁。<font color="red">CAS</font>就是compare and swap，线程将一个读取一个数据的值A，进行操作得到C，写回之前将A和原来的数据值比较，如果相同就写回C，不同就自旋反复尝试。</li>
+<li><strong>偏向锁</strong>：通俗来说，偏向锁也是类似于82原则，一个被共享的的数据有80%的时间都在被同一个线程t1访问，只有20%的时间被其他线程访问。所以偏向锁就会给t1一个偏向锁认证，免去它访问时的CAS操作，只有当其他线程尝试获取偏向锁时，持有偏向锁的线程才会释放锁。</li>
+</ul>
+<h5 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h5><p>ReentrantLock就是可重入锁，一个线程获取到锁后，如果重复获取锁，不会被锁阻塞。重复获取n次锁，就要重复释放n次锁。</p>
+<p>一般的使用方式</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Lock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();</span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">// 代码</span></span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    lock.unlock();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>学习</category>
       </categories>
@@ -604,6 +584,74 @@
       </tags>
   </entry>
   <entry>
+    <title>基础知识复习笔记4-计算机网络</title>
+    <url>/posts/3d21fd56/</url>
+    <content><![CDATA[<h3 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a>TCP和UDP的区别</h3><p>TCP和UDP都是传输层协议，负责端到端的数据传输，主要区别是：</p>
+<ul>
+<li>TCP是有连接的，UDP是无连接的。TCP传输数据前需要三次握手建立连接，UDP只需要知道对方IP和端口即可发送数据。</li>
+<li>TCP是可靠传输协议，UDP是不可靠的。UDP只管发送数据，不会关心数据包是否到达。TCP则需要保证每一个数据分片都能可靠地交付给对方，所以引入了序列号、确认号、超时重传等机制。</li>
+</ul>
+<h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><ul>
+<li>第一次握手是客户端向服务提供端发起SYNC同步请求，并且附带自己的序列号。</li>
+<li>第二次握手是服务提供方接收到连接请求后，返回一个确认数据包，这个数据包也包含了他自己的序列号，以及SYNC同步标志。</li>
+<li>客户端收到第二次握手的确认包后，再返回一个ACK确认数据包，连接才建立，之后发送数据。</li>
+</ul>
+<h5 id="为什么要三次而不是两次"><a href="#为什么要三次而不是两次" class="headerlink" title="为什么要三次而不是两次"></a>为什么要三次而不是两次</h5><ul>
+<li>如果只有两次握手，实际上只有客户端确认了服务端能够连接，服务端是不知道客户端的连接状态的。假如第二次握手丢失，客户端放弃了连接，而服务端直接就开始发送数据，会造成资源浪费。</li>
+<li>假如第一次握手的数据包在网络中滞留，过一段时间，早就失效的数据包传到服务端，服务端以为是新的连接请求，于是产生第二次握手，然后就以为连接建立了，但实际上这时候客户端已经没有传输需求了，也不会回应服务端，也会造成资源浪费。</li>
+</ul>
+<h5 id="为什么不是四次"><a href="#为什么不是四次" class="headerlink" title="为什么不是四次"></a>为什么不是四次</h5><p>第二次握手实际上把确认收到，和发起连接请求合并到一起了。</p>
+<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><ul>
+<li>第一次挥手：客户端发送FIN数据包，表明打算断开连接，它不再发送数据，但是可以接收数据，进入FIN-WAIT1状态。</li>
+<li>第二次挥手：服务端收到FIN数据，回复一个ACK，表明它知道对方打算断开连接。客户端收到后，进入FIN-WAIT2状态。服务端进入CLOSE-WAIT状态。</li>
+<li>中间 ：服务端继续发送未传输完毕的数据</li>
+<li>第三次挥手：服务端发送FIN数据包，请求关闭连接，进入LAST-ACK状态。</li>
+<li>第四次挥手：客户端回复ACK，进入TIME-WAIT状态，等到两个报文段最长寿命后，CLOSE连接。如果这段时间内收到了服务端的第三次挥手重传，说明第四次挥手没成功发送过去，重传。</li>
+</ul>
+<h5 id="为什么要等两个报文段最长寿命"><a href="#为什么要等两个报文段最长寿命" class="headerlink" title="为什么要等两个报文段最长寿命"></a>为什么要等两个报文段最长寿命</h5><p>因为第四次挥手后，客户端无法得知对方是否收到数据包，并且关闭连接。两个报文段最长寿命就是一发一收的时间，如果这个时间段内没有收到超时重传的消息，就认为服务端收到了最后的ACK。</p>
+<p>如果不等待的话，服务端可能没收到第四次挥手数据，连接无法正常关闭造成资源浪费。</p>
+<h4 id="TCP的拥塞控制、流量控制、滑动窗口等等"><a href="#TCP的拥塞控制、流量控制、滑动窗口等等" class="headerlink" title="TCP的拥塞控制、流量控制、滑动窗口等等"></a>TCP的拥塞控制、流量控制、滑动窗口等等</h4><h5 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h5><p>拥塞控制是针对网络的，避免网络中存在过多的报文造成网络信道拥堵。主要用慢开始、拥塞避免算法，快速重传、快速回复。</p>
+<p><strong>慢开始、拥塞避免</strong><br>发送方维护一个拥塞窗口大小，最开始拥塞窗口为1个单位，每次成功收到确认后就将窗口大小加倍。当窗口大小大于阈值时，就执行拥塞避免算法，每次窗口大小加一个单位。</p>
+<p>如果出现数据丢失，将窗口设为1，执行慢开始算法，并且阈值设为数据丢失时的窗口大小的一半。</p>
+<p><strong>快重传、快恢复</strong><br>快重传是，如果发送方收到连续三个重复确认就立刻重传对方尚未收到的报文段，而不是等重传计时器时间到期。</p>
+<p>同时，因为能收到三个重复ACK，所以认为网络虽然拥堵，但还是有一定的运输能力，所以窗口不会设为1，而是设为阈值减半后的大小，并且继续执行拥塞避免算法。</p>
+<h5 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h5><p>流量控制是针对发送方和接收方数据处理能力的。双方各自维护一个窗口，并且在发送数据时会告知对方自己空闲窗口大小，如果窗口没有空闲，就会减缓数据发送速度。</p>
+<h5 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h5><p>滑动窗口的设置是为了避免出现每一个数据包发送后都要等待确认才能发送下一个数据包这样的情况，效率很低。滑动窗口外的左侧，可以看作是已经发送、确认的数据包；滑动窗口内的话，只有最左侧边缘的连续的数据包被确认了，窗口才会向右移动。</p>
+<h3 id="输入网址后发生的事情"><a href="#输入网址后发生的事情" class="headerlink" title="输入网址后发生的事情"></a>输入网址后发生的事情</h3><ol>
+<li>URL解析：url是统一资源定位符，为了访问服务器的资源，需要将url解析为IP地址，就会用到DNS协议。如果浏览器有域名缓存，或者系统本地有相应的hosts项，那就不用再向DNS服务器发送请求，直接就可以解析。如果没有的话，主机就会依次向本地、上级的DNS服务器递归地发送请求。</li>
+<li>解析得到IP地址后，为了传输HTTP请求，还要和服务器建立TCP连接，也就是三次握手。传输层往下，网络层根据IP对数据包进行转发，再往下还有ARP协议通过IP地址获得下一次转发的MAC地址。</li>
+<li>TCP连接建立后，服务器收到HTTP请求，将网页资源封装，再传给主机。主机收到网页资源数据后，由浏览器进行解析和渲染，同时页面内如果还有其他资源，则还会构造相应的HTTP请求去获取这些资源文件。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>远程软件控制Manjaro</title>
+    <url>/posts/1075cfa9/</url>
+    <content><![CDATA[<h3 id="为什么要用Manjaro"><a href="#为什么要用Manjaro" class="headerlink" title="为什么要用Manjaro"></a>为什么要用Manjaro</h3><p>实验室电脑配置很旧，且常年不关机导致硬件老化严重，很难带动Windwos系统，于是把系统盘格式化了<br>受人影响想试试arch linux，又有点怕麻烦所以用了Manjaro</p>
+<h3 id="下载软件"><a href="#下载软件" class="headerlink" title="下载软件"></a>下载软件</h3><p>Manjaro可以用pacma build直接构建软件</p>
+<p>记得在teamviewer官网上把以前的电脑给删除了，不然限制用户数</p>
+<p>anydesk也还可以用</p>
+<h3 id="解决远程软件无法显示（黑屏）"><a href="#解决远程软件无法显示（黑屏）" class="headerlink" title="解决远程软件无法显示（黑屏）"></a>解决远程软件无法显示（黑屏）</h3><p>在&#x2F;etc&#x2F;gdm3&#x2F;custom.conf，允许自动登录，填上用户名</p>
+<p>最后一行设置<code>WaylandEnable=false</code></p>
+<h3 id="解决无显示器导致卡顿"><a href="#解决无显示器导致卡顿" class="headerlink" title="解决无显示器导致卡顿"></a>解决无显示器导致卡顿</h3><p>安装xf86，sudo pacman -S xf86-video-dummy</p>
+<p>修改配置 sudo gedit &#x2F;etc&#x2F;X11&#x2F;xorg.conf</p>
+<p>抄来的配置，随便了能用就行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Section &quot;Device&quot;</span><br><span class="line">    Identifier  &quot;Configured Video Device&quot;</span><br><span class="line">    Driver      &quot;dummy&quot;</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Monitor&quot;</span><br><span class="line">    Identifier  &quot;Configured Monitor&quot;</span><br><span class="line">    HorizSync 31.5-48.5</span><br><span class="line">    VertRefresh 50-70</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Screen&quot;</span><br><span class="line">    Identifier  &quot;Default Screen&quot;</span><br><span class="line">    Monitor     &quot;Configured Monitor&quot;</span><br><span class="line">    Device      &quot;Configured Video Device&quot;</span><br><span class="line">    DefaultDepth 24</span><br><span class="line">    SubSection &quot;Display&quot;</span><br><span class="line">        Depth 24</span><br><span class="line">        Modes &quot;1920x1080&quot;</span><br><span class="line">    EndSubSection</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>Manjaro</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>如何提问、如何解决遇到的问题</title>
     <url>/posts/9429079c/</url>
     <content><![CDATA[<h3 id="提问之前"><a href="#提问之前" class="headerlink" title="提问之前"></a>提问之前</h3><ul>
@@ -623,49 +671,28 @@
 ]]></content>
   </entry>
   <entry>
-    <title>远程软件控制Manjaro</title>
-    <url>/posts/1075cfa9/</url>
-    <content><![CDATA[<h3 id="为什么要用Manjaro"><a href="#为什么要用Manjaro" class="headerlink" title="为什么要用Manjaro"></a>为什么要用Manjaro</h3><p>实验室电脑配置很旧，且常年不关机导致硬件老化严重，很难带动Windwos系统，于是把系统盘格式化了<br>受人影响想试试arch linux，又有点怕麻烦所以用了Manjaro</p>
-<h3 id="下载软件"><a href="#下载软件" class="headerlink" title="下载软件"></a>下载软件</h3><p>Manjaro可以用pacma build直接构建软件</p>
-<p>记得在teamviewer官网上把以前的电脑给删除了，不然限制用户数</p>
-<p>anydesk也还可以用</p>
-<h3 id="解决远程软件无法显示（黑屏）"><a href="#解决远程软件无法显示（黑屏）" class="headerlink" title="解决远程软件无法显示（黑屏）"></a>解决远程软件无法显示（黑屏）</h3><p>在/etc/gdm3/custom.conf，允许自动登录，填上用户名</p>
-<p>最后一行设置<code>WaylandEnable=false</code></p>
-<h3 id="解决无显示器导致卡顿"><a href="#解决无显示器导致卡顿" class="headerlink" title="解决无显示器导致卡顿"></a>解决无显示器导致卡顿</h3><p>安装xf86，sudo pacman -S xf86-video-dummy</p>
-<p>修改配置 sudo gedit /etc/X11/xorg.conf</p>
-<p>抄来的配置，随便了能用就行</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Section &quot;Device&quot;</span><br><span class="line">    Identifier  &quot;Configured Video Device&quot;</span><br><span class="line">    Driver      &quot;dummy&quot;</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Monitor&quot;</span><br><span class="line">    Identifier  &quot;Configured Monitor&quot;</span><br><span class="line">    HorizSync 31.5-48.5</span><br><span class="line">    VertRefresh 50-70</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Screen&quot;</span><br><span class="line">    Identifier  &quot;Default Screen&quot;</span><br><span class="line">    Monitor     &quot;Configured Monitor&quot;</span><br><span class="line">    Device      &quot;Configured Video Device&quot;</span><br><span class="line">    DefaultDepth 24</span><br><span class="line">    SubSection &quot;Display&quot;</span><br><span class="line">        Depth 24</span><br><span class="line">        Modes &quot;1920x1080&quot;</span><br><span class="line">    EndSubSection</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>Manjaro</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>露营物品列表</title>
     <url>/posts/59b9e0e2/</url>
     <content><![CDATA[<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ol>
 <li>确定目的地。如果选择有人经营的露营营地，可以减少一些装备的准备。如果是无人看守的地方，最好提前看好附近有无公共厕所。</li>
 <li>预订酒店。有些地方会提供民宿+野外烧烤的服务，也可以在露营地附近订住宿。露宿野外有风险。</li>
-<li>提前一天入住酒店，第二天早上开始活动，可以视情况晚上收摊或酒店再住一晚。<h3 id="物品列表"><a href="#物品列表" class="headerlink" title="物品列表"></a>物品列表</h3></li>
+<li>提前一天入住酒店，第二天早上开始活动，可以视情况晚上收摊或酒店再住一晚。</li>
 </ol>
-<ul>
-<li>可折叠桌椅。椅子数量 = 人数</li>
+<h3 id="物品列表"><a href="#物品列表" class="headerlink" title="物品列表"></a>物品列表</h3><ul>
+<li>可折叠桌椅。椅子数量 &#x3D; 人数</li>
 <li>地垫。2到3张</li>
-<li>露营用天幕 / 帐篷。天幕优先级 &gt; 帐篷</li>
+<li>露营用天幕 &#x2F; 帐篷。天幕优先级 &gt; 帐篷</li>
 <li>烧水壶 + 水杯</li>
 <li>一次性烧烤架。2个（大概能烤3小时）</li>
 <li>打火石。（比打火机用起来炫酷一些）</li>
 <li>应急灯。手电筒</li>
 <li>小刀</li>
-<li>一次性餐具。份数 = 人数 * 2。也可以自带餐盒。</li>
+<li>一次性餐具。份数 &#x3D; 人数 * 2。也可以自带餐盒。</li>
 <li>酒精湿巾</li>
 <li>抽纸</li>
-<li>矿泉水。6L一桶<h3 id="食品列表"><a href="#食品列表" class="headerlink" title="食品列表"></a>食品列表</h3></li>
+<li>矿泉水。6L一桶</li>
 </ul>
-<p><strong><font color="red">野外烧烤 / 方便食品 / 零食 = 4：4：2</font></strong></p>
+<h3 id="食品列表"><a href="#食品列表" class="headerlink" title="食品列表"></a>食品列表</h3><p><strong><font color="red">野外烧烤 &#x2F; 方便食品 &#x2F; 零食 &#x3D; 4：4：2</font></strong></p>
 <hr>
 <ul>
 <li>烤肉串。商超里有冷冻腌制串，一包</li>
