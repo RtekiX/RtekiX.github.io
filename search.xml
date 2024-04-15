@@ -1,79 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>2024-03-01-oppo一面</title>
-    <url>/posts/e8b72eb/</url>
-    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>2月29日上午邮件通知面试，3月1日下午14:10开始，调试设备约5分钟，面试时长约30分钟，无手撕代码。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><ul>
-<li><strong>自我介绍</strong>：主要介绍了我的本科、硕士经历，常用编程语言，业余项目。</li>
-<li><strong>个人介绍中提到了论文，介绍论文工作和贡献</strong>：主要从研究背景、解决方法、创新点三方面讲了一下。</li>
-<li><strong>论文中怎麽判断用户是否恶意，用哪些属性</strong>：我理解的意思是，怎么筛选重要属性和非重要属性。主要根据过往文献总结、个人经验，筛选出“粉丝、关注、博客数、是否开启定位、是否开启账号保护”这几项属性为比较重要的。</li>
-<li><strong>C++的内存管理</strong>：new和delete、智能指针</li>
-<li><strong>深入讲一下new</strong>：new主要做三部分工作，计算对象大小、在堆上开辟空间，调用类构造函数，将对象绑定到开辟空间的地址上（返回指针）</li>
-<li><strong>多线程编程了解哪些</strong>：用C++写过一个生产者消费者程序，用mutex、条件变量、int类型的资源标记数定义了信号量的P、V操作，用于临界资源管理。对C++的队列容器进行了包装，用三个信号量分别用于标志队列未满、队列未空以及当前是否有线程访问队列。</li>
-<li><strong>用的什么队列</strong>：猜测是联想到了Java中队列有很多种实现形式，说明了用的就是C++中的默认队列。<font color="red">这里回答有一点错误，C++的queue是一个容器适配器，类似于Java中的接口，默认实现方式其实是deque。</font>之后我也讲了一下deque的底层，是多块不连续内存加一个数组实现的。以及优先队列是堆。</li>
-<li><strong>介绍最有价值的项目</strong>：其实都是业余项目，简单讲了一下QQ聊天机器人的架构。Nonebot+Gocqhttp，Nonebot是Onebot协议的实现，类似于一个Python的SDK。Gocqhttp通俗来说是模拟QQ客户端的一个程序，与腾讯的消息服务器通信。我做的是Nonebot框架下的功能插件开发，包括点歌、记账、定时提醒等。顺便讲了一下消息传递的优先级模式。</li>
-<li><strong>反问</strong>：<ul>
-<li>研发有很多方向，具体是由谁定？——主要看个人兴趣</li>
-<li>Java了解比较浅，有没有关系？——有导师带，当然自己尽快学习上手最好</li>
-</ul>
-</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>面试官人很好，基本是顺着我的舒适区提问，让我有点不好意思。因为没有手撕环节，整体流程体感比较快。</p>
-]]></content>
-      <categories>
-        <category>面试</category>
-      </categories>
-      <tags>
-        <tag>面试</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>2024-04-11-学习</title>
-    <url>/posts/f44a7f04/</url>
-    <content><![CDATA[<h3 id="objective-C"><a href="#objective-C" class="headerlink" title="objective-C"></a>objective-C</h3><p>objective-C是C语言的超集，属于面向对象的编程语言，但是它有一个比较核心的概念叫Smalltalk，消息传递机制，导致oc和C++的编写方法略有差异。</p>
-<ul>
-<li>objective-C是C语言的严格超集，所有C语言的程序都可以直接被通过oc编译器，也可以直接使用C语言语法</li>
-</ul>
-<h4 id="Smalltalk"><a href="#Smalltalk" class="headerlink" title="Smalltalk"></a>Smalltalk</h4><p>Smalltalk是oc的面向对象语法，用法差距和C++对象调用方法很大，与其说是对象调用方法，不如说是对象之间传递消息。<br>举例来说：</p>
-<ul>
-<li>C++：obj.method(arg1, arg2); 这是对象obj调用method方法</li>
-<li>oc：[obj method : arg1, arg2]; 这是发送一个method的消息给obj对象，即使obj没有method方法，程序也能通过编译，在运行期runtime抛出异常。</li>
-</ul>
-<p>因为运行期才会处理消息，所以可以发送未知消息给对象，即可以很方便实现动态绑定（运行期才决定调用哪个方法）</p>
-<h4 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h4><p>oc当然可以接受C风格字符串，但是通常使用NSString。</p>
-<ul>
-<li>从常量创建NSString对象：NSString* str &#x3D; @”a string”; 使用‘@’符号标注即可。</li>
-</ul>
-<h4 id="类"><a href="#类" class="headerlink" title="类"></a>类</h4><p>oc的类声明和C++相似，但看起来差别又很大。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@interface A : NSObject &#123;</span><br><span class="line">    int a; //默认为protected</span><br><span class="line">    @public</span><br><span class="line">        char b;</span><br><span class="line">    @private </span><br><span class="line">        NSString* c;</span><br><span class="line">&#125;</span><br><span class="line">+(int) class_fun1: (int) arg1 andPar: (char) arg2;</span><br><span class="line"></span><br><span class="line">-(void) instance_fun1;</span><br><span class="line">-(char) instance_fun2: (char) arg1;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-<p>大括号里面的是类成员变量，函数方法格式为：</p>
-<ul>
-<li>+&#x2F;-(返回类型) 函数名称 : (参数类型) 参数名 andPar: …</li>
-<li>+表示类级方法，即静态方法，-表示实例方法，即成员方法</li>
-<li>@interface和@end标识类的开始和结束</li>
-</ul>
-<h4 id="类的实现"><a href="#类的实现" class="headerlink" title="类的实现"></a>类的实现</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@implementation A : NSObject &#123;</span><br><span class="line">    int d; //默认为private</span><br><span class="line">&#125;</span><br><span class="line">+(int) class_fun1: (int) arg1 andPar: (char) arg2 &#123;</span><br><span class="line">    //实现</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void) instance_fun1 &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">-(char) instance_fun2: (char) arg1 &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>实现模块也可以定义变量，默认为private。</p>
-<h4 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h4><p>一般的创建对象方法：</p>
-<ul>
-<li>A *a &#x3D; [[A alloc] init]，init是默认构造函数</li>
-<li>上述写法等同于 A *a &#x3D; [A new]，相当于合并调用alloc和init</li>
-</ul>
-<p>自定义构造方法：</p>
-<ul>
-<li>格式必须为 -(A) initWith… : (type) arg1 : (type) arg2</li>
-<li>调用方法 A *a &#x3D; [[A alloc] initWithXXX : arg1_val arg2 : arg2_val]</li>
-<li>多参数方法中，第一个参数的名称默认为方法名，从第二个参数开始为参数名，参数之间空格隔开</li>
-</ul>
-<h3 id="C-迭代器失效"><a href="#C-迭代器失效" class="headerlink" title="C++迭代器失效"></a>C++迭代器失效</h3><p>vector，使用insert或erase之后，之后的元素的迭代器都会失效。容器扩容，所有迭代器都会失效。应当使用insert或erase返回的迭代器。</p>
-<p>map，erase后被删除的迭代器失效，因此无法执行++操作，需要在删除前保存下一个迭代器位置。</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-  </entry>
-  <entry>
     <title>2024-03-06 笔试</title>
     <url>/posts/c8a3261c/</url>
     <content><![CDATA[<h3 id="最长连续回文子串"><a href="#最长连续回文子串" class="headerlink" title="最长连续回文子串"></a>最长连续回文子串</h3><p>定义dp数组，dp[i][j]表示字符串i到j是否为回文串。</p>
@@ -124,48 +51,58 @@
       </tags>
   </entry>
   <entry>
-    <title>2024/2/21-笔试</title>
-    <url>/posts/4a67726/</url>
-    <content><![CDATA[<h3 id="选择题"><a href="#选择题" class="headerlink" title="选择题"></a>选择题</h3><p>MySQL分布式事务：XA事务，2pc。将分布式事务执行的过程分为两阶段，第一阶段所有需要执行操作的节点准备自身资源数据，检查是否可以提交，向事务管理节点发送precommit的消息。所有节点都准备就绪precommit后，才能开始实际执行事务，期间等待是阻塞的。</p>
-<p>Java垃圾回收：强引用，任何时候都不回收；软引用，空间不足时回收；弱引用和虚引用，任何时候都回收。</p>
-<h3 id="编程题"><a href="#编程题" class="headerlink" title="编程题"></a>编程题</h3><h4 id="第一题忘了，比较简单"><a href="#第一题忘了，比较简单" class="headerlink" title="第一题忘了，比较简单"></a>第一题忘了，比较简单</h4><h4 id="第二题"><a href="#第二题" class="headerlink" title="第二题"></a>第二题</h4><p>第二题题意是，一个数组中，任选两个元素删除，并将它们的和再加入数组，使数组的极差最小。</p>
-<h5 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h5><p>用优先队列读入元素，删除最小的两个元素，再加入数组。过了90%。</p>
-<p>忘记考虑的点：最小的两个元素相加后，可能大于原数组最大的元素，而我直接默认优先队列头的元素最大了，测试数据中可能出现了负数。</p>
-<h4 id="第三题"><a href="#第三题" class="headerlink" title="第三题"></a>第三题</h4><p>n个杯子中有k杯水，每个回合可能的行为：</p>
+    <title>2024-04-11-学习</title>
+    <url>/posts/f44a7f04/</url>
+    <content><![CDATA[<h3 id="objective-C"><a href="#objective-C" class="headerlink" title="objective-C"></a>objective-C</h3><p>objective-C是C语言的超集，属于面向对象的编程语言，但是它有一个比较核心的概念叫Smalltalk，消息传递机制，导致oc和C++的编写方法略有差异。</p>
 <ul>
-<li>随机选择一个杯子</li>
-<li>如果杯子空：则回合结束</li>
-<li>如果杯子不空：上回合喝过水了，则放下杯子回合结束；上回合没喝水，则喝掉杯子里的水</li>
+<li>objective-C是C语言的严格超集，所有C语言的程序都可以直接被通过oc编译器，也可以直接使用C语言语法</li>
 </ul>
-<p>最终求所有水被喝完时的回合数的期望值。</p>
-<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><p>很明显是一个数学题。假如不考虑两次喝水之间的间隙，还剩i杯水的时候，喝到水的概率p&#x3D;i&#x2F;n。此时，喝一杯水的期望回合是：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">T = p*1 + p(1-p)*2 + p(1-p)^2*3 + ... + p(1-p)^n*(n+1)</span><br><span class="line">  = i/n(1-p)^2</span><br></pre></td></tr></table></figure>
-<p>然后令i&#x3D;k，i&#x3D;k-1, … i&#x3D;1，累加即可</p>
-<p>没想出来的地方：两次喝水有间隙——卡在这里很久，实际上只需要在最后的结果加上k-1个回合就可以了。</p>
+<h4 id="Smalltalk"><a href="#Smalltalk" class="headerlink" title="Smalltalk"></a>Smalltalk</h4><p>Smalltalk是oc的面向对象语法，用法差距和C++对象调用方法很大，与其说是对象调用方法，不如说是对象之间传递消息。<br>举例来说：</p>
+<ul>
+<li>C++：obj.method(arg1, arg2); 这是对象obj调用method方法</li>
+<li>oc：[obj method : arg1, arg2]; 这是发送一个method的消息给obj对象，即使obj没有method方法，程序也能通过编译，在运行期runtime抛出异常。</li>
+</ul>
+<p>因为运行期才会处理消息，所以可以发送未知消息给对象，即可以很方便实现动态绑定（运行期才决定调用哪个方法）</p>
+<h4 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h4><p>oc当然可以接受C风格字符串，但是通常使用NSString。</p>
+<ul>
+<li>从常量创建NSString对象：NSString* str &#x3D; @”a string”; 使用‘@’符号标注即可。</li>
+</ul>
+<h4 id="类"><a href="#类" class="headerlink" title="类"></a>类</h4><p>oc的类声明和C++相似，但看起来差别又很大。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@interface A : NSObject &#123;</span><br><span class="line">    int a; //默认为protected</span><br><span class="line">    @public</span><br><span class="line">        char b;</span><br><span class="line">    @private </span><br><span class="line">        NSString* c;</span><br><span class="line">@property NSString* c; //属性</span><br><span class="line">&#125;</span><br><span class="line">+(int) class_fun1: (int) arg1 andPar: (char) arg2;</span><br><span class="line"></span><br><span class="line">-(void) instance_fun1;</span><br><span class="line">-(char) instance_fun2: (char) arg1;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>大括号里面的是类成员变量，函数方法格式为：</p>
+<ul>
+<li>+&#x2F;-(返回类型) 函数名称 : (参数类型) 参数名 andPar: …</li>
+<li>+表示类级方法，即静态方法，-表示实例方法，即成员方法</li>
+<li>@interface和@end标识类的开始和结束</li>
+<li>将变量声明为@property属性，可以自动生成getter和setter方法，减少重复代码</li>
+</ul>
+<h4 id="类的实现"><a href="#类的实现" class="headerlink" title="类的实现"></a>类的实现</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@implementation A : NSObject &#123;</span><br><span class="line">    int d; //默认为private</span><br><span class="line">&#125;</span><br><span class="line">@synthesize c; //这里自动生成getter和setter</span><br><span class="line">+(int) class_fun1: (int) arg1 andPar: (char) arg2 &#123;</span><br><span class="line">    //实现</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void) instance_fun1 &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">-(char) instance_fun2: (char) arg1 &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>实现模块也可以定义变量，默认为private。</p>
+<h4 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h4><p>一般的创建对象方法：</p>
+<ul>
+<li>A *a &#x3D; [[A alloc] init]，init是默认构造函数</li>
+<li>上述写法等同于 A *a &#x3D; [A new]，相当于合并调用alloc和init</li>
+</ul>
+<p>自定义构造方法：</p>
+<ul>
+<li>格式必须为 -(A) initWith… : (type) arg1 : (type) arg2</li>
+<li>调用方法 A *a &#x3D; [[A alloc] initWithXXX : arg1_val arg2 : arg2_val]</li>
+<li>多参数方法中，第一个参数的名称默认为方法名，从第二个参数开始为参数名，参数之间空格隔开</li>
+</ul>
+<h4 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h4><p>协议类似于Java的接口，就是一组没有实现的方法集合。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@protocol Sem</span><br><span class="line">-(void) P;</span><br><span class="line">-(void) V;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>声明实现协议：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@interface A : NSObject&lt;Sem&gt;</span><br><span class="line">// 声明后，implemention就必须实现P和V方法</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="C-迭代器失效"><a href="#C-迭代器失效" class="headerlink" title="C++迭代器失效"></a>C++迭代器失效</h3><p>vector，使用insert或erase之后，之后的元素的迭代器都会失效。容器扩容，所有迭代器都会失效。应当使用insert或erase返回的迭代器。</p>
+<p>map，erase后被删除的迭代器失效，因此无法执行++操作，需要在删除前保存下一个迭代器位置。</p>
 ]]></content>
       <categories>
         <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔试</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>QQ的存储空间为什么会越来越大</title>
-    <url>/posts/cda2b7f1/</url>
-    <content><![CDATA[<h3 id="注意到问题的缘由"><a href="#注意到问题的缘由" class="headerlink" title="注意到问题的缘由"></a>注意到问题的缘由</h3><p>我有定期清理硬盘空间的习惯，除了用dism++清理系统临时文件以外，还会手动去检查一些占用空间比较大的文件夹。</p>
-<p>事情就发生在上一次清理空间的时候。我习惯性地打开QQ存储文件主目录，然后删除 QQ&#x2F;&lt;qq号&gt;&#x2F;Image&#x2F;Gourp2 里的所有文件。关于这里，还有一点想吐槽的：</p>
-<ul>
-<li>QQ为了加速图片检索，以Gourp2文件夹为根建了一颗B+树，所以点开文件夹会看到很多个名称长度为2的子文件夹，子文件夹下又有若干个名称长度为2的子文件夹，里面存储的就是文件前缀名相同的几张图片。结果就是删除的时候系统会做很多额外的检查，比如找文件索引、检查权限等等，因为删除实际上也是文件的移动，移动到回收站而已，整个删除过程速度非常慢。</li>
-</ul>
-<p>回到主题，删除完没用的群聊图片后，我发现QQ占用空间仍然很大，而且点击文件夹属性，存储空间计算时有一个断崖式的增长，也就是肯定存在一个大文件，进而才发现了 Msg3.0.db 和 Msg3.0index.db</p>
-<h3 id="Msg3-0-db"><a href="#Msg3-0-db" class="headerlink" title="Msg3.0.db"></a>Msg3.0.db</h3><p>Msg3.0.db 和 Msg3.0index.db 在我的电脑上一个占用11.3GB，一个占用7GB。</p>
-<p>根据文件名形式，猜测是SQLite，网上查了一下确实是。所以说QQ是将所有的聊天记录都存储在 Msg3.0.db 中，并且为其建立了 Msg3.0index.db 的索引。</p>
-<p>在QQ界面有一个消息管理器，所有消息记录都存储在 Msg3.0.db 中。如果不删除，那QQ占用空间就确实会随着时间越来越大，只删除图片缓存也没用。</p>
-<p>删除的时候，文件夹下会有相应的 db-journal 文件，实际上就是事务执行时的临时文件，用于回滚。事务执行结束后会清空为0字节，但不会删除，省去下次创建操作。</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
       </categories>
   </entry>
   <entry>
@@ -248,31 +185,214 @@
       </tags>
   </entry>
   <entry>
-    <title>NEMU-pa0</title>
-    <url>/posts/50a57998/</url>
-    <content><![CDATA[<p>主要问题有</p>
+    <title>2024/2/21-笔试</title>
+    <url>/posts/4a67726/</url>
+    <content><![CDATA[<h3 id="选择题"><a href="#选择题" class="headerlink" title="选择题"></a>选择题</h3><p>MySQL分布式事务：XA事务，2pc。将分布式事务执行的过程分为两阶段，第一阶段所有需要执行操作的节点准备自身资源数据，检查是否可以提交，向事务管理节点发送precommit的消息。所有节点都准备就绪precommit后，才能开始实际执行事务，期间等待是阻塞的。</p>
+<p>Java垃圾回收：强引用，任何时候都不回收；软引用，空间不足时回收；弱引用和虚引用，任何时候都回收。</p>
+<h3 id="编程题"><a href="#编程题" class="headerlink" title="编程题"></a>编程题</h3><h4 id="第一题忘了，比较简单"><a href="#第一题忘了，比较简单" class="headerlink" title="第一题忘了，比较简单"></a>第一题忘了，比较简单</h4><h4 id="第二题"><a href="#第二题" class="headerlink" title="第二题"></a>第二题</h4><p>第二题题意是，一个数组中，任选两个元素删除，并将它们的和再加入数组，使数组的极差最小。</p>
+<h5 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h5><p>用优先队列读入元素，删除最小的两个元素，再加入数组。过了90%。</p>
+<p>忘记考虑的点：最小的两个元素相加后，可能大于原数组最大的元素，而我直接默认优先队列头的元素最大了，测试数据中可能出现了负数。</p>
+<h4 id="第三题"><a href="#第三题" class="headerlink" title="第三题"></a>第三题</h4><p>n个杯子中有k杯水，每个回合可能的行为：</p>
 <ul>
-<li>虚拟机网络问题</li>
-<li>github TLS问题</li>
+<li>随机选择一个杯子</li>
+<li>如果杯子空：则回合结束</li>
+<li>如果杯子不空：上回合喝过水了，则放下杯子回合结束；上回合没喝水，则喝掉杯子里的水</li>
 </ul>
-<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>因为我主机用了代理，允许局域网连接。<br>想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，<br>相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。<br>然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，<br>主机有点像一个默认“网关”？</p>
-<hr>
-<p><font color="red">2023&#x2F;12&#x2F;15 update</font></p>
-<p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
-<p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
-<h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
-<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#103;&#105;&#116;&#64;&#103;&#105;&#x74;&#104;&#117;&#98;&#x2e;&#x63;&#x6f;&#109;">&#103;&#105;&#116;&#64;&#103;&#105;&#x74;&#104;&#117;&#98;&#x2e;&#x63;&#x6f;&#109;</a>。</p>
-<p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
-<p>然后git clone和git push时要使用<a href="mailto:&#x67;&#105;&#116;&#x40;&#103;&#x69;&#116;&#104;&#x75;&#98;&#46;&#x63;&#111;&#109;">&#x67;&#105;&#116;&#x40;&#103;&#x69;&#116;&#104;&#x75;&#98;&#46;&#x63;&#111;&#109;</a>&#x2F;仓库地址，而不是http或https</p>
-<h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
-<p>以后再学</p>
+<p>最终求所有水被喝完时的回合数的期望值。</p>
+<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><p>很明显是一个数学题。假如不考虑两次喝水之间的间隙，还剩i杯水的时候，喝到水的概率p&#x3D;i&#x2F;n。此时，喝一杯水的期望回合是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">T = p*1 + p(1-p)*2 + p(1-p)^2*3 + ... + p(1-p)^n*(n+1)</span><br><span class="line">  = i/n(1-p)^2</span><br></pre></td></tr></table></figure>
+<p>然后令i&#x3D;k，i&#x3D;k-1, … i&#x3D;1，累加即可</p>
+<p>没想出来的地方：两次喝水有间隙——卡在这里很久，实际上只需要在最后的结果加上k-1个回合就可以了。</p>
 ]]></content>
       <categories>
         <category>学习</category>
       </categories>
       <tags>
-        <tag>ICS实验</tag>
+        <tag>笔试</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>2024-03-01-oppo一面</title>
+    <url>/posts/e8b72eb/</url>
+    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>2月29日上午邮件通知面试，3月1日下午14:10开始，调试设备约5分钟，面试时长约30分钟，无手撕代码。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><ul>
+<li><strong>自我介绍</strong>：主要介绍了我的本科、硕士经历，常用编程语言，业余项目。</li>
+<li><strong>个人介绍中提到了论文，介绍论文工作和贡献</strong>：主要从研究背景、解决方法、创新点三方面讲了一下。</li>
+<li><strong>论文中怎麽判断用户是否恶意，用哪些属性</strong>：我理解的意思是，怎么筛选重要属性和非重要属性。主要根据过往文献总结、个人经验，筛选出“粉丝、关注、博客数、是否开启定位、是否开启账号保护”这几项属性为比较重要的。</li>
+<li><strong>C++的内存管理</strong>：new和delete、智能指针</li>
+<li><strong>深入讲一下new</strong>：new主要做三部分工作，计算对象大小、在堆上开辟空间，调用类构造函数，将对象绑定到开辟空间的地址上（返回指针）</li>
+<li><strong>多线程编程了解哪些</strong>：用C++写过一个生产者消费者程序，用mutex、条件变量、int类型的资源标记数定义了信号量的P、V操作，用于临界资源管理。对C++的队列容器进行了包装，用三个信号量分别用于标志队列未满、队列未空以及当前是否有线程访问队列。</li>
+<li><strong>用的什么队列</strong>：猜测是联想到了Java中队列有很多种实现形式，说明了用的就是C++中的默认队列。<font color="red">这里回答有一点错误，C++的queue是一个容器适配器，类似于Java中的接口，默认实现方式其实是deque。</font>之后我也讲了一下deque的底层，是多块不连续内存加一个数组实现的。以及优先队列是堆。</li>
+<li><strong>介绍最有价值的项目</strong>：其实都是业余项目，简单讲了一下QQ聊天机器人的架构。Nonebot+Gocqhttp，Nonebot是Onebot协议的实现，类似于一个Python的SDK。Gocqhttp通俗来说是模拟QQ客户端的一个程序，与腾讯的消息服务器通信。我做的是Nonebot框架下的功能插件开发，包括点歌、记账、定时提醒等。顺便讲了一下消息传递的优先级模式。</li>
+<li><strong>反问</strong>：<ul>
+<li>研发有很多方向，具体是由谁定？——主要看个人兴趣</li>
+<li>Java了解比较浅，有没有关系？——有导师带，当然自己尽快学习上手最好</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>面试官人很好，基本是顺着我的舒适区提问，让我有点不好意思。因为没有手撕环节，整体流程体感比较快。</p>
+]]></content>
+      <categories>
+        <category>面试</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>QQ的存储空间为什么会越来越大</title>
+    <url>/posts/cda2b7f1/</url>
+    <content><![CDATA[<h3 id="注意到问题的缘由"><a href="#注意到问题的缘由" class="headerlink" title="注意到问题的缘由"></a>注意到问题的缘由</h3><p>我有定期清理硬盘空间的习惯，除了用dism++清理系统临时文件以外，还会手动去检查一些占用空间比较大的文件夹。</p>
+<p>事情就发生在上一次清理空间的时候。我习惯性地打开QQ存储文件主目录，然后删除 QQ&#x2F;&lt;qq号&gt;&#x2F;Image&#x2F;Gourp2 里的所有文件。关于这里，还有一点想吐槽的：</p>
+<ul>
+<li>QQ为了加速图片检索，以Gourp2文件夹为根建了一颗B+树，所以点开文件夹会看到很多个名称长度为2的子文件夹，子文件夹下又有若干个名称长度为2的子文件夹，里面存储的就是文件前缀名相同的几张图片。结果就是删除的时候系统会做很多额外的检查，比如找文件索引、检查权限等等，因为删除实际上也是文件的移动，移动到回收站而已，整个删除过程速度非常慢。</li>
+</ul>
+<p>回到主题，删除完没用的群聊图片后，我发现QQ占用空间仍然很大，而且点击文件夹属性，存储空间计算时有一个断崖式的增长，也就是肯定存在一个大文件，进而才发现了 Msg3.0.db 和 Msg3.0index.db</p>
+<h3 id="Msg3-0-db"><a href="#Msg3-0-db" class="headerlink" title="Msg3.0.db"></a>Msg3.0.db</h3><p>Msg3.0.db 和 Msg3.0index.db 在我的电脑上一个占用11.3GB，一个占用7GB。</p>
+<p>根据文件名形式，猜测是SQLite，网上查了一下确实是。所以说QQ是将所有的聊天记录都存储在 Msg3.0.db 中，并且为其建立了 Msg3.0index.db 的索引。</p>
+<p>在QQ界面有一个消息管理器，所有消息记录都存储在 Msg3.0.db 中。如果不删除，那QQ占用空间就确实会随着时间越来越大，只删除图片缓存也没用。</p>
+<p>删除的时候，文件夹下会有相应的 db-journal 文件，实际上就是事务执行时的临时文件，用于回滚。事务执行结束后会清空为0字节，但不会删除，省去下次创建操作。</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>SRS直播服务器</title>
+    <url>/posts/1fa37b1/</url>
+    <content><![CDATA[<h3 id="使用SRS-Stack构建"><a href="#使用SRS-Stack构建" class="headerlink" title="使用SRS-Stack构建"></a>使用SRS-Stack构建</h3><p>腾讯云轻量应用服务器提供了应用模板，在控制台重装为音视频流服务器即可快速启动SRS服务。</p>
+<h3 id="使用Docker构建"><a href="#使用Docker构建" class="headerlink" title="使用Docker构建"></a>使用Docker构建</h3><p>SRS文档提供了服务启动脚本，在服务器中安装好docker后运行即可。</p>
+<h4 id="需要注意的点"><a href="#需要注意的点" class="headerlink" title="需要注意的点"></a>需要注意的点</h4><ol>
+<li>docker hub配置镜像源，配置文件为&#x2F;etc&#x2F;docker&#x2F;daemon.json</li>
+<li>在腾讯云控制台开放1935、8080、8000端口，用于推流和访问直播服务器管理后台</li>
+<li>docker默认的推流地址是rmtp:&#x2F;&#x2F;host&#x2F;live，推流码是livestream</li>
+</ol>
+<h3 id="遇到的问题："><a href="#遇到的问题：" class="headerlink" title="遇到的问题："></a>遇到的问题：</h3><ul>
+<li>默认推流方式需要观看者安装VLC等能接收rmtp流的播放器</li>
+<li>SRS提供的网页端流播放器在url中明文携带参数内容，url很长，且容易暴露信息</li>
+<li>域名备案很麻烦，暂时搁置。备案不了域名就无法使用WebRTC-HTTPS。不管是访问后台还是观众观看都是不安全的IP地址访问</li>
+<li>服务器带宽限制，直播很卡，只能用OKANE解决的问题</li>
+</ul>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Samsung S24+使用体验</title>
+    <url>/posts/70749ec9/</url>
+    <content><![CDATA[<h3 id="高中毕业前"><a href="#高中毕业前" class="headerlink" title="高中毕业前"></a>高中毕业前</h3><p>高中毕业之前，我用的手机一直是家里淘汰下来的旧手机，前前后后用过诺基亚经典九键、三星（很老的一款）、oppo、iPhone 5S。</p>
+<h4 id="01"><a href="#01" class="headerlink" title="01"></a>01</h4><p>诺基亚是第一款手机，大概是小学毕业前后开始用的，基本上只能聊QQ。</p>
+<h4 id="02"><a href="#02" class="headerlink" title="02"></a>02</h4><p>初二的时候，买了iPad 2，同时也换了第一款智能手机。具体型号已经记不清了，大概是三星S或者Note系列的初代&#x2F;二代。刚开始用的时候还行，但流畅度随着时间稳定下降，打开APP速度也骤降。最夸张的是，重启一次手机后，打开QQ居然会花费接近1分钟的时间。</p>
+<h4 id="03"><a href="#03" class="headerlink" title="03"></a>03</h4><p>oppo是家里人淘汰下来的旧手机，虽然是旧款，但流畅度显然比上一款三星好了很多，直到换iPhone 5S之前都没有遇到卡顿问题。最大的问题是电池续航，虽然当年的电池容量还没有现在这么大，但开机后1分钟掉10%的电量也非常夸张。当时是高中时期，每周日下午三点充满电，到学校六点交手机关机，到下周的周六下午四点拿到手机，回到家大约五点。仅仅是这四个小时都难以支撑下来。</p>
+<h4 id="04"><a href="#04" class="headerlink" title="04"></a>04</h4><p>iPhone 5S也是家里人淘汰下来的旧手机，不过是我主动提出要换的，原因就是电池续航问题。在当时，5S的流畅度和续航能力都完全满足我的需求，唯一的问题在于iOS系统封闭，无法便捷使用一些开源APP。</p>
+<h3 id="大学期间"><a href="#大学期间" class="headerlink" title="大学期间"></a>大学期间</h3><p>大学期间使用的手机是在天津买的，当时荣耀和华为还同属一家，买的是荣耀9，在当时属于性价比很高的中端手机。</p>
+<h4 id="荣耀9"><a href="#荣耀9" class="headerlink" title="荣耀9"></a>荣耀9</h4><p>荣耀9从大一用到大四下学期，差不多3年半，使用体验如下：</p>
+<ul>
+<li><strong>系统</strong>：EMUI。拥有大量我从未使用过的本地化和便捷功能，虽然当时没什么感觉，但对于现在来说，这些冗余的推送、新闻、卡片服务是无法忍受的。</li>
+<li><strong>指纹解锁</strong>：有Home键，解锁速度傻快，比后来用的Redmi还快，但手不干净时还是会失灵。</li>
+<li><strong>运存</strong>：4GB。我会随时清理后台，所以对于运存大小不是很敏感。</li>
+<li><strong>闪存</strong>：没记错的话是64GB。闪存都是，刚开始够用，随着时间推移就不够用了，到后来必须隔一段时间清除微信和QQ的全部数据。</li>
+<li><strong>GMS</strong>：没有禁用，但想要使用也比较费劲，需要手动安装框架、下载play store，且play store无法自动版本更新，基本属于阉割版。</li>
+<li><strong>推送服务</strong>：当时没怎么注意，但想必当时用的也是华为的统一推送服务，基本的QQ和微信消息都有及时推送，也有一些广告推送。印象中没有fcm的推送。</li>
+<li><strong>摄像</strong>：完全没注意过，扫码水平。</li>
+<li><strong>硬件</strong>：主要指屏幕。基本告别需要低延迟触控的音乐游戏。</li>
+</ul>
+<p><strong>总结</strong>：第一款自主选购的智能手机，在本人的电子洁癖症还不太严重的时候，基本满足了所有需求。但最终让我无法忍受、不得不换手机的原因主要是：**<font color="red">电池、闪存</font>**。</p>
+<p>简单来说就是续航崩坏，闪存爆满。</p>
+<h4 id="红米Redmi-K30U"><a href="#红米Redmi-K30U" class="headerlink" title="红米Redmi K30U"></a>红米Redmi K30U</h4><p>红米是在大四下学期换的，第一批5G进网试用的机器，差不多用了三年，使用体验如下：</p>
+<ul>
+<li><strong>系统</strong>：MIUI。拥有大量本地化和便捷功能，使用过一部分，例如万能遥控、地震预警，但系统中仍然存在不少无法卸载的自带APP和功能，虽然可以通过权限完全禁用，但无法隐藏其图标，仍然会带来一定程度的折磨。</li>
+<li><strong>指纹解锁</strong>：光感屏下指纹。在强光环境下非常难用，例如大白天走在外面，需要用左手遮住光才能正常解锁，解锁速度也很慢，完全不及荣耀9。</li>
+<li><strong>运存</strong>：8+3GB，应该是用闪存换的虚拟内存。没什么实感，因为我随时清后台。</li>
+<li><strong>闪存</strong>：128GB。当初以为完全够用的，结果空间越来越少，从占用50GB一路飙升到现在的100GB，而且QQ和微信的空间也有随时清理。</li>
+<li><strong>GMS</strong>：没有禁用，相比荣耀9来说使用更方便了一些，但仍然需要手动安装play store，并且无法自动更新商店版本。</li>
+<li><strong>推送服务</strong>：mi push。推送非常及时，除了常用的QQ和微信，甚至能及时推送AcFun主播开始直播的消息。但相应的，也会收到很多不想收到的消息，比如支付宝、携程旅行、12306的推广消息。推送消息虽然可以分类别开关，但每个类别的描述非常模糊，很难理解哪些消息属于哪些类别，为了不错过某些消息，比如包裹物流，只能开启全类别推送。此外，默认能够连接到fcm服务，但系统会默认关闭所有APP的自启动权限和后台运行权限，因此fcm在默认状态下是无法工作的。想要及时收到gmail等应用的消息，必须手动开启自启动权限，取消后台运行限制等。</li>
+<li><strong>摄像</strong>：外星科技升降前置摄像头，提供了一块完整、没有挖孔、没有刘海的全面屏。拍照质量不提，速度有些慢，估计是校正算法太耗时。</li>
+<li><strong>硬件</strong>：主要指屏幕。亮度一般，反光严重，基本告别音乐游戏。</li>
+</ul>
+<p><strong>总结</strong>：当初购买这款手机也纠结了很久，最后选择原因主要是性价比和系统开放度。到手后我研究了很久刷机，先是注册账号等一周，然后找固件，最后发现K30U是国行特供，没有国际版固件，因此告别了刷机。总体来说，前半段时间使用体感良好，后半段时间问题越来越多，包括：</p>
+<ul>
+<li><strong>续航</strong>：4500mA的电池，没有防过充，长期的过饱和充电把电池损得需要一天两充甚至三充，出门80%电量都心慌还要带充电宝。</li>
+<li><strong>指纹</strong>：如上所述，在外使用非常不便。</li>
+<li><strong>WiFi信号</strong>：长期以来，我一直以为在宿舍连不上校园网是宿舍的问题，直到我换了手机才发现是小米的问题。</li>
+<li><strong>闪存</strong>：128G已经无法满足一众庞然大物APP了。</li>
+</ul>
+<h3 id="三星S24"><a href="#三星S24" class="headerlink" title="三星S24+"></a>三星S24+</h3><p>终于到了主题。考虑换手机是在2024年1月份的时候，因为实在无法忍受出门必备充电宝，考虑换一个电池容量更大的手机。</p>
+<p>最开始考虑的需求是：</p>
+<ul>
+<li>电池容量大</li>
+<li>闪存大</li>
+<li>广告少</li>
+<li>能比较方便地刷机</li>
+<li>最好不是挖孔屏</li>
+</ul>
+<p>在上述考虑下，选择了如下几款机型：</p>
+<ul>
+<li>小米14</li>
+<li>一加12</li>
+<li>一加Ace3</li>
+<li>努比亚z60</li>
+</ul>
+<p>但最后被一一排除：</p>
+<ul>
+<li>小米14是澎湃OS，几乎不可能达到解锁系统的要求</li>
+<li>努比亚z60太重，几乎是带个板砖出门</li>
+<li>一加12和一加Ace3其实蛮无辜的，去线下看实机之前，顺带去逛了一下三星旗舰店，摸了一下S24新机，然后再摸一加12的曲面屏，瞬间感觉无法接受。此外，ColorOS系统似乎也不太干净，不太适合有高度电子洁癖的我。与此同时，三星S24就成为了我选购的目标。</li>
+</ul>
+<h4 id="调校和设置"><a href="#调校和设置" class="headerlink" title="调校和设置"></a>调校和设置</h4><p>到手后首先是转移数据，联系人、短信、照片等数据都是用腾讯的换机助手转移的，S换机助手貌似不能在不同品牌手机之间转移数据。</p>
+<p>然后是下载应用，调校设置。应用通知权限、电池使用策略、屏幕布局、UI美化等等。不得不说，ONE UI的功能真的很多，但也藏得真的很深，许多设置搜都搜不出来，例如：</p>
+<ul>
+<li>锁屏界面的布局设置，需要在锁屏界面长按才能进去，其他地方完全搜索不到。如果设置了人脸自动解锁，根本就很难进入到设置界面，非常反人类。</li>
+<li><strong>消息通知设置</strong>：可谓是花费我心力最多的一项设置。最开始，我的目标是做成iOS通知那样，有消息来自动亮屏，消息在锁屏界面堆叠式陈列。<ul>
+<li>第一个尝试的解决方案是息屏提醒，设置有消息来时开启息屏。但息屏和锁屏始终不是同一个东西，亮屏只能让你知道有消息了，但息屏界面不会显示具体的消息栏，只有一个很小的图标，几乎没有任何标识作用。此外，息屏亮之后要很长时间才会黑屏，对于强迫症来说，超过2秒都是极限了啊。</li>
+<li>第二个尝试的，也是目前使用的解决方案，将消息提醒设置为【简洁】，（没错，如果设置为详细内容，是没有办法弹窗的），然后允许弹窗提示，这样即使是黑屏界面，消息弹窗依然会正常显示，并且只会存在1秒左右，基本起到了提醒作用。此外，也可以附加锁屏特效，不过我不太喜欢。</li>
+<li>虽然最终没有达到iOS的消息通知效果，不过目前的方案也还算满意。黑屏状态下，有消息会弹窗显示，虽然不会亮屏，但双击也可以进入锁屏界面查看消息概要。</li>
+</ul>
+</li>
+</ul>
+<h5 id="电池优化策略"><a href="#电池优化策略" class="headerlink" title="电池优化策略"></a>电池优化策略</h5><p>三星的电池优化策略可以按应用设置，分为无限制、优化和受限制。国行机器默认是全受限制，其他版本固件默认是全优化。</p>
+<ul>
+<li>受限制：应用在后台运行一段时间后会自动结束，即使内存足够也不会保活，具体的存活时间未知。曾经用听歌软件测试，听了一段时间后音乐确实突然就停止了，打开应用发现已经重启了。（此外，由于三星的推送服务接入的应用很少，大多数应用发送消息都不得不依赖后台，所以受限制的应用通常也没法在关闭的状态下推送消息）。</li>
+<li>优化：优化策略未知，使用体验约等于无限制。由于我后台不会留存太多应用，所以设置为优化的APP基本没有被杀后台的情况。（如果想使用fcm服务接受推送，也需要将对应的应用设置为优化及以上的策略）。</li>
+<li>无限制：可以无限制运行、自启动，但内存不足时是否会杀后台未知。</li>
+</ul>
+<p>根据我个人的使用习惯，QQ和微信为无限制，邮件APP、听歌软件为优化，其他APP基本都为受限制，不影响使用，也基本收不到广告消息。</p>
+<h5 id="指纹解锁和面部解锁"><a href="#指纹解锁和面部解锁" class="headerlink" title="指纹解锁和面部解锁"></a>指纹解锁和面部解锁</h5><p>指纹解锁应该是超声波类型的，没有像上一部机器一样遇到强光就无法解锁的情况。黑屏状态下没有指纹图标，但可识别区域较大，允许一定的误差，解锁速度非常快，傻快。</p>
+<p>面部解锁。其实最开始不太想用的，但在手不方便的时候面部解锁看消息实在太方便了，所以还是开启了。黑暗环境、戴口罩无法识别，其余情况识别速度也很快。设置中可以更改识别面部后立刻解锁，或是停留在锁屏界面，我是习惯停留在锁屏界面，可以看看消息就关。</p>
+<h5 id="固件-刷机"><a href="#固件-刷机" class="headerlink" title="固件 &#x2F; 刷机"></a>固件 &#x2F; 刷机</h5><p>为了体验Google系AI的功能，我在调校好手机一周后毅然又刷了港版固件。解锁无需前置条件，刷机也非常简单，下载好文件后十来分钟就可以刷完。</p>
+<p>体验下来，相比于国行，港版固件系统自带的系统服务组件、Google服务组件更多，省电策略也比较粗放，可以明显感觉电量用得更快。至于AI功能，我发现不管是哪个版本我都不会主动去使用，用了两天后又刷回了国行，没出现任何问题。</p>
+<h5 id="S换机助手"><a href="#S换机助手" class="headerlink" title="S换机助手"></a>S换机助手</h5><p>在刷固件的时候，用到了S换机助手，可以将手机备份到电脑。数据基本上能把手机完全还原到备份时的状态，包括相册分类、各种设置等等，只有QQ、微信、支付宝等应用的登录数据会消失。</p>
+<h5 id="其他非常方便、但需要自行调校的功能"><a href="#其他非常方便、但需要自行调校的功能" class="headerlink" title="其他非常方便、但需要自行调校的功能"></a>其他非常方便、但需要自行调校的功能</h5><ul>
+<li>三星钱包。可以在钱包中加入支付宝、微信的付款码，公交地铁乘车码等等。设置黑屏状态下从屏幕底部向上扫，可以快速打开钱包，再也不需要在排队的时候提前打开支付宝或微信了。</li>
+<li>模式和日常程序。目前我设置了如下：<ul>
+<li>睡眠模式：开启飞行模式、黑暗模式、免打扰模式、灰度。</li>
+<li>连接到WiFi自动关闭流量：WiFi断开后也会自动开启流量。</li>
+<li>打开美团、百度地图自动开启定位：关闭后会自动关闭定位</li>
+</ul>
+</li>
+</ul>
+<p>这些日常中经常会用到的“组合技”，用了才知道有多方便。</p>
+<h5 id="目前用着不太方便的地方"><a href="#目前用着不太方便的地方" class="headerlink" title="目前用着不太方便的地方"></a>目前用着不太方便的地方</h5><ul>
+<li>短信通知需要展开才能点击已阅读。</li>
+<li>邮件经常会通知两次。</li>
+<li>相册文件夹可以分类，但在其他地方调用相册时无法分类，找相册很麻烦。（感觉绝大部分手机也没法解决这个问题）</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li><strong>系统</strong>：ONE UI。一款简洁又复杂的系统，如果没有功夫钻研设置，系统用起来会相当不方便（比如最开始的通知就花了很长时间设置），但设置好后，会真正感觉到手机服务于人，而不是人适应手机。</li>
+<li><strong>指纹解锁</strong>：声波指纹。傻快，超越前面用过的所有手机。</li>
+<li><strong>运存</strong>：12GB。很多人觉得16GB才是当代旗舰该有的基本配置，不过我常清后台感觉不到。</li>
+<li><strong>闪存</strong>：512GB。先行者预约，可以256GB升到512GB，目前完全没有存储空间焦虑。</li>
+<li><strong>GMS</strong>：使用起来和小米差不多，需要手动安装Play Store。</li>
+<li><strong>推送服务</strong>：三星push几乎不会有任何作用，只会偶尔推送一些系统提示。QQ和微信的消息推送完全靠无限制后台，其他邮件等推送完全靠自行设置的fcm。另外，正常使用fcm也花费了我不少功夫，并且国行锁定了*#<em>#426#</em>#*查看fcm log，所以还需要第三方APP提供入口。事实上，大多数地区都是能够直连到mtalk.google的，我当时的问题大概率出在DNS设置上。对于喜欢简洁的我来说，短信、QQ、微信、邮件推送已经足够了。</li>
+<li><strong>摄像</strong>：目前用过的摄像最好的手机，成像速度也很快。前置摄像头挖孔，但只能和解了。</li>
+<li><strong>硬件</strong>：屏幕傻亮，太阳底下最大亮度基本都看的清。直屏手感舒适，用原厂膜的话，反光也会降到很低。</li>
+</ul>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>应该是目前使用过最满意的手机，让我对三星这个品牌有所改观。同时也真正体会到了手机的便捷之处。不出意外的话，未来还会换三星S系列。</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
   </entry>
   <entry>
     <title>关于FCM服务的一些问题</title>
@@ -334,76 +454,30 @@
       </categories>
   </entry>
   <entry>
-    <title>SRS直播服务器</title>
-    <url>/posts/1fa37b1/</url>
-    <content><![CDATA[<h3 id="使用SRS-Stack构建"><a href="#使用SRS-Stack构建" class="headerlink" title="使用SRS-Stack构建"></a>使用SRS-Stack构建</h3><p>腾讯云轻量应用服务器提供了应用模板，在控制台重装为音视频流服务器即可快速启动SRS服务。</p>
-<h3 id="使用Docker构建"><a href="#使用Docker构建" class="headerlink" title="使用Docker构建"></a>使用Docker构建</h3><p>SRS文档提供了服务启动脚本，在服务器中安装好docker后运行即可。</p>
-<h4 id="需要注意的点"><a href="#需要注意的点" class="headerlink" title="需要注意的点"></a>需要注意的点</h4><ol>
-<li>docker hub配置镜像源，配置文件为&#x2F;etc&#x2F;docker&#x2F;daemon.json</li>
-<li>在腾讯云控制台开放1935、8080、8000端口，用于推流和访问直播服务器管理后台</li>
-<li>docker默认的推流地址是rmtp:&#x2F;&#x2F;host&#x2F;live，推流码是livestream</li>
-</ol>
-<h3 id="遇到的问题："><a href="#遇到的问题：" class="headerlink" title="遇到的问题："></a>遇到的问题：</h3><ul>
-<li>默认推流方式需要观看者安装VLC等能接收rmtp流的播放器</li>
-<li>SRS提供的网页端流播放器在url中明文携带参数内容，url很长，且容易暴露信息</li>
-<li>域名备案很麻烦，暂时搁置。备案不了域名就无法使用WebRTC-HTTPS。不管是访问后台还是观众观看都是不安全的IP地址访问</li>
-<li>服务器带宽限制，直播很卡，只能用OKANE解决的问题</li>
-</ul>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>基础知识复习笔记1-Java集合</title>
-    <url>/posts/67cafe3d/</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>复习笔记系列记录一些C++&#x2F;Java，本科专业课的一些知识，强化记忆</p>
-<p>本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。</p>
-<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_queue实际上底层都是deque容器，deque实现了它们所需的方法。Java中类似，所有容器都是从Collection和Map接口派生出来的，从Collection和Map接口又派生出许多子接口，由“集合（容器）”实现这些接口的方法。</p>
+    <title>NEMU-pa0</title>
+    <url>/posts/50a57998/</url>
+    <content><![CDATA[<p>主要问题有</p>
 <ul>
-<li><strong>Collection：</strong> 存放单一元素<ul>
-<li><strong>List</strong>：ArrayList，LinkedList</li>
-<li><strong>Set</strong>：HashSet，TreeSet，LinkedHashSet</li>
-<li><strong>Queue</strong>：PiorityQueue<ul>
-<li><strong>Deque</strong>：LinkedList，ArrayDeque</li>
+<li>虚拟机网络问题</li>
+<li>github TLS问题</li>
 </ul>
-</li>
-</ul>
-</li>
-<li><strong>Map：</strong> 存放键值对<ul>
-<li>HashMap，TreeMap，LinkedHashMap</li>
-</ul>
-</li>
-</ul>
-<p>以上黑体是接口，常规体是集合&#x2F;容器。</p>
-<h4 id="ArrayList和LinkedList"><a href="#ArrayList和LinkedList" class="headerlink" title="ArrayList和LinkedList"></a>ArrayList和LinkedList</h4><p>ArrayList类似于C++的vector，底层用数组实现，可以随机访问、自动扩容。扩容机制也和vector类似，大约为1.5倍。</p>
-<p>LinkedList是双向链表，头尾插入删除O(1)，随机位置插入删除平均仍然是O(n)，所以实际上与ArrayList相比优势不大，但适合作为双向队列的接口实现。</p>
-<h4 id="HashSet，HashMap"><a href="#HashSet，HashMap" class="headerlink" title="HashSet，HashMap"></a>HashSet，HashMap</h4><h5 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h5><p>HashMap和HashSet底层实现相同，都是数组+链表。当冲突形成的拉链表长度大于8，而且数组长度大于64时，会将链表转化为红黑树，降低查找开销。数组长度不大于64则优先数组扩容。</p>
-<h5 id="下标计算"><a href="#下标计算" class="headerlink" title="下标计算"></a>下标计算</h5><p>HashSet类似于C++的unordered_set，元素存放无序、不可重复。计算元素存放位置时，先对元素进行一次hashCode()得到哈希值h，再将h和h的高16位或运算，得到最终的hash。然后<code>(n-1) &amp; hash</code>计算出下标。当n是2的幂次时，<code>(n-1)&amp;hash == hash % n</code>，所以HashMap表的长度总是2的幂次。</p>
-<h5 id="冲突处理"><a href="#冲突处理" class="headerlink" title="冲突处理"></a>冲突处理</h5><p>插入的时候，先对元素进行hashcode计算，如果冲突，则调用equals对比元素的值，相同则覆盖值，不同则按照哈希冲突拉链处理。</p>
-<h5 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h5><p>可以用foreach语法糖遍历，但遍历中不能对元素进行remove。如果需要遍历中对元素remove，需要用Iterator。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Iterator&lt;Map.Entry&lt;Object, Object&gt;&gt; it = mp.entrySet().iterator();</span><br><span class="line">while(it.hasNext()) &#123;</span><br><span class="line">    Map.Entry&lt;Object, Object&gt; entry = it.next();</span><br><span class="line">    System.out.println(entry.getKey() + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>foreach语法糖本质也是用迭代器遍历，但是remove会使用集合的remove方法，而不是迭代器的remove方法，导致出错。</p>
-<p>不建议使用map.keySet()获取键表，然后用get(key)的方法遍历，相当于遍历了两次，效率很低。</p>
-<h4 id="TreeSet和TreeMap"><a href="#TreeSet和TreeMap" class="headerlink" title="TreeSet和TreeMap"></a>TreeSet和TreeMap</h4><p>两者关系和HashSet、HashMap差不多，TreeMap是有序的，会默认按照键值升序排序。</p>
-<h5 id="底层实现-1"><a href="#底层实现-1" class="headerlink" title="底层实现"></a>底层实现</h5><p>红黑树，查找和增删的复杂度相同，效率低于HashMap。</p>
-<h5 id="自定义排序"><a href="#自定义排序" class="headerlink" title="自定义排序"></a>自定义排序</h5><ul>
-<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">  <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Node</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Node&gt;&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> value;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">char</span> ch;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(<span class="type">int</span> v, <span class="type">char</span> c)</span> &#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hashCode和equals重写是为了让自定义类型在Set中去重</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Integer</span>(value).hashCode() + <span class="keyword">new</span> <span class="title class_">Character</span>(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">n2</span> <span class="operator">=</span> (Node) o;</span><br><span class="line">        <span class="keyword">return</span> value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Node o)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> value &lt; o.value ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li>方法二：在创建TreeMap时定义比较函数compare：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Character, Integer&gt; mp = new TreeMap&lt;&gt;(new Comparator&lt;Character&gt;() &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public int compare(Character o1, Character o2) &#123;</span><br><span class="line">      return o1 &lt; o2 ? 1 : -1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h4><p>PiorityQueue默认是小顶堆，自定义比较的方法和TreeMap一样。</p>
-<ul>
-<li>poll和take都是取出一个元素，poll不会抛出异常</li>
-<li>peek和element都是获取顶端元素，peek不会抛出异常</li>
-<li>offer和add都是添加一个元素，offer不会抛出异常</li>
-<li>Deque的offerFirst、pollLast等同理</li>
-</ul>
+<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>因为我主机用了代理，允许局域网连接。<br>想要使用主机的网络，使用的是桥接模式，复制主机的网络状态，<br>相当于虚拟机加入到了主机同一个局域网中，可以互相ping到。<br>然后系统代理选择主机的IP和相应端口，所有流量都先转发给主机做处理，<br>主机有点像一个默认“网关”？</p>
+<hr>
+<p><font color="red">2023&#x2F;12&#x2F;15 update</font></p>
+<p>用桥接模式有一点问题，就是主机的IP是变化的，相应的代理都要手动变更。</p>
+<p>NAT模式是虚拟了一个Vmnet交换机，交换机上连接了虚拟NAT设备、虚拟DHCP服务器和虚拟机。虚拟机通过虚拟交换机、虚拟NAT和外部主机网关连接，实现联网。另有一个虚拟网卡，实现主机和虚拟机的通信。虚拟网卡的地址是相对固定的，所以代理地址只要填虚拟网卡的地址即可。<br></p>
+<h3 id="github-TLS问题"><a href="#github-TLS问题" class="headerlink" title="github TLS问题"></a>github TLS问题</h3><p>git clone、push的时候，会出现TLS connection不安全的问题。</p>
+<p>主要解决方法是，以自己的github账号为KEY，生成一对RSA密钥，用于SSH连接<a href="mailto:&#x67;&#105;&#116;&#x40;&#103;&#105;&#x74;&#104;&#117;&#x62;&#x2e;&#99;&#111;&#109;">&#x67;&#105;&#116;&#x40;&#103;&#105;&#x74;&#104;&#117;&#x62;&#x2e;&#99;&#111;&#109;</a>。</p>
+<p>本机ssh-keygen -t rsa -C “xxx”之后，将公钥添加到github账号，相当于免密登录</p>
+<p>然后git clone和git push时要使用<a href="mailto:&#x67;&#105;&#x74;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#x62;&#46;&#x63;&#x6f;&#x6d;">&#x67;&#105;&#x74;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#x62;&#46;&#x63;&#x6f;&#x6d;</a>&#x2F;仓库地址，而不是http或https</p>
+<h3 id="顺便记录一个最简单的Makefile"><a href="#顺便记录一个最简单的Makefile" class="headerlink" title="顺便记录一个最简单的Makefile"></a>顺便记录一个最简单的Makefile</h3><p>hello:<br>    gcc hello.cpp -o hello</p>
+<p>以后再学</p>
 ]]></content>
       <categories>
         <category>学习</category>
       </categories>
       <tags>
-        <tag>笔记</tag>
+        <tag>ICS实验</tag>
       </tags>
   </entry>
   <entry>
@@ -429,77 +503,6 @@
 <p>I&#x2F;O多路复用有三种模式，select、poll和epoll。select是采取轮询的模式，将所有连接维护在一个线性表里，每次select都将表复制到内核，由内核检查并更新是否有数据事件发生，再将结果复制回用户态，遍历获取事件更新状态。</p>
 <p>poll和select类似，只是将线性表改成了链表，增加了最大并发连接数。</p>
 <p>epoll则是在内核中用一个红黑树维护所有连接，有连接发生事件时，内核自动将其加入到一个链表中。当用户调用函数想知道哪些连接有数据事件发生时，内核只需要返回链表中的连接对象。</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础知识复习笔记5-内存管理</title>
-    <url>/posts/a2044ae4/</url>
-    <content><![CDATA[<h3 id="C-的程序内存布局"><a href="#C-的程序内存布局" class="headerlink" title="C++的程序内存布局"></a>C++的程序内存布局</h3><p>从上往下是：</p>
-<ul>
-<li>内核空间：操作系统内核</li>
-<li>环境变量，命令行参数</li>
-<li>栈（高地址向低地址增长）：存放局部变量，函数参数，返回地址等，由编译器管理</li>
-<li>（空闲区域）</li>
-<li>堆（低地址向高地址增长）：由程序员new&#x2F;delete管理，容量远大于栈</li>
-<li>BSS段：未初始化的数据</li>
-<li>data段：已初始化的数据，全局变量，静态变量</li>
-<li>text段：代码区</li>
-</ul>
-<h4 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h4><p>C++没有垃圾回收机制，只能由程序员手动管理内存，一旦操作不当就可能导致：</p>
-<ul>
-<li>内存泄漏：某段代码每次执行都会申请一小段内存，结束后却不释放，久而久之就会吞噬系统的空闲内存，最终导致程序甚至系统崩溃。<ul>
-<li>如果一段程序随着时间运行，内存占用越来越大且没有饱和的趋势，可能就出现了内存泄漏。</li>
-<li>内存泄漏的静态检测方法，首先就是对代码进行检查，看是否有new&#x2F;delete不匹配的地方。</li>
-<li>也可以用工具进行检查，比如valgrind可以检查程序是否有非法使用内存的问题。</li>
-</ul>
-</li>
-</ul>
-<p>另外一个方法是使用智能指针，智能指针会管理对象的生命周期，在其生命周期结束时自动释放内存。</p>
-<ul>
-<li>shared_ptr：可以允许多个指针指向一个对象，通过引用计数管理对象生命周期。</li>
-<li>unique_ptr：对象只能由一个指针独享，可以移动对象所有权，但不能复制。</li>
-<li>weak_ptr：主要避免shared_ptr造成的循环引用，A引用B，B引用A，这样谁都无法被释放。weak_ptr可以提供某个对象的访问，但是不会参与引用计数。需要用时，使用lock方法来获得一个shared_ptr对象。</li>
-</ul>
-<h4 id="C-类的内存布局"><a href="#C-类的内存布局" class="headerlink" title="C++类的内存布局"></a>C++类的内存布局</h4><p>对于一般的类，所有非静态成员变量按照声明顺序，内存对齐原则放在一起。静态成员变量放在全局数据区，所有类成员函数是放在代码区，位置没有明显关联。</p>
-<p>有虚函数的类，类的地址起始位置有一个虚函数指针，指向虚函数表，虚函数表中存放了所有虚函数的入口地址。紧接着放非静态成员变量。子类在构造时也会有一个虚函数表，如果子类重写了虚函数，则会用新的函数地址覆盖掉表中原来的虚函数地址。</p>
-<p>继承的话，继承类先按照其继承的基类的顺序，存放了各个基类的成员变量和各自的虚函数表指针，再存放自己的数据成员。</p>
-<p>基类析构函数声明为虚函数：这样才能在基类指针调用析构时，执行子类的析构函数，不然可能出现局部释放的情况，只释放了基类的相关内容，子类的却没有释放，造成内存泄漏。</p>
-<h3 id="Java的内存管理"><a href="#Java的内存管理" class="headerlink" title="Java的内存管理"></a>Java的内存管理</h3><p>Java有垃圾回收机制，不需要程序员手动管理内存分配和释放，</p>
-<h4 id="Java的垃圾回收策略"><a href="#Java的垃圾回收策略" class="headerlink" title="Java的垃圾回收策略"></a>Java的垃圾回收策略</h4><p>根据JVM实现的不同，策略也有所不同。Java的堆内存区域一般可以分为新生代、老年代和永久代三块，新生代一般是生命周期比较短的对象，老年代是占用内存比较大，生命周期较长的对象，永久代则是始终不会被清理的对象。</p>
-<p>分配内存时，优先在新生代区域分配，如果内存不够，则尝试将新生代的部分对象转移到老年代。如果分配的对象很大，则会直接进入到老年代，减少垃圾回收的频率和成本。每个对象都有一个年龄计数器，每次垃圾回收没有被清理的对象年龄就会增加，增加到一定数值就会转移到老年代区域。</p>
-<h4 id="判断对象生命周期"><a href="#判断对象生命周期" class="headerlink" title="判断对象生命周期"></a>判断对象生命周期</h4><ul>
-<li>引用计数：类似于C++的shared_ptr，但是也有循环引用的问题，使用的比较少。</li>
-<li>可达性分析算法：从以下对象中选择根对象，搜索根对象引用的对象，如果一个对象没有一条到达根对象的引用链，就说明它该被回收了。（我理解的就是从“钉子户”开始链式搜索，因为“钉子户”引用的对象一定是被需要的）<ul>
-<li>虚拟机栈(栈帧中的局部变量表)中引用的对象</li>
-<li>本地方法栈(Native 方法)中引用的对象</li>
-<li>方法区中类静态属性引用的对象</li>
-<li>方法区中常量引用的对象</li>
-<li>所有被同步锁持有的对象</li>
-<li>JNI（Java Native Interface）引用的对象</li>
-</ul>
-</li>
-</ul>
-<h4 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h4><ul>
-<li>标记-清除算法：标记所有不用的对象，然后再依次清除。<ul>
-<li>简单，但是容易产生内存碎片，标记和清除的效率低</li>
-</ul>
-</li>
-<li>复制算法：将内存划为两半，只用其中一半存放对象。内存满后，将还存活的对象复制到另一边，直接清除掉当前这边的内存。<ul>
-<li>清除的效率更高，但可用内存变小了，且不适用于老年代对象，因为复制开销大</li>
-</ul>
-</li>
-<li>标记-整理算法：标记所有存活的对象，将他们向内存的一端整理移动，然后清除掉另一端的内存。<ul>
-<li>整理的效率比较低</li>
-</ul>
-</li>
-</ul>
-<h5 id="分代算法"><a href="#分代算法" class="headerlink" title="分代算法"></a>分代算法</h5><p>新生代使用复制算法，因为新生代的对象存活概率低，大概率不需要复制很多内容。<br>老年代使用标记整理算法，老年代的对象通常比较大。</p>
 ]]></content>
       <categories>
         <category>学习</category>
@@ -585,6 +588,129 @@
       </tags>
   </entry>
   <entry>
+    <title>基础知识复习笔记1-Java集合</title>
+    <url>/posts/67cafe3d/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>复习笔记系列记录一些C++&#x2F;Java，本科专业课的一些知识，强化记忆</p>
+<p>本科学习数据结构、算法、高级语言程序设计都是C++，Java是选修课。虽然大二的时候选过，但是就像自学的Python一样，会写代码但对基础原理理解不深，所以打算写笔记记录一些自己的学习理解，也方便以后查阅。</p>
+<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>Java的集合也叫容器，类似于C++的stack容器适配器。C++中的stack、queue和priority_queue实际上底层都是deque容器，deque实现了它们所需的方法。Java中类似，所有容器都是从Collection和Map接口派生出来的，从Collection和Map接口又派生出许多子接口，由“集合（容器）”实现这些接口的方法。</p>
+<ul>
+<li><strong>Collection：</strong> 存放单一元素<ul>
+<li><strong>List</strong>：ArrayList，LinkedList</li>
+<li><strong>Set</strong>：HashSet，TreeSet，LinkedHashSet</li>
+<li><strong>Queue</strong>：PiorityQueue<ul>
+<li><strong>Deque</strong>：LinkedList，ArrayDeque</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Map：</strong> 存放键值对<ul>
+<li>HashMap，TreeMap，LinkedHashMap</li>
+</ul>
+</li>
+</ul>
+<p>以上黑体是接口，常规体是集合&#x2F;容器。</p>
+<h4 id="ArrayList和LinkedList"><a href="#ArrayList和LinkedList" class="headerlink" title="ArrayList和LinkedList"></a>ArrayList和LinkedList</h4><p>ArrayList类似于C++的vector，底层用数组实现，可以随机访问、自动扩容。扩容机制也和vector类似，大约为1.5倍。</p>
+<p>LinkedList是双向链表，头尾插入删除O(1)，随机位置插入删除平均仍然是O(n)，所以实际上与ArrayList相比优势不大，但适合作为双向队列的接口实现。</p>
+<h4 id="HashSet，HashMap"><a href="#HashSet，HashMap" class="headerlink" title="HashSet，HashMap"></a>HashSet，HashMap</h4><h5 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h5><p>HashMap和HashSet底层实现相同，都是数组+链表。当冲突形成的拉链表长度大于8，而且数组长度大于64时，会将链表转化为红黑树，降低查找开销。数组长度不大于64则优先数组扩容。</p>
+<h5 id="下标计算"><a href="#下标计算" class="headerlink" title="下标计算"></a>下标计算</h5><p>HashSet类似于C++的unordered_set，元素存放无序、不可重复。计算元素存放位置时，先对元素进行一次hashCode()得到哈希值h，再将h和h的高16位或运算，得到最终的hash。然后<code>(n-1) &amp; hash</code>计算出下标。当n是2的幂次时，<code>(n-1)&amp;hash == hash % n</code>，所以HashMap表的长度总是2的幂次。</p>
+<h5 id="冲突处理"><a href="#冲突处理" class="headerlink" title="冲突处理"></a>冲突处理</h5><p>插入的时候，先对元素进行hashcode计算，如果冲突，则调用equals对比元素的值，相同则覆盖值，不同则按照哈希冲突拉链处理。</p>
+<h5 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h5><p>可以用foreach语法糖遍历，但遍历中不能对元素进行remove。如果需要遍历中对元素remove，需要用Iterator。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Iterator&lt;Map.Entry&lt;Object, Object&gt;&gt; it = mp.entrySet().iterator();</span><br><span class="line">while(it.hasNext()) &#123;</span><br><span class="line">    Map.Entry&lt;Object, Object&gt; entry = it.next();</span><br><span class="line">    System.out.println(entry.getKey() + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>foreach语法糖本质也是用迭代器遍历，但是remove会使用集合的remove方法，而不是迭代器的remove方法，导致出错。</p>
+<p>不建议使用map.keySet()获取键表，然后用get(key)的方法遍历，相当于遍历了两次，效率很低。</p>
+<h4 id="TreeSet和TreeMap"><a href="#TreeSet和TreeMap" class="headerlink" title="TreeSet和TreeMap"></a>TreeSet和TreeMap</h4><p>两者关系和HashSet、HashMap差不多，TreeMap是有序的，会默认按照键值升序排序。</p>
+<h5 id="底层实现-1"><a href="#底层实现-1" class="headerlink" title="底层实现"></a>底层实现</h5><p>红黑树，查找和增删的复杂度相同，效率低于HashMap。</p>
+<h5 id="自定义排序"><a href="#自定义排序" class="headerlink" title="自定义排序"></a>自定义排序</h5><ul>
+<li>方法一：自定义类实现Comparable接口，在类中重写compareTo函数：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">  <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Node</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Node&gt;&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> value;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">char</span> ch;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(<span class="type">int</span> v, <span class="type">char</span> c)</span> &#123;</span><br><span class="line">        value = v;</span><br><span class="line">        ch = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hashCode和equals重写是为了让自定义类型在Set中去重</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Integer</span>(value).hashCode() + <span class="keyword">new</span> <span class="title class_">Character</span>(ch).hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">n2</span> <span class="operator">=</span> (Node) o;</span><br><span class="line">        <span class="keyword">return</span> value == n2.value &amp;&amp; ch == n2.ch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Node o)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> value &lt; o.value ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>方法二：在创建TreeMap时定义比较函数compare：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Character, Integer&gt; mp = new TreeMap&lt;&gt;(new Comparator&lt;Character&gt;() &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public int compare(Character o1, Character o2) &#123;</span><br><span class="line">      return o1 &lt; o2 ? 1 : -1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h4><p>PiorityQueue默认是小顶堆，自定义比较的方法和TreeMap一样。</p>
+<ul>
+<li>poll和take都是取出一个元素，poll不会抛出异常</li>
+<li>peek和element都是获取顶端元素，peek不会抛出异常</li>
+<li>offer和add都是添加一个元素，offer不会抛出异常</li>
+<li>Deque的offerFirst、pollLast等同理</li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础知识复习笔记5-内存管理</title>
+    <url>/posts/a2044ae4/</url>
+    <content><![CDATA[<h3 id="C-的程序内存布局"><a href="#C-的程序内存布局" class="headerlink" title="C++的程序内存布局"></a>C++的程序内存布局</h3><p>从上往下是：</p>
+<ul>
+<li>内核空间：操作系统内核</li>
+<li>环境变量，命令行参数</li>
+<li>栈（高地址向低地址增长）：存放局部变量，函数参数，返回地址等，由编译器管理</li>
+<li>（空闲区域）</li>
+<li>堆（低地址向高地址增长）：由程序员new&#x2F;delete管理，容量远大于栈</li>
+<li>BSS段：未初始化的数据</li>
+<li>data段：已初始化的数据，全局变量，静态变量</li>
+<li>text段：代码区</li>
+</ul>
+<h4 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h4><p>C++没有垃圾回收机制，只能由程序员手动管理内存，一旦操作不当就可能导致：</p>
+<ul>
+<li>内存泄漏：某段代码每次执行都会申请一小段内存，结束后却不释放，久而久之就会吞噬系统的空闲内存，最终导致程序甚至系统崩溃。<ul>
+<li>如果一段程序随着时间运行，内存占用越来越大且没有饱和的趋势，可能就出现了内存泄漏。</li>
+<li>内存泄漏的静态检测方法，首先就是对代码进行检查，看是否有new&#x2F;delete不匹配的地方。</li>
+<li>也可以用工具进行检查，比如valgrind可以检查程序是否有非法使用内存的问题。</li>
+</ul>
+</li>
+</ul>
+<p>另外一个方法是使用智能指针，智能指针会管理对象的生命周期，在其生命周期结束时自动释放内存。</p>
+<ul>
+<li>shared_ptr：可以允许多个指针指向一个对象，通过引用计数管理对象生命周期。</li>
+<li>unique_ptr：对象只能由一个指针独享，可以移动对象所有权，但不能复制。</li>
+<li>weak_ptr：主要避免shared_ptr造成的循环引用，A引用B，B引用A，这样谁都无法被释放。weak_ptr可以提供某个对象的访问，但是不会参与引用计数。需要用时，使用lock方法来获得一个shared_ptr对象。</li>
+</ul>
+<h4 id="C-类的内存布局"><a href="#C-类的内存布局" class="headerlink" title="C++类的内存布局"></a>C++类的内存布局</h4><p>对于一般的类，所有非静态成员变量按照声明顺序，内存对齐原则放在一起。静态成员变量放在全局数据区，所有类成员函数是放在代码区，位置没有明显关联。</p>
+<p>有虚函数的类，类的地址起始位置有一个虚函数指针，指向虚函数表，虚函数表中存放了所有虚函数的入口地址。紧接着放非静态成员变量。子类在构造时也会有一个虚函数表，如果子类重写了虚函数，则会用新的函数地址覆盖掉表中原来的虚函数地址。</p>
+<p>继承的话，继承类先按照其继承的基类的顺序，存放了各个基类的成员变量和各自的虚函数表指针，再存放自己的数据成员。</p>
+<p>基类析构函数声明为虚函数：这样才能在基类指针调用析构时，执行子类的析构函数，不然可能出现局部释放的情况，只释放了基类的相关内容，子类的却没有释放，造成内存泄漏。</p>
+<h3 id="Java的内存管理"><a href="#Java的内存管理" class="headerlink" title="Java的内存管理"></a>Java的内存管理</h3><p>Java有垃圾回收机制，不需要程序员手动管理内存分配和释放，</p>
+<h4 id="Java的垃圾回收策略"><a href="#Java的垃圾回收策略" class="headerlink" title="Java的垃圾回收策略"></a>Java的垃圾回收策略</h4><p>根据JVM实现的不同，策略也有所不同。Java的堆内存区域一般可以分为新生代、老年代和永久代三块，新生代一般是生命周期比较短的对象，老年代是占用内存比较大，生命周期较长的对象，永久代则是始终不会被清理的对象。</p>
+<p>分配内存时，优先在新生代区域分配，如果内存不够，则尝试将新生代的部分对象转移到老年代。如果分配的对象很大，则会直接进入到老年代，减少垃圾回收的频率和成本。每个对象都有一个年龄计数器，每次垃圾回收没有被清理的对象年龄就会增加，增加到一定数值就会转移到老年代区域。</p>
+<h4 id="判断对象生命周期"><a href="#判断对象生命周期" class="headerlink" title="判断对象生命周期"></a>判断对象生命周期</h4><ul>
+<li>引用计数：类似于C++的shared_ptr，但是也有循环引用的问题，使用的比较少。</li>
+<li>可达性分析算法：从以下对象中选择根对象，搜索根对象引用的对象，如果一个对象没有一条到达根对象的引用链，就说明它该被回收了。（我理解的就是从“钉子户”开始链式搜索，因为“钉子户”引用的对象一定是被需要的）<ul>
+<li>虚拟机栈(栈帧中的局部变量表)中引用的对象</li>
+<li>本地方法栈(Native 方法)中引用的对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>所有被同步锁持有的对象</li>
+<li>JNI（Java Native Interface）引用的对象</li>
+</ul>
+</li>
+</ul>
+<h4 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h4><ul>
+<li>标记-清除算法：标记所有不用的对象，然后再依次清除。<ul>
+<li>简单，但是容易产生内存碎片，标记和清除的效率低</li>
+</ul>
+</li>
+<li>复制算法：将内存划为两半，只用其中一半存放对象。内存满后，将还存活的对象复制到另一边，直接清除掉当前这边的内存。<ul>
+<li>清除的效率更高，但可用内存变小了，且不适用于老年代对象，因为复制开销大</li>
+</ul>
+</li>
+<li>标记-整理算法：标记所有存活的对象，将他们向内存的一端整理移动，然后清除掉另一端的内存。<ul>
+<li>整理的效率比较低</li>
+</ul>
+</li>
+</ul>
+<h5 id="分代算法"><a href="#分代算法" class="headerlink" title="分代算法"></a>分代算法</h5><p>新生代使用复制算法，因为新生代的对象存活概率低，大概率不需要复制很多内容。<br>老年代使用标记整理算法，老年代的对象通常比较大。</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>基础知识复习笔记7-泛型和模板类</title>
     <url>/posts/10facbba/</url>
     <content><![CDATA[<h3 id="模板类"><a href="#模板类" class="headerlink" title="模板类"></a>模板类</h3><p>模板类是C++泛型编程的实现之一，STL的容器都是模板类实现的。模板类可以不具体指定数据的类型，实现一份代码多处复用。</p>
@@ -599,27 +725,6 @@
 <li>由于实际上Java的泛型是通过类型转换和类型检查实现的，所以Java的泛型类、泛型方法等，其中的泛型数据可以指定类型范围（extends T：必须是T的子类，super T，必须是T的父类）</li>
 <li>类型参数T和通配符?。类型参数用于声明泛型类，?用在泛型类的使用中。</li>
 </ul>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础知识学习笔记6-Spring</title>
-    <url>/posts/ccf09792/</url>
-    <content><![CDATA[<h3 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h3><p>Spring是Java的一个轻量级开发框架，包含了很多模块，可以帮助开发人员快速构建应用，提高开发效率。其中最核心的模块就是IoC（控制反转）和AOP（面向切片编程）</p>
-<h4 id="IoC"><a href="#IoC" class="headerlink" title="IoC"></a>IoC</h4><p>控制反转的核心就是让Spring框架来管理程序中需要的对象实例，而不是由程序自己手动创建。</p>
-<ul>
-<li>不需要考虑实例化某个类需要构造怎样的参数，只要配置好，在需要用的时候，向IOC容器拿就可以了。</li>
-<li>如果某个类A用到了一个接口B，因为接口不能被实例化，所以就必须指定B的实现类。但是使用IOC的话，定义接口不需要指定实现类，在需要的时候在IOC容器中获取就可以了<ul>
-<li>比如在Service类里定义了操作数据库的DAO接口，用注解@Autowired就可以自动注入DAO对象实例</li>
-</ul>
-</li>
-</ul>
-<h4 id="面向切片编程"><a href="#面向切片编程" class="headerlink" title="面向切片编程"></a>面向切片编程</h4><p>面向切片编程和面向对象编程并不冲突，目的是将一些通用的操作和功能与业务功能代码分离开，提高代码的可读性和可维护性。比如像日志记录，如果每个类都重复实现日志的功能，就会有很多重复的冗余代码，维护起来很麻烦。所以面向切片就是把这些代码分离出来。</p>
 ]]></content>
       <categories>
         <category>学习</category>
@@ -684,6 +789,30 @@
 <li>实际上因为数据范围1-1000，应该遍历每一种求和情况，DFS<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iomanip&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unordered_set&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">unordered_set&lt;<span class="type">int</span>&gt; mp;</span><br><span class="line"><span class="type">int</span> max_gcd = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">gcd</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (x &lt; y)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">swap</span>(x, y);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (x == <span class="number">0</span> || y == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (y != <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> temp = x;</span><br><span class="line">        x = y;</span><br><span class="line">        y = (temp % y);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arr, <span class="type">int</span> index, <span class="type">int</span> cur_sum, <span class="type">int</span> sum)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= arr.<span class="built_in">size</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!mp.<span class="built_in">count</span>(cur_sum))</span><br><span class="line">    &#123;</span><br><span class="line">        mp.<span class="built_in">insert</span>(cur_sum);</span><br><span class="line">        max_gcd = <span class="built_in">max</span>(max_gcd, <span class="built_in">gcd</span>(cur_sum, sum - cur_sum));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">dfs</span>(arr, index + <span class="number">1</span>, cur_sum + arr[index], sum);</span><br><span class="line">    <span class="built_in">dfs</span>(arr, index + <span class="number">1</span>, cur_sum, sum);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; arr = &#123;<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">1000</span>&#125;;</span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> x : arr)</span><br><span class="line">    &#123;</span><br><span class="line">        sum += x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">dfs</span>(arr, <span class="number">0</span>, <span class="number">0</span>, sum);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;maxgcd: &quot;</span> &lt;&lt; max_gcd;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 ]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>基础知识学习笔记6-Spring</title>
+    <url>/posts/ccf09792/</url>
+    <content><![CDATA[<h3 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h3><p>Spring是Java的一个轻量级开发框架，包含了很多模块，可以帮助开发人员快速构建应用，提高开发效率。其中最核心的模块就是IoC（控制反转）和AOP（面向切片编程）</p>
+<h4 id="IoC"><a href="#IoC" class="headerlink" title="IoC"></a>IoC</h4><p>控制反转的核心就是让Spring框架来管理程序中需要的对象实例，而不是由程序自己手动创建。</p>
+<ul>
+<li>不需要考虑实例化某个类需要构造怎样的参数，只要配置好，在需要用的时候，向IOC容器拿就可以了。</li>
+<li>如果某个类A用到了一个接口B，因为接口不能被实例化，所以就必须指定B的实现类。但是使用IOC的话，定义接口不需要指定实现类，在需要的时候在IOC容器中获取就可以了<ul>
+<li>比如在Service类里定义了操作数据库的DAO接口，用注解@Autowired就可以自动注入DAO对象实例</li>
+</ul>
+</li>
+</ul>
+<h4 id="面向切片编程"><a href="#面向切片编程" class="headerlink" title="面向切片编程"></a>面向切片编程</h4><p>面向切片编程和面向对象编程并不冲突，目的是将一些通用的操作和功能与业务功能代码分离开，提高代码的可读性和可维护性。比如像日志记录，如果每个类都重复实现日志的功能，就会有很多重复的冗余代码，维护起来很麻烦。所以面向切片就是把这些代码分离出来。</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
   </entry>
   <entry>
     <title>除法取模</title>
@@ -693,6 +822,28 @@
 
 <h4 id="扩展欧几里得算法"><a href="#扩展欧几里得算法" class="headerlink" title="扩展欧几里得算法"></a>扩展欧几里得算法</h4><p>计算a，b最大公约数的同时算出逆元</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">using</span> LL = <span class="type">long</span> <span class="type">long</span> <span class="type">int</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ex_gcd</span><span class="params">(LL a, LL b, LL &amp;x, LL &amp;y)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// x即为逆元</span></span><br><span class="line">    <span class="comment">// ax + by == gcd(a, b)</span></span><br><span class="line">    <span class="comment">// ax === 1(mod m)</span></span><br><span class="line">    <span class="keyword">if</span>(a &lt; b) &#123;</span><br><span class="line">        <span class="built_in">swap</span>(a, b);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(b == <span class="number">0</span>) &#123;</span><br><span class="line">        x = <span class="number">1</span>;</span><br><span class="line">        y = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">ex_gcd</span>(b, a%b, x, y);</span><br><span class="line">    <span class="type">int</span> temp = x;</span><br><span class="line">    x = y;</span><br><span class="line">    y = temp - a/b * y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>如何提问、如何解决遇到的问题</title>
+    <url>/posts/9429079c/</url>
+    <content><![CDATA[<h3 id="提问之前"><a href="#提问之前" class="headerlink" title="提问之前"></a>提问之前</h3><ul>
+<li>作为计算机专业的学生，你遇到的大部分问题都是别人已经遇到过、有成熟的解决方案的。那么关键在于，“怎样才能正确地找到这些问题的答案”。需要准备的：</li>
+</ul>
+<h4 id="正确的搜索引擎"><a href="#正确的搜索引擎" class="headerlink" title="正确的搜索引擎"></a>正确的搜索引擎</h4><ul>
+<li>你应该使用Google，而不是baidu或其他国内搜索引擎</li>
+<li>（如何在国内使用Google不做说明）</li>
+<li>如果是代码问题，你可以在github尝试搜索类似的项目，并参考他们的项目架构和代码写法（<font color="red">但不要抄袭</font>）</li>
+</ul>
+<h4 id="正确的搜索方式"><a href="#正确的搜索方式" class="headerlink" title="正确的搜索方式"></a>正确的搜索方式</h4><ul>
+<li>确保你已经尝试过自行搜索、解决该问题，并没有找到办法。</li>
+<li>你不应该搜索“电脑蓝屏了怎么办”，而是问出具体的“电脑出现错误代码XXXXXXX”，并且尽量使用关键词组合，而不是自然语言问句。</li>
+<li>如果允许，你应该使用英文搜索你的问题。</li>
+<li>从报错代码中先推测可能出现的问题，因为很多时候报错代码报出的是一个宽泛的错误，造成错误的原因可能大相径庭。例如C语言中常常出现的段错误，直接搜索“段错误”完全无法确定你遇到的是哪个问题。</li>
+</ul>
 ]]></content>
   </entry>
   <entry>
@@ -715,25 +866,6 @@
       <tags>
         <tag>Manjaro</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>如何提问、如何解决遇到的问题</title>
-    <url>/posts/9429079c/</url>
-    <content><![CDATA[<h3 id="提问之前"><a href="#提问之前" class="headerlink" title="提问之前"></a>提问之前</h3><ul>
-<li>作为计算机专业的学生，你遇到的大部分问题都是别人已经遇到过、有成熟的解决方案的。那么关键在于，“怎样才能正确地找到这些问题的答案”。需要准备的：</li>
-</ul>
-<h4 id="正确的搜索引擎"><a href="#正确的搜索引擎" class="headerlink" title="正确的搜索引擎"></a>正确的搜索引擎</h4><ul>
-<li>你应该使用Google，而不是baidu或其他国内搜索引擎</li>
-<li>（如何在国内使用Google不做说明）</li>
-<li>如果是代码问题，你可以在github尝试搜索类似的项目，并参考他们的项目架构和代码写法（<font color="red">但不要抄袭</font>）</li>
-</ul>
-<h4 id="正确的搜索方式"><a href="#正确的搜索方式" class="headerlink" title="正确的搜索方式"></a>正确的搜索方式</h4><ul>
-<li>确保你已经尝试过自行搜索、解决该问题，并没有找到办法。</li>
-<li>你不应该搜索“电脑蓝屏了怎么办”，而是问出具体的“电脑出现错误代码XXXXXXX”，并且尽量使用关键词组合，而不是自然语言问句。</li>
-<li>如果允许，你应该使用英文搜索你的问题。</li>
-<li>从报错代码中先推测可能出现的问题，因为很多时候报错代码报出的是一个宽泛的错误，造成错误的原因可能大相径庭。例如C语言中常常出现的段错误，直接搜索“段错误”完全无法确定你遇到的是哪个问题。</li>
-</ul>
-]]></content>
   </entry>
   <entry>
     <title>露营物品列表</title>
