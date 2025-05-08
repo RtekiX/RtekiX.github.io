@@ -1,0 +1,7 @@
+{
+    "model": "moca.moc",
+    "textures": [
+        "texture_00.png"
+    ],
+    "physics": "moca.physics.json"
+}
